@@ -226,6 +226,10 @@ export interface Localized extends LocalizedStringsMethods {
   adminScreen: {
     title: string;
     description: string;
+    dialogText: {
+      fi: string;
+      en: string;
+    }
     navigation: {
       dropdownSettings: {
         title: string;
@@ -307,7 +311,10 @@ export interface Localized extends LocalizedStringsMethods {
     };
     addNewWasteSpecifierDialog: {
       title: string;
-      text: string;
+      text: {
+        fi: string;
+        en: string;
+      }
     };
     deleteWasteSpecifierDialog: {
       title: string;
