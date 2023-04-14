@@ -453,10 +453,15 @@ const SummaryView: React.FC = () => {
 
     return (
       <Stack spacing={ 2 }>
-        <Stack spacing={ 2 }>
-          <Typography variant="h3">
+        <Stack
+          spacing={ 2 }
+          direction={ isMobile ? "column" : "row" }
+        >
+          <Typography width="100%" variant="h3">
             { strings.survey.building.title }
           </Typography>
+        </Stack>
+        <Stack>
           <Box>
             <Typography>
               { `${building.address?.streetAddress} ${building.address?.postCode} ${building.address?.city}` }
@@ -470,6 +475,7 @@ const SummaryView: React.FC = () => {
             p={ 2 }
           >
             <Stack width="100%" spacing={ 2 }>
+              { renderDataCell(strings.survey.building.propertyName, building.propertyName) }
               { renderDataCell(strings.survey.building.propertyID, building.propertyId) }
               { renderDataCell(strings.survey.building.buildingID, building.buildingId) }
               { renderDataCell(strings.survey.building.buildingClass, LocalizationUtils.getLocalizedName(buildingTypes.find(buildingType => buildingType.id === building.buildingTypeId)?.localizedNames || [], selectedLanguage)) }
@@ -539,6 +545,9 @@ const SummaryView: React.FC = () => {
         <Typography variant="h3">
           { strings.survey.otherStructures.title }
         </Typography>
+        <Typography>
+          { strings.survey.otherStructures.addedDescription }
+        </Typography>
         <Stack spacing={ 2 }>
           { building?.otherStructures.map(otherStructure => (
             <Paper elevation={ 1 } key={ otherStructure.name }>
@@ -583,7 +592,7 @@ const SummaryView: React.FC = () => {
                 flexItem
               />
             }
-            { renderDataCell(strings.survey.info.startDate, moment(selectedSurvey.startDate).format("MMMM YYYY")) }
+            { renderDataCell(strings.survey.info.startDate, selectedSurvey.dateUnknown ? strings.survey.info.dateUnknown : moment(selectedSurvey.startDate).format("DD.MM.YYYY")) }
             { !isMobile &&
               <Divider
                 variant="inset"
@@ -591,7 +600,7 @@ const SummaryView: React.FC = () => {
                 flexItem
               />
             }
-            { renderDataCell(strings.survey.info.endDate, moment(selectedSurvey.endDate).format("MMMM YYYY")) }
+            { renderDataCell(strings.survey.info.endDate, moment(selectedSurvey.endDate).format("DD.MM.YYYY")) }
           </Stack>
         </Paper>
       </Stack>
@@ -627,6 +636,7 @@ const SummaryView: React.FC = () => {
                   { renderDataValue(surveyor.phone || "") }
                   { renderDataValue(surveyor.email || "") }
                   { renderDataCell(strings.survey.info.dataGridColumns.reportDate, surveyor.reportDate ? moment(surveyor.reportDate).format("DD.MM.YYYY") : strings.generic.unknown) }
+                  { renderDataValue(surveyor.visits || "") }
                   { !isMobile &&
                     <Divider
                       variant="inset"

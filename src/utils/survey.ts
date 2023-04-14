@@ -23,6 +23,7 @@ export default class SurveyUtils {
     buildingId: building?.buildingId,
     classificationCode: LocalizationUtils.getLocalizedName(buildingType?.localizedNames ?? [], store.getState().locale.language),
     ownerName: ownerInformation?.ownerName,
+    propertyName: building?.propertyName,
     city: building?.address?.city,
     streetAddress: building?.address?.streetAddress,
     creatorId: survey.metadata.creatorId
