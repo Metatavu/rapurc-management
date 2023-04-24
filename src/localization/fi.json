@@ -361,8 +361,8 @@
         "role": "Rooli",
         "phone": "Puhelin",
         "email": "Sähköpostiosoite",
-        "reportDate": "Raportointipäivä",
-        "visits": "Käynnit"
+        "reportDate": "Raportointipvm",
+        "visits": "Kohdekäynnit"
       },
       "addNewSurveyorDialog": {
         "title": "Lisää kartoittaja"
