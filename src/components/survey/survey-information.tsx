@@ -293,6 +293,7 @@ const SurveyInformation: React.FC = () => {
     value: string,
     onChange: React.ChangeEventHandler<HTMLInputElement>
   ) => (
+    <Stack direction={"row"} spacing={2}>
     <WithDebounce
       name={ name }
       value={ value }
@@ -304,6 +305,14 @@ const SurveyInformation: React.FC = () => {
         </TextField>
       }
     />
+    {/*Temporary, showcases an upcoming feature*/}
+    <FormControlLabel 
+    sx={{width: "100%"}}
+    control={<Checkbox/>}
+    disabled
+    label={"Tämä purkukartoitus ei sisällä erillistä asbesti- ja haitta-aine-karkoitusta sekä -tutkimuksia."}
+    labelPlacement="start"/>
+    </Stack>
   );
 
   /**
