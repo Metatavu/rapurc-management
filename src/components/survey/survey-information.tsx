@@ -521,7 +521,7 @@ const SurveyInformation: React.FC = () => {
       {
         field: "reportDate",
         headerName: strings.survey.info.dataGridColumns.reportDate,
-        width: 325,
+        width: 148,
         type: "date",
         editable: true,
         renderEditCell: (params: GridRenderEditCellParams) => {
@@ -548,7 +548,7 @@ const SurveyInformation: React.FC = () => {
       {
         field: "visits",
         headerName: strings.survey.info.dataGridColumns.visits,
-        width: 200,
+        width: 250,
         editable: true
       }
     ];
