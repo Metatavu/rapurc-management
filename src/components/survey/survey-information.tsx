@@ -293,17 +293,27 @@ const SurveyInformation: React.FC = () => {
     value: string,
     onChange: React.ChangeEventHandler<HTMLInputElement>
   ) => (
-    <WithDebounce
-      name={ name }
-      value={ value }
-      label={ label }
-      onChange={ onChange }
-      component={ props =>
-        <TextField select { ...props }>
-          { Object.values(SurveyType).map(renderDemolitionScopeOption) }
-        </TextField>
-      }
-    />
+    <Stack direction="row" spacing={ 2 }>
+      <WithDebounce
+        name={ name }
+        value={ value }
+        label={ label }
+        onChange={ onChange }
+        component={ props =>
+          <TextField select { ...props }>
+            { Object.values(SurveyType).map(renderDemolitionScopeOption) }
+          </TextField>
+        }
+      />
+      {/* Temporary, showcases an upcoming feature  */}
+      <FormControlLabel
+        sx={{ width: "100%" }}
+        control={ <Checkbox/> }
+        disabled
+        label="Tämä purkukartoitus ei sisällä erillistä asbesti- ja haitta-aine-karkoitusta sekä -tutkimuksia."
+        labelPlacement="start"
+      />
+    </Stack>
   );
 
   /**
@@ -512,7 +522,7 @@ const SurveyInformation: React.FC = () => {
       {
         field: "reportDate",
         headerName: strings.survey.info.dataGridColumns.reportDate,
-        width: 325,
+        width: 148,
         type: "date",
         editable: true,
         renderEditCell: (params: GridRenderEditCellParams) => {
@@ -539,7 +549,7 @@ const SurveyInformation: React.FC = () => {
       {
         field: "visits",
         headerName: strings.survey.info.dataGridColumns.visits,
-        width: 200,
+        width: 250,
         editable: true
       }
     ];
