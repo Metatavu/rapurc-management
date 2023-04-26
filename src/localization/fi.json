@@ -179,7 +179,7 @@
       "building": "Rakennuksen tiedot",
       "otherStructures": "Muut purettavat rakennukset / rakennelmat",
       "info": "Kartoituksen tiedot",
-      "reusables": "Uudelleenkäytettävät rakennusosat",
+      "reusables": "Uudelleenkäyttökelpoiset purkutuotteet",
       "waste": "Purkujätemateriaalit",
       "hazardous": "Haitta-ainetta sisältävät materiaalit",
       "attachments": "Liitteet",
@@ -391,7 +391,7 @@
         "usabilityHelperText": "Jos ei tiedossa, valitse \"ei arvioitu\"",
         "descriptionHelperText": "Vapaa kuvaus esim. sijainnista rakennuksessa tms.",
         "wasteAmountHelperText": "Valinnainen tieto",
-        "imageDescription": "Tuetut formaatit: jpg, gif tai png\nMax. 4 kuvaa / rakennusosa"
+        "imageDescription": "Tuetut formaatit: jpg, gif tai png\nMax. 2 kuvaa / rakennusosa"
       },
       "deleteReusableDialog": {
         "title": "Poista uudelleenkäytettävä osa",
@@ -438,7 +438,7 @@
       "dataGridColumns": {
         "material": "Materiaali",
         "wasteCode": "Jätekoodi",
-        "usage": "Jatkokäsittely",
+        "usage": "Käsittely",
         "amount": "Määrä",
         "amountInTons": "Määrä tonneina",
         "description": "Lisätiedot",

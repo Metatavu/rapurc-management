@@ -179,7 +179,7 @@
       "building": "Building information",
       "otherStructures": "Other demolished structures",
       "info": "Survey information",
-      "reusables": "Reusable materials",
+      "reusables": "Reusable demolition products",
       "waste": "Waste materials",
       "hazardous": "Hazardous materials",
       "attachments": "Attachments",
@@ -374,7 +374,7 @@
       }
     },
     "reusables": {
-      "title": "Reusable building parts",
+      "title": "Reusable demolition products",
       "dropFile": "Drop here",
       "viewImage": "View images",
       "moreImage": "More images",
@@ -392,7 +392,7 @@
         "usabilityHelperText": "If it's unknown, choose \"Not validated\"",
         "descriptionHelperText": "Free description, for example, location in the building.",
         "wasteAmountHelperText": "Optional",
-        "imageDescription": "Supported formats: jpg, gif or png\nMax. 4 pictures / building block"
+        "imageDescription": "Supported formats: jpg, gif or png\nMax. 2 pictures / building block"
       },
       "deleteReusableDialog": {
         "title": "Delete reusable building part",
