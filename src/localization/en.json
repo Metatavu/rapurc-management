@@ -482,6 +482,7 @@
     "summary": {
       "title": "Summary",
       "print": "Print",
+      "document": "Document",
       "demolitionInfo": "Demolition information",
       "images": "Images",
       "image": "Image"

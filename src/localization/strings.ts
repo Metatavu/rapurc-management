@@ -521,6 +521,7 @@ export interface Localized extends LocalizedStringsMethods {
     summary: {
       title: string;
       print: string;
+      document: string;
       demolitionInfo: string;
       images: string;
       image: string;
