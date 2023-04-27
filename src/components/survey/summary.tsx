@@ -18,6 +18,7 @@ import FileUploadUtils from "utils/file-upload";
 import { Reusable } from "generated/client";
 import ImageGallery from "styled/generic/image-gallery";
 import { selectLanguage } from "features/locale-slice";
+import DocxExportUtils from "components/docx-export/docx-export-utils";
 
 const initialSurveySummary: SurveySummary = {
   buildingTypes: [],
@@ -934,6 +935,14 @@ const SummaryView: React.FC = () => {
           onClick={ () => setPdfDialogOpen(true) }
         >
           { strings.survey.summary.print }
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={ <Print/> }
+          onClick={ () => selectedSurvey && DocxExportUtils.generateDocx(selectedSurvey, surveySummary) }
+        >
+          { strings.survey.summary.document }
         </Button>
       </Stack>
       <Stack spacing={ 4 }>
