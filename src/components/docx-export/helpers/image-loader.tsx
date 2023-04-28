@@ -1,64 +1,50 @@
-import path from 'path';
-import Jimp from 'jimp';
+import { Document, Media } from "docx";
+// import Jimp from "jimp";
 
 namespace ImageLoader {
-    /**
-     * Get image fit coefficient
-     * 
-     * @param width image width
-     * @param height image height
-     * @param fitWidth image fit width
-     * @param fitHeight image fit height
-     * @returns 
-     */
-    const fitImage = (width: number, height: number, fitWidth: number, fitHeight: number) => {
-        const fitRatio = fitWidth / fitHeight;
-        const ratio = width / height;
-        let newWidth = fitWidth;
-        let newHeight = fitHeight;
-        if (ratio > fitRatio) {
-            newHeight = newWidth / ratio;
-        } else {
-            newWidth = newHeight * ratio;
-        }
-        return [newWidth, newHeight];
-    };
+  /**
+   * Get image blob dimensions
+   * 
+   * @param imageBlob image blob
+   */
+  const getBlobImageDimensions = async (imageBlob: Blob) => {
+    const img = new Image();
+    img.src = URL.createObjectURL(imageBlob);
+    const imageDimensions = await new Promise((resolve, reject) => {
+      img.onload = () => {
+        resolve([img.width, img.height]);
+      };
+      img.onerror = reject;
+    });
+    
+    return imageDimensions;
+  };
 
-    /**
-     * Load image from file 
-     *
-     * @param filePath file path
-     */
-    export const load = async (filePath: string) => {
-        const fullPath = path.resolve(filePath);
-        const image = await Jimp.read(fullPath);
+  /**
+  * Gets image by url and converts it to buffer
+  * 
+  * @param url image url
+  */
+  const getImageBlobByUrl = async (url: string) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
 
-        return image;
-    };
+    return blob;
+  };
 
-    /**
-     * Get image fit size height and width
-     * 
-     * @param image image
-     * @param fitWidth fit width
-     * @param fitHeight fit height
-     * @returns 
-     */
-    export const getFitSize = (image: Jimp, fitWidth: number, fitHeight: number) => {
-        const width = image.bitmap.width;
-        const height = image.bitmap.height;
-        return fitImage(width, height, fitWidth, fitHeight);
-    }
+  /**
+   * Get docx image by url with original dimensions
+   * 
+   * @param doc docx document
+   * @param url image url
+   */
+  export const getDocxImage = async (doc: Document, url: string) => {
+    const blob = await getImageBlobByUrl(url);
+    const dimensions = await getBlobImageDimensions(blob) as [number, number];
+    const imageBuffer = await blob.arrayBuffer();
 
-    /**
-     * Get image buffer
-     * 
-     * @param image image
-     */
-    export const getBuffer = async (image: Jimp) => {
-        const imageBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
-        return imageBuffer;
-    }
+    return Media.addImage(doc, imageBuffer, dimensions[0], dimensions[1]);
+  };
 }
 
 export default ImageLoader;
