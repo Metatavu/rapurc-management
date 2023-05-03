@@ -16,6 +16,7 @@ interface Props {
   title: string;
   back?: boolean;
   customControls?: JSX.Element;
+  renderLastModifiedDate?: JSX.Element;
 }
 
 /**
@@ -27,7 +28,8 @@ const Header: React.FC<Props> = ({
   title,
   children,
   back,
-  customControls
+  customControls,
+  renderLastModifiedDate
 }) => {
   const navigate = useNavigate();
   const language = useAppSelector(selectLanguage);
@@ -89,9 +91,14 @@ const Header: React.FC<Props> = ({
           </Stack>
           <Stack
             direction="row"
-            spacing={ 2 }
+            spacing={ 4 }
           >
-            { customControls }
+            <Stack marginTop={ 3 }>
+              { renderLastModifiedDate }
+            </Stack>
+            <Stack>
+              { customControls }
+            </Stack>
           </Stack>
         </Stack>
       </Toolbar>

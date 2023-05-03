@@ -208,6 +208,7 @@ export interface Localized extends LocalizedStringsMethods {
   surveyScreen: {
     title: string;
     status: string;
+    lastModified: string;
     navigation: {
       owner: string;
       building: string;
