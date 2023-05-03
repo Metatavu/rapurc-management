@@ -378,6 +378,7 @@ export interface Localized extends LocalizedStringsMethods {
       occupation: string;
       phone: string;
       email: string;
+      sendLink: string;
     };
     info: {
       title: string;

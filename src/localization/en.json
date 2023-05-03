@@ -337,7 +337,8 @@
       "surname": "Surname",
       "occupation": "Occupation",
       "phone": "Phone",
-      "email": "E-mail address"
+      "email": "E-mail address",
+      "sendLink": "Send link"
     },
     "info": {
       "title": "Survey information",

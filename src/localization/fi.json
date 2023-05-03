@@ -337,7 +337,8 @@
       "surname": "Sukunimi",
       "occupation": "Ammatti",
       "phone": "Puhelinnumero",
-      "email": "Sähköpostiosoite"
+      "email": "Sähköpostiosoite",
+      "sendLink": "Lähetä Linkki"
     },
     "info": {
       "title": "Kartoituksen tiedot",
