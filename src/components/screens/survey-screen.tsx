@@ -52,10 +52,13 @@ const SurveyScreen: React.FC = () => {
    */
   const onStatusChange: React.ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement> = ({ target }) => {
     const { value } = target;
-
+    console.log("newe date", survey.metadata.modifiedAt);
+    const updatedMetadata = { ...survey.metadata, modifiedAt: new Date() };
+    console.log("newe date", updatedMetadata.modifiedAt);
     dispatch(updateSurvey({
       ...survey,
-      status: value as SurveyStatus
+      status: value as SurveyStatus,
+      metadata: updatedMetadata
     }))
       .unwrap()
       .then(_survey => setSurvey(_survey))
