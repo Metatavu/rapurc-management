@@ -378,6 +378,8 @@
       "dropFile": "Pudota kuvat tähän tai valitse alla olevasta painikkeesta.",
       "viewImage": "Näytä kuvat",
       "moreImage": "Lisää kuvia",
+      "createListing": "Luo ilmoitus",
+      "createdListing": "Ilmoitus luotu",
       "addImage": "Lisää kuva",
       "deleteImage": "Poista kuva",
       "preview": "Esikatselu",
@@ -408,7 +410,8 @@
         "description": "Lisätieto",
         "unit": "Yksikkö",
         "editDescription": "Muokkaa lisätietoa",
-        "images": "Materiaalin kuvat"
+        "images": "Materiaalin kuvat",
+        "listing": "Myynti-ilmoitus"
       },
       "usability": {
         "excellent": "Erinomainen",

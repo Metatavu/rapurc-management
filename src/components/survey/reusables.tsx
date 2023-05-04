@@ -1162,6 +1162,24 @@ const Reusables: React.FC<Props> = ({ surveyId }) => {
             </SurveyButton>
           );
         }
+      },
+      {
+        field: "addListing",
+        headerName: strings.survey.reusables.dataGridColumns.listing,
+        width: 180,
+        renderCell: (params: GridRenderCellParams) => {
+          const { row } = params;
+          return (
+            <SurveyButton
+              fullWidth
+              variant="contained"
+              color="primary"
+
+            >
+              { row.listing?.length ? strings.survey.reusables.createdListing : strings.survey.reusables.createListing }
+            </SurveyButton>
+          );
+        }
       }
     ];
 
