@@ -219,7 +219,6 @@ const Owner: React.FC<Props> = ({ surveyId }) => {
             sx={{ width: "200px", height: "50px" }}
           >
             {strings.survey.owner.sendLink}
-
           </Button>
         </Stack>
       </Stack>
