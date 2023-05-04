@@ -11,6 +11,7 @@ import React, { ChangeEventHandler, FC, useContext, useEffect, useState } from "
 import { useParams } from "react-router-dom";
 import LocalizationUtils from "utils/localization-utils";
 import SurveyRoutes from "./survey-routes";
+import moment from "moment";
 
 /**
  * Survey screen component
@@ -19,7 +20,7 @@ const SurveyScreen: FC = () => {
   const dispatch = useAppDispatch();
   const errorContext = useContext(ErrorContext);
   const { surveyId } = useParams<"surveyId">();
-
+  
   const [ survey, setSurvey ] = useState<Survey | undefined>();
 
   /**
@@ -149,10 +150,10 @@ const SurveyScreen: FC = () => {
    */
   const renderLastModifiedDate = () => {
     const { modifiedAt } = survey.metadata;
-  
+    
     return (
       <Typography variant="h5" fontSize={ 18 }>
-        { strings.formatString(`${strings.surveyScreen.lastModified}: ${modifiedAt?.toLocaleDateString("fi")}`) }
+        { strings.formatString(`${strings.surveyScreen.lastModified}: ${(moment(modifiedAt).format("D.M.YYYY h:mm"))}`) }
       </Typography>
     );
   };
