@@ -1,17 +1,8 @@
-import { Add, Delete } from "@mui/icons-material";
-import { Box, Button, CircularProgress, Container, Fab, Grid, Hidden, List, MenuItem, Paper, Stack, TextField, Typography, useMediaQuery } from "@mui/material";
-import Api from "api";
-import { useAppSelector } from "app/hooks";
-import { ErrorContext } from "components/error-handler/error-handler";
-import GenericDialog from "components/generic/generic-dialog";
-import WithDebounce from "components/generic/with-debounce";
-import { selectKeycloak } from "features/auth-slice";
-import { Unit } from "generated/client";
+import { Button, MenuItem, Paper, Stack, TextField, Typography, Container } from "@mui/material";
+import { Reusable, Unit, Usability } from "generated/client";
 import strings from "localization/strings";
 import * as React from "react";
-import theme from "theme";
 import LocalizationUtils from "utils/localization-utils";
-import { selectLanguage } from "features/locale-slice";
 
 /**
  * Component properties
@@ -23,7 +14,25 @@ const SurveyListingScreen: React.FC = () => {
   // const keycloak = useAppSelector(selectKeycloak);
   // const errorContext = React.useContext(ErrorContext);
   // const selectedLanguage = useAppSelector(selectLanguage);
+  /**
+  * Component for reusable materials and building parts
+  */
+  const [ newMaterial, setNewMaterial ] = React.useState<Reusable>({
+    componentName: "",
+    usability: Usability.NotValidated,
+    reusableMaterialId: "",
+    metadata: {}
+  });
+  /**
+   * Event handler for new material string change
+   *
+   * @param event React change event
+   */
+  const onNewMaterialChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = event.target;
 
+    setNewMaterial({ ...newMaterial, [name]: value });
+  };
   const unitOptions = Object.values(Unit)
     .sort((a, b) => LocalizationUtils.getLocalizedUnits(a).localeCompare(LocalizationUtils.getLocalizedUnits(b)))
     .map(unit =>
@@ -41,10 +50,11 @@ const SurveyListingScreen: React.FC = () => {
         alignItems="center"
         justifyContent="center"
         spacing={1}
+        overflow="auto"
       >
         <Paper>
           { /* Otsikko */ }
-          <Typography>
+          <Typography variant="h1" margin={1} textAlign="center">
             Tee ilmoitus kauppapaikkaan
           </Typography>
           <TextField
@@ -52,7 +62,7 @@ const SurveyListingScreen: React.FC = () => {
             color="primary"
             name="componentName"
             label="Ilmoituksen otsikko"
-            value="newMaterial.componentName"
+            value="ovi"
           />
         
           <Stack
@@ -65,18 +75,27 @@ const SurveyListingScreen: React.FC = () => {
               select
               color="primary"
               name="reusableMaterialId"
-              value="newMaterial.reusableMaterialId "
+              value="rakennusosat"
               label="Materiaali"
               helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartOrMaterialHelperText }
+            />
+            <TextField
+              fullWidth
+              select={false}
+              color="primary"
+              name="reusableMaterialId"
+              value="valittu rakennusosa"
+              label="Materiaali"
             />
           </Stack>
           <TextField
             multiline
-            rows={ 6 }
+            rows={ 2 }
             name="description"
             label="Materiaalin kuvaus"
-            value="newMaterial.description"
+            value={newMaterial.description}
             helperText={ strings.survey.reusables.addNewBuildingPartsDialog.descriptionHelperText }
+            onChange={ onNewMaterialChange }
           />
           <Stack
             direction="row"
@@ -88,64 +107,129 @@ const SurveyListingScreen: React.FC = () => {
               fullWidth
               color="primary"
               name="amount"
-              value="newMaterial.amount"
+              value={ newMaterial.amount }
               label="Arvio materiaalin määrästä"
               type="number"
+              onChange={ onNewMaterialChange }
             />
+            <TextField
+              fullWidth
+              select={false}
+              color="primary"
+              name="amount"
+              value={ newMaterial.amount }
+              label="Annettu arvo"
+              type="number"
+              onChange={ onNewMaterialChange }
+            />
+          </Stack>
+          <Stack
+            direction="row"
+            spacing={ 2 }
+            marginTop={ 2 }
+          >
             <TextField
               fullWidth
               select
               name="unit"
               color="primary"
-              value="newMaterial.unit"
+              value={ newMaterial.unit }
               label={ strings.survey.reusables.dataGridColumns.unit }
+              onChange={ onNewMaterialChange }
             >
               { unitOptions }
             </TextField>
+            <TextField
+              fullWidth
+              select={false}
+              color="primary"
+              name="amount"
+              value={ newMaterial.amount }
+              label="Annettu arvo"
+              type="number"
+              onChange={ onNewMaterialChange }
+            />
           </Stack>
           <Stack spacing={ 2 } marginTop={ 2 }>
             <TextField
               multiline
-              rows={ 6 }
+              rows={ 2 }
               name="description"
               label="Lisätieto määrästä"
-              value="newMaterial.description"
+              value={ newMaterial.description }
               helperText={ strings.survey.reusables.addNewBuildingPartsDialog.descriptionHelperText }
+              onChange={ onNewMaterialChange }
             />
           </Stack>
           { /* Location of the material */ }
-          <TextField
-            fullWidth
-            color="primary"
-            name="componentName"
-            label="Kohteen nimi"
-            value="newMaterial.componentName"
-            helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
-          />
-          <TextField
-            fullWidth
-            color="primary"
-            name="componentName"
-            label="Katuosoite"
-            value="newMaterial.componentName"
-            helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
-          />
-          <TextField
-            fullWidth
-            color="primary"
-            name="componentName"
-            label="Postinumero"
-            value="newMaterial.componentName"
-            helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
-          />
+          <Stack spacing={ 2 } marginTop={ 2 }>
+            <TextField
+              fullWidth
+              color="primary"
+              name="componentName"
+              label="Kohteen nimi"
+              value={ newMaterial.componentName }
+              helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
+              onChange={ onNewMaterialChange }
+            />
+          </Stack>
+          <Stack
+            direction="row"
+            spacing={ 2 }
+            marginTop={ 2 }
+          >
+            <TextField
+              fullWidth
+              color="primary"
+              name="componentName"
+              label="Katuosoite"
+              value={ newMaterial.componentName }
+              helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
+              onChange={ onNewMaterialChange }
+            />
+            <TextField
+              fullWidth
+              color="primary"
+              name="componentName"
+              label="Annettu arvo"
+              value={ newMaterial.componentName }
+              helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
+              onChange={ onNewMaterialChange }
+            />
+          </Stack>
+          <Stack
+            direction="row"
+            spacing={ 2 }
+            marginTop={ 2 }
+          >
+            <TextField
+              fullWidth
+              color="primary"
+              name="componentName"
+              label="Postinumero"
+              value={ newMaterial.componentName }
+              helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
+              onChange={ onNewMaterialChange }
+            />
+            <TextField
+              fullWidth
+              color="primary"
+              name="componentName"
+              label="Annettu arvo"
+              value={ newMaterial.componentName }
+              helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
+              onChange={ onNewMaterialChange }
+            />
+          </Stack>
           {/* kunta/alue */}
           <TextField
             fullWidth
             select
             name="unit"
             color="primary"
-            value="newMaterial.unit"
+            value={ newMaterial.componentName}
             label="Kunta/Alue"
+            onChange={ onNewMaterialChange }
           >
             { unitOptions }
           </TextField>
@@ -155,8 +239,9 @@ const SurveyListingScreen: React.FC = () => {
             color="primary"
             name="componentName"
             label="Nimi"
-            value={ 0 }
+            value={ newMaterial.componentName }
             helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
+            onChange={ onNewMaterialChange }
           />
           { /* puh */ }
           <TextField
@@ -164,8 +249,9 @@ const SurveyListingScreen: React.FC = () => {
             color="primary"
             name="componentName"
             label="Puhelinnumero"
-            value={ 0 }
-            helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
+            value={ newMaterial.unit }
+            helperText="040 ..."
+            onChange={ onNewMaterialChange }
           />
           { /* e-mail */ }
           <TextField
@@ -173,9 +259,39 @@ const SurveyListingScreen: React.FC = () => {
             color="primary"
             name="componentName"
             label="Sähköposti"
-            value={ 0 }
+            value={ newMaterial.componentName }
             helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
+            onChange={ onNewMaterialChange }
           />
+          <Stack
+            direction="row"
+            spacing={ 2 }
+            marginTop={ 2 }
+            marginBottom={ 2 }
+            justifyContent="center"
+          >
+            <Button
+              variant="contained"
+            >
+              peruuta
+            </Button>
+            <Button
+              variant="contained"
+            >
+              POISTA OMA KÄYTTÖ
+            </Button>
+            <Button
+              variant="contained"
+            >
+              OMAAN KÄYTTÖÖN
+            </Button>
+            <Button
+              variant="contained"
+              disabled
+            >
+              lähetä
+            </Button>
+          </Stack>
         </Paper>
       </Stack>
     </Container>
