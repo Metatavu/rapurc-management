@@ -38,6 +38,7 @@ const SurveyInformation: React.FC = () => {
   const [ selectedSurveyorIds, setSelectedSurveyorIds ] = React.useState<GridRowId[]>([]);
   const [ deletingSurveyor, setDeletingSurveyor ] = React.useState(false);
   const [ addingSurveyor, setAddingSurveyor ] = React.useState(false);
+  const [ additionalInformation, setAdditionalInformation ] = React.useState(selectedSurvey?.additionalInformation || "");
   const [ newSurveyor, setNewSurveyor ] = React.useState<Surveyor>({
     firstName: "",
     lastName: "",
@@ -95,7 +96,7 @@ const SurveyInformation: React.FC = () => {
   * @param name field name
   * @param dateUnknown date unknown
   */
-  const onDateUnknownChange = (name: string) => async (event: React.ChangeEvent<HTMLInputElement>, Checked: Boolean | null) => {
+  const onDateUnknownChange = (name: string) => async (event: React.ChangeEvent<HTMLInputElement>, Checked: boolean | null) => {
     if (!selectedSurvey || !selectedSurvey.id) {
       return;
     }
@@ -138,6 +139,7 @@ const SurveyInformation: React.FC = () => {
     }
 
     try {
+      setAdditionalInformation(value);
       await dispatch(updateSurvey({ ...selectedSurvey, additionalInformation: value })).unwrap();
     } catch (error) {
       errorContext.setError(strings.errorHandling.surveys.update);
@@ -754,7 +756,7 @@ const SurveyInformation: React.FC = () => {
         { renderAdditionalInformationField(
           "additionalInformation",
           strings.survey.info.additionalInformation,
-          selectedSurvey.additionalInformation as string,
+          additionalInformation,
           onSurveyAdditionalInfoChange
         ) }
       </Stack>
