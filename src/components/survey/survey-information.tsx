@@ -126,6 +126,25 @@ const SurveyInformation: React.FC = () => {
   };
 
   /**
+   * Event Handler set survey additional info
+   * 
+   * @param event event
+   */
+  const onSurveyAdditionalInfoChange: React.ChangeEventHandler<HTMLInputElement> = async ({ target }) => {
+    const { value } = target;
+
+    if (!selectedSurvey?.id) {
+      return;
+    }
+
+    try {
+      await dispatch(updateSurvey({ ...selectedSurvey, additionalInformation: value })).unwrap();
+    } catch (error) {
+      errorContext.setError(strings.errorHandling.surveys.update);
+    }
+  };
+
+  /**
    * Surveyor change handler
    * 
    * @param surveyor updated surveyor
@@ -317,6 +336,33 @@ const SurveyInformation: React.FC = () => {
   );
 
   /**
+   * Renders multiline textfield with debounce for additional information
+   * 
+   * @param name name
+   * @param label label
+   * @param value value
+   * @param onChange onChange
+   */
+  const renderAdditionalInformationField = (
+    name: string,
+    label: string,
+    value: string,
+    onChange: React.ChangeEventHandler<HTMLInputElement>
+  ) => (
+    <Stack direction="row" spacing={ 2 }>
+      <WithDebounce
+        name={ name }
+        value={ value }
+        label={ label }
+        onChange={ onChange }
+        component={ props =>
+          <TextField multiline { ...props }/>
+        }
+      />
+    </Stack>
+  );
+
+  /**
    * Renders date pickers
    */
   const renderDatePickers = () => {
@@ -411,6 +457,7 @@ const SurveyInformation: React.FC = () => {
   const renderSurveyorListItems = () => (
     surveyors.map(surveyor =>
       <SurveyItem
+        key={ surveyor.id }
         title={ `${surveyor.firstName} ${surveyor.lastName}` }
         subtitle={ surveyor.role || "" }
       >
@@ -702,6 +749,14 @@ const SurveyInformation: React.FC = () => {
       </Stack>
       <Stack>
         { renderDateUnknownCheckbox() }
+      </Stack>
+      <Stack>
+        { renderAdditionalInformationField(
+          "additionalInformation",
+          strings.survey.info.additionalInformation,
+          selectedSurvey.additionalInformation as string,
+          onSurveyAdditionalInfoChange
+        ) }
       </Stack>
       <Stack
         spacing={ 2 }
