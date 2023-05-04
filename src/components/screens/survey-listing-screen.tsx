@@ -3,7 +3,9 @@ import { Reusable, Unit, Usability } from "generated/client";
 import strings from "localization/strings";
 import * as React from "react";
 import LocalizationUtils from "utils/localization-utils";
-
+/**
+ * Everything to do with language, api and routing are temporary, this is just a base to be coded on
+ */
 /**
  * Component properties
 interface Props {
@@ -15,7 +17,7 @@ const SurveyListingScreen: React.FC = () => {
   // const errorContext = React.useContext(ErrorContext);
   // const selectedLanguage = useAppSelector(selectLanguage);
   /**
-  * Component for reusable materials and building parts
+  * Component for reusable materials and building parts (to showcase options TEMPORARY)
   */
   const [ newMaterial, setNewMaterial ] = React.useState<Reusable>({
     componentName: "",
