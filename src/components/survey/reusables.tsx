@@ -38,7 +38,6 @@ const Reusables: React.FC<Props> = ({ surveyId }) => {
   const errorContext = React.useContext(ErrorContext);
   const selectedLanguage = useAppSelector(selectLanguage);
   const [ addingSurveyReusable, setAddingSurveyReusable ] = React.useState<boolean>(false);
-  const [ addingListingSurveyReusable, setListingSurveyReusable] = React.useState<boolean>(false);
   const [ loading, setLoading ] = React.useState(false);
   const [ uploadedFiles, setUploadedFiles ] = React.useState<UploadFile[]>([]);
   const [ newReusableFiles, setNewReusableFiles ] = React.useState<File[]>([]);
@@ -563,199 +562,6 @@ const Reusables: React.FC<Props> = ({ surveyId }) => {
       }
     </Stack>
   );
-  /**
-   * Temporary add listing reusable dialog
-   */
-  const renderAddListingReusableDialog = () => {
-    const reusableOptions = Object.values(reusableMaterials)
-      .sort((a, b) => LocalizationUtils.getLocalizedName(a.localizedNames, selectedLanguage)
-        .localeCompare(LocalizationUtils.getLocalizedName(b.localizedNames, selectedLanguage)))
-      .map(material =>
-        <MenuItem key={ material.id } value={ material.id }>
-          { LocalizationUtils.getLocalizedName(material.localizedNames, selectedLanguage) }
-        </MenuItem>
-      );
-
-    const usabilityOptions = Object.values(Usability)
-      .sort((a, b) => LocalizationUtils.getLocalizedUsability(a).localeCompare(LocalizationUtils.getLocalizedUsability(b)))
-      .map(usability =>
-        <MenuItem key={ usability } value={ usability }>
-          { LocalizationUtils.getLocalizedUsability(usability) }
-        </MenuItem>
-      );
-
-    const unitOptions = Object.values(Unit)
-      .sort((a, b) => LocalizationUtils.getLocalizedUnits(a).localeCompare(LocalizationUtils.getLocalizedUnits(b)))
-      .map(unit =>
-        <MenuItem key={ unit } value={ unit }>
-          { LocalizationUtils.getLocalizedUnits(unit) }
-        </MenuItem>
-      );
-
-    return (
-      /*
-      Otsikko 
-      */
-      <GenericDialog
-        fullScreen={ useMediaQuery(theme.breakpoints.down("sm")) }
-        error={ false }
-        disabled={ !newMaterial.componentName || !newMaterial.reusableMaterialId }
-        open={ addingListingSurveyReusable }
-        onClose={ () => setListingSurveyReusable(false) }
-        onCancel={ () => setListingSurveyReusable(false) }
-        onConfirm={ onAddReusableConfirm }
-        title="Tee ilmoitus kauppapaikkaan"
-        positiveButtonText={ strings.generic.confirm }
-        cancelButtonText={ strings.generic.cancel }
-      >
-      
-        <TextField
-          fullWidth
-          color="primary"
-          name="componentName"
-          label="Ilmoituksen otsikko"
-          onChange={ onNewMaterialChange }
-          value={ newMaterial.componentName }
-        />
-        
-        <Stack
-          direction={ isMobile ? "column" : "row" }
-          spacing={ 2 }
-          marginTop={ 2 }
-        >
-          <TextField
-            fullWidth
-            select
-            color="primary"
-            name="reusableMaterialId"
-            value={ newMaterial.reusableMaterialId }
-            label="Materiaali"
-            helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartOrMaterialHelperText }
-            onChange={ onNewMaterialChange }
-          >
-            { reusableOptions }
-          </TextField>
-        </Stack>
-        <TextField
-          multiline
-          rows={ 6 }
-          name="description"
-          label="Materiaalin kuvaus"
-          value={ newMaterial.description }
-          onChange={ onNewMaterialChange }
-          helperText={ strings.survey.reusables.addNewBuildingPartsDialog.descriptionHelperText }
-        />
-        <Stack
-          direction={ isMobile ? "column" : "row" }
-          spacing={ 2 }
-          marginTop={ 2 }
-        >
-          { /* Määrät */ }
-          <TextField
-            fullWidth
-            color="primary"
-            name="amount"
-            value={ newMaterial.amount }
-            label="Arvio materiaalin määrästä"
-            type="number"
-            onChange={ onNewMaterialChange }
-          />
-          <TextField
-            fullWidth
-            select
-            name="unit"
-            color="primary"
-            value={ newMaterial.unit }
-            label={ strings.survey.reusables.dataGridColumns.unit }
-            onChange={ onNewMaterialChange }
-          >
-            { unitOptions }
-          </TextField>
-        </Stack>
-        <Stack spacing={ 2 } marginTop={ 2 }>
-          <TextField
-            multiline
-            rows={ 6 }
-            name="description"
-            label="Lisätieto määrästä"
-            value={ newMaterial.description }
-            onChange={ onNewMaterialChange }
-            helperText={ strings.survey.reusables.addNewBuildingPartsDialog.descriptionHelperText }
-          />
-        </Stack>
-        { /* Location of the material */ }
-        <TextField
-          fullWidth
-          color="primary"
-          name="componentName"
-          label="Kohteen nimi"
-          onChange={ onNewMaterialChange }
-          value={ newMaterial.componentName }
-          helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
-        />
-        <TextField
-          fullWidth
-          color="primary"
-          name="componentName"
-          label="Katuosoite"
-          onChange={ onNewMaterialChange }
-          value={ newMaterial.componentName }
-          helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
-        />
-        <TextField
-          fullWidth
-          color="primary"
-          name="componentName"
-          label="Postinumero"
-          onChange={ onNewMaterialChange }
-          value={ newMaterial.componentName }
-          helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
-        />
-        {/* kunta/alue */}
-        <TextField
-          fullWidth
-          select
-          name="unit"
-          color="primary"
-          value={ newMaterial.unit }
-          label="Kunta/Alue"
-          onChange={ onNewMaterialChange }
-        >
-          { unitOptions }
-        </TextField>
-        {/* Yhteystiedot */}
-        <TextField
-          fullWidth
-          color="primary"
-          name="componentName"
-          label="Nimi"
-          onChange={ onNewMaterialChange }
-          value={ newMaterial.componentName }
-          helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
-        />
-        { /* puh */ }
-        <TextField
-          fullWidth
-          color="primary"
-          name="componentName"
-          label="Puhelinnumero"
-          onChange={ onNewMaterialChange }
-          value={ newMaterial.componentName }
-          helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
-        />
-        { /* e-mail */ }
-        <TextField
-          fullWidth
-          color="primary"
-          name="componentName"
-          label="Sähköposti"
-          onChange={ onNewMaterialChange }
-          value={ newMaterial.componentName }
-          helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
-        />
-      </GenericDialog>
-    );
-  };
   /**
    * Renders add survey reusable dialog
    */
@@ -1415,17 +1221,6 @@ const Reusables: React.FC<Props> = ({ surveyId }) => {
           >
             { strings.survey.reusables.addNewBuildingPart }
           </SurveyButton>
-          { /* 
-          * Temporary button to see upcoming form-submit-dialog.
-          */ }
-          <SurveyButton
-            variant="contained"
-            color="secondary"
-            startIcon={ <Add/> }
-            onClick={ () => setListingSurveyReusable(true) }
-          >
-            { strings.survey.reusables.addNewBuildingPart }
-          </SurveyButton>
         </Box>
       </Stack>
       <Hidden lgUp>
@@ -1435,7 +1230,6 @@ const Reusables: React.FC<Props> = ({ surveyId }) => {
         { renderSurveyDataTable() }
       </Hidden>
       { renderAddSurveyReusableDialog() }
-      { renderAddListingReusableDialog() }
       { renderDeleteSurveyMaterialDialog() }
       { renderReusableImageDialog() }
     </>
