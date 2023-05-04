@@ -417,6 +417,8 @@ export interface Localized extends LocalizedStringsMethods {
       dropFile: string;
       viewImage: string;
       moreImage: string;
+      createListing: string;
+      createdListing: string;
       addImage: string;
       deleteImage: string;
       preview: string;
@@ -448,6 +450,7 @@ export interface Localized extends LocalizedStringsMethods {
         description: string;
         unit: string;
         editDescription: string;
+        listing: string;
       };
       usability: {
         excellent: string;

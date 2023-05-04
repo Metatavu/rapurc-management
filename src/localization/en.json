@@ -378,6 +378,8 @@
       "dropFile": "Drop here",
       "viewImage": "View images",
       "moreImage": "More images",
+      "createListing": "Create Listing",
+      "createdListing": "Listing created",
       "addImage": "Add image",
       "deleteImage": "Delete image",
       "preview": "Preview:",
@@ -408,7 +410,8 @@
         "description": "Description",
         "unit": "Unit",
         "editDescription": "Edit description",
-        "images": "Images"
+        "images": "Images",
+        "listing": "Sales listing"
       },
       "usability": {
         "excellent": "Excellent",
