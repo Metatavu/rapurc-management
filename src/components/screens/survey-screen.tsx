@@ -66,7 +66,6 @@ const SurveyScreen: FC = () => {
   /**
    * Side navigation content
    *
-   * TODO: Add rest of the components
    */
   const renderSideNavigation = () => (
     <List>
