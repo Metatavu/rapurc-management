@@ -1,6 +1,10 @@
 import { Button, MenuItem, Paper, Stack, TextField, Typography, Container } from "@mui/material";
-import { Reusable, Unit, Usability } from "generated/client";
+import { Reusable, Unit, Usability, Survey } from "generated/client";
 import strings from "localization/strings";
+import { useParams } from "react-router-dom";
+import { ErrorContext } from "components/error-handler/error-handler";
+import { useAppDispatch } from "app/hooks";
+import { fetchSelectedSurvey } from "features/surveys-slice";
 import * as React from "react";
 import LocalizationUtils from "utils/localization-utils";
 /**
@@ -25,6 +29,39 @@ const SurveyListingScreen: React.FC = () => {
     reusableMaterialId: "",
     metadata: {}
   });
+  /**
+   * Get the SurveyId
+   */
+  const dispatch = useAppDispatch();
+  const errorContext = React.useContext(ErrorContext);
+  const { surveyId } = useParams<"surveyId">();
+
+  const [ survey, setSurvey ] = React.useState<Survey | undefined>();
+
+  /**
+   * Fetches survey based on URL survey ID
+   */
+  const fetchSurvey = async () => {
+    if (!surveyId) {
+      return;
+    }
+
+    try {
+      const selectedSurvey = await dispatch(fetchSelectedSurvey(surveyId)).unwrap();
+      setSurvey(selectedSurvey);
+    } catch (error) {
+      errorContext.setError(strings.errorHandling.surveys.find, error);
+    }
+  };
+
+  /**
+   * Effect for fetching surveys. Triggered when survey ID is changed
+   */
+  React.useEffect(() => { fetchSurvey(); }, [ surveyId ]);
+
+  if (!survey) {
+    return null;
+  }
 
   /**
    * Event handler for new material string change
