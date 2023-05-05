@@ -266,18 +266,6 @@ const SurveyListingScreen: React.FC = () => {
               onChange={ onNewMaterialChange }
             />
           </Stack>
-          {/* kunta/alue */}
-          <TextField
-            fullWidth
-            select
-            name="unit"
-            color="primary"
-            value={ newMaterial.componentName}
-            label="Kunta/Alue"
-            onChange={ onNewMaterialChange }
-          >
-            { unitOptions }
-          </TextField>
           {/* Yhteystiedot */}
           <TextField
             fullWidth
