@@ -49,8 +49,12 @@ const App: React.FC = () => {
               }
             />
             <Route
-              path="/listing"
-              element={ <ListingScreen/> }
+              path="/listing/:surveyId/*"
+              element={
+                <VisibleWithRole userRole="admin">
+                  <ListingScreen/>
+                </VisibleWithRole>
+              }
             />
             <Route
               path="/"
