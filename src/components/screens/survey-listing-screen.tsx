@@ -25,6 +25,7 @@ const SurveyListingScreen: React.FC = () => {
     reusableMaterialId: "",
     metadata: {}
   });
+
   /**
    * Event handler for new material string change
    *
@@ -35,13 +36,18 @@ const SurveyListingScreen: React.FC = () => {
 
     setNewMaterial({ ...newMaterial, [name]: value });
   };
+
   const unitOptions = Object.values(Unit)
-    .sort((a, b) => LocalizationUtils.getLocalizedUnits(a).localeCompare(LocalizationUtils.getLocalizedUnits(b)))
+    
+    .sort((a, b) =>
+      LocalizationUtils.getLocalizedUnits(a).localeCompare(LocalizationUtils.getLocalizedUnits(b)))
+    
     .map(unit =>
       <MenuItem key={ unit } value={ unit }>
         { LocalizationUtils.getLocalizedUnits(unit) }
       </MenuItem>
     );
+
   /**
   * Render listing UI
   */
