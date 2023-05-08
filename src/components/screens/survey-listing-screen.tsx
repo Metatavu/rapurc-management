@@ -243,7 +243,6 @@ const SurveyListingScreen: React.FC = () => {
               label="Annettu arvo"
               type="text"
               value={ newMaterial.componentName }
-              helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
               onChange={ onNewMaterialChange }
               disabled
             />
@@ -269,7 +268,6 @@ const SurveyListingScreen: React.FC = () => {
               label="Annettu arvo"
               type="text"
               value={ newMaterial.componentName }
-              helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
               onChange={ onNewMaterialChange }
               disabled
             />
