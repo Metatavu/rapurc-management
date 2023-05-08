@@ -1,5 +1,5 @@
 import { Apartment, Attachment, ChangeCircle, Delete, Engineering, NoteAdd, PersonOutlined, Summarize, WarningAmber } from "@mui/icons-material";
-import { Divider, List, MenuItem, TextField } from "@mui/material";
+import { Divider, List, MenuItem, TextField, Typography } from "@mui/material";
 import { useAppDispatch } from "app/hooks";
 import { ErrorContext } from "components/error-handler/error-handler";
 import NavigationItem from "components/layout-components/navigation-item";
@@ -7,20 +7,21 @@ import SidePanelLayout from "components/layouts/side-panel-layout";
 import { fetchSelectedSurvey, updateSurvey } from "features/surveys-slice";
 import { Survey, SurveyStatus } from "generated/client";
 import strings from "localization/strings";
-import React from "react";
+import React, { ChangeEventHandler, FC, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import LocalizationUtils from "utils/localization-utils";
 import SurveyRoutes from "./survey-routes";
+import moment from "moment";
 
 /**
  * Survey screen component
  */
-const SurveyScreen: React.FC = () => {
+const SurveyScreen: FC = () => {
   const dispatch = useAppDispatch();
-  const errorContext = React.useContext(ErrorContext);
+  const errorContext = useContext(ErrorContext);
   const { surveyId } = useParams<"surveyId">();
-
-  const [ survey, setSurvey ] = React.useState<Survey | undefined>();
+  
+  const [ survey, setSurvey ] = useState<Survey | undefined>();
 
   /**
    * Fetches survey based on URL survey ID
@@ -41,7 +42,7 @@ const SurveyScreen: React.FC = () => {
   /**
    * Effect for fetching surveys. Triggered when survey ID is changed
    */
-  React.useEffect(() => { fetchSurvey(); }, [ surveyId ]);
+  useEffect(() => { fetchSurvey(); }, [ surveyId ]);
 
   if (!survey) {
     return null;
@@ -50,12 +51,13 @@ const SurveyScreen: React.FC = () => {
   /**
    * Event handler for survey status change
    */
-  const onStatusChange: React.ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement> = ({ target }) => {
+  const onStatusChange: ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement> = ({ target }) => {
     const { value } = target;
 
     dispatch(updateSurvey({
       ...survey,
-      status: value as SurveyStatus
+      status: value as SurveyStatus,
+      markedAsDone: value === SurveyStatus.Done ? new Date() : undefined
     }))
       .unwrap()
       .then(_survey => setSurvey(_survey))
@@ -65,7 +67,6 @@ const SurveyScreen: React.FC = () => {
   /**
    * Side navigation content
    *
-   * TODO: Add rest of the components
    */
   const renderSideNavigation = () => (
     <List>
@@ -145,12 +146,26 @@ const SurveyScreen: React.FC = () => {
   };
 
   /**
+   * Renders surveys last modified date
+   */
+  const renderLastModifiedDate = () => {
+    const { modifiedAt } = survey.metadata;
+    
+    return (
+      <Typography variant="h5" fontSize={ 18 }>
+        { strings.formatString(`${strings.surveyScreen.lastModified}: ${(moment(modifiedAt).format("D.M.YYYY h:mm"))}`) }
+      </Typography>
+    );
+  };
+
+  /**
    * Component render
    */
   return (
     <SidePanelLayout
       title={ strings.surveyScreen.title }
       sidePanelContent={ renderSideNavigation() }
+      renderLastModifiedDate={ renderLastModifiedDate() }
       headerControls={ renderStatusSelect() }
       back
     >

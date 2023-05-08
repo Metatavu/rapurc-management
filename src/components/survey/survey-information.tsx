@@ -38,6 +38,7 @@ const SurveyInformation: React.FC = () => {
   const [ selectedSurveyorIds, setSelectedSurveyorIds ] = React.useState<GridRowId[]>([]);
   const [ deletingSurveyor, setDeletingSurveyor ] = React.useState(false);
   const [ addingSurveyor, setAddingSurveyor ] = React.useState(false);
+  const [ additionalInformation, setAdditionalInformation ] = React.useState(selectedSurvey?.additionalInformation || "");
   const [ newSurveyor, setNewSurveyor ] = React.useState<Surveyor>({
     firstName: "",
     lastName: "",
@@ -95,7 +96,7 @@ const SurveyInformation: React.FC = () => {
   * @param name field name
   * @param dateUnknown date unknown
   */
-  const onDateUnknownChange = (name: string) => async (event: React.ChangeEvent<HTMLInputElement>, Checked: Boolean | null) => {
+  const onDateUnknownChange = (name: string) => async (event: React.ChangeEvent<HTMLInputElement>, Checked: boolean | null) => {
     if (!selectedSurvey || !selectedSurvey.id) {
       return;
     }
@@ -120,6 +121,26 @@ const SurveyInformation: React.FC = () => {
 
     try {
       await dispatch(updateSurvey({ ...selectedSurvey, type: value as SurveyType })).unwrap();
+    } catch (error) {
+      errorContext.setError(strings.errorHandling.surveys.update);
+    }
+  };
+
+  /**
+   * Event Handler set survey additional info
+   * 
+   * @param event event
+   */
+  const onSurveyAdditionalInfoChange: React.ChangeEventHandler<HTMLInputElement> = async ({ target }) => {
+    const { value } = target;
+
+    if (!selectedSurvey?.id) {
+      return;
+    }
+
+    try {
+      setAdditionalInformation(value);
+      await dispatch(updateSurvey({ ...selectedSurvey, additionalInformation: value })).unwrap();
     } catch (error) {
       errorContext.setError(strings.errorHandling.surveys.update);
     }
@@ -317,6 +338,33 @@ const SurveyInformation: React.FC = () => {
   );
 
   /**
+   * Renders multiline textfield with debounce for additional information
+   * 
+   * @param name name
+   * @param label label
+   * @param value value
+   * @param onChange onChange
+   */
+  const renderAdditionalInformationField = (
+    name: string,
+    label: string,
+    value: string,
+    onChange: React.ChangeEventHandler<HTMLInputElement>
+  ) => (
+    <Stack direction="row" spacing={ 2 }>
+      <WithDebounce
+        name={ name }
+        value={ value }
+        label={ label }
+        onChange={ onChange }
+        component={ props =>
+          <TextField multiline { ...props }/>
+        }
+      />
+    </Stack>
+  );
+
+  /**
    * Renders date pickers
    */
   const renderDatePickers = () => {
@@ -411,6 +459,7 @@ const SurveyInformation: React.FC = () => {
   const renderSurveyorListItems = () => (
     surveyors.map(surveyor =>
       <SurveyItem
+        key={ surveyor.id }
         title={ `${surveyor.firstName} ${surveyor.lastName}` }
         subtitle={ surveyor.role || "" }
       >
@@ -702,6 +751,14 @@ const SurveyInformation: React.FC = () => {
       </Stack>
       <Stack>
         { renderDateUnknownCheckbox() }
+      </Stack>
+      <Stack>
+        { renderAdditionalInformationField(
+          "additionalInformation",
+          strings.survey.info.additionalInformation,
+          additionalInformation,
+          onSurveyAdditionalInfoChange
+        ) }
       </Stack>
       <Stack
         spacing={ 2 }
