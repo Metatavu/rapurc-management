@@ -1,7 +1,7 @@
 import { Paragraph, TextRun, Table, TableRow, TableCell, Document, WidthType } from "docx";
 import { Survey } from "generated/client";
 import { SurveySummary } from "types";
-import ImageLoader from "../helpers/image-loader";
+import ImageUtils from "../helpers/image-utils";
 
 /**
  * Demolition Information Page
@@ -27,8 +27,15 @@ const imagesAndTablesPage = async (doc: Document, survey: Survey, surveySummary:
     })
   );
 
-  const image = surveySummary.attachments[0];
-  const testImage = await ImageLoader.getDocxImage(doc, image.url);
+  const images = await ImageUtils.getSurveySummaryImageAttachments(doc, surveySummary.attachments);
+
+  pageChildren.push(
+    new Paragraph({
+      children: [
+        ...images
+      ]
+    })
+  );
 
   pageChildren.push(
     new Paragraph({
@@ -37,10 +44,6 @@ const imagesAndTablesPage = async (doc: Document, survey: Survey, surveySummary:
       ],
       style: "normalPara"
     })
-  );
-  // Image paragraph
-  pageChildren.push(
-    new Paragraph(testImage)
   );
 
   pageChildren.push(

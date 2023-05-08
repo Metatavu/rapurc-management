@@ -1,7 +1,10 @@
-import { Document, Media } from "docx";
+import { Document, Media, PictureRun } from "docx";
+import { Attachment } from "generated/client";
 // import Jimp from "jimp";
 
-namespace ImageLoader {
+const allowedImageTypes = ["image/gif", "image/jpeg", "image/png"];
+
+namespace ImageUtils {
   /**
    * Get image blob dimensions
    * 
@@ -16,15 +19,15 @@ namespace ImageLoader {
       };
       img.onerror = reject;
     });
-    
+
     return imageDimensions;
   };
 
   /**
-  * Gets image by url and converts it to buffer
-  * 
-  * @param url image url
-  */
+   * Gets image by url and converts it to buffer
+   * 
+   * @param url image url
+   */
   const getImageBlobByUrl = async (url: string) => {
     const response = await fetch(url);
     const blob = await response.blob();
@@ -40,11 +43,34 @@ namespace ImageLoader {
    */
   export const getDocxImage = async (doc: Document, url: string) => {
     const blob = await getImageBlobByUrl(url);
+
+    if (!allowedImageTypes.includes(blob.type)) {
+      return null;
+    }
+
     const dimensions = await getBlobImageDimensions(blob) as [number, number];
     const imageBuffer = await blob.arrayBuffer();
 
     return Media.addImage(doc, imageBuffer, dimensions[0], dimensions[1]);
   };
+
+  /**
+   * Get image attachments from survey summary
+   * 
+   * @param doc docx document
+   * @param attachments survey summary attachments
+   */
+  export const getSurveySummaryImageAttachments = async (doc: Document, attachments: Attachment[]) => {
+    const imageAttachments: Promise<PictureRun | null>[] = [];
+
+    attachments.forEach(attachment => {
+      const image = getDocxImage(doc, attachment.url);
+      imageAttachments.push(image);
+    });
+
+    const imageAttachmentsUnfiltered = await Promise.all(imageAttachments);
+    return imageAttachmentsUnfiltered.filter(image => image !== null) as PictureRun[];
+  };
 }
 
-export default ImageLoader;
+export default ImageUtils;

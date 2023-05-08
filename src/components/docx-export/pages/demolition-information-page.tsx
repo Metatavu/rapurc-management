@@ -26,10 +26,6 @@ const demolitionInformationPage = async (doc: Document, survey: Survey, surveySu
     })
   );
 
-  console.log("Survey", survey);
-  console.log("Survey summary", surveySummary.attachments);
-  console.log("Localization", localization);
-
   // Here we create a simple text paragraph and add it to our array of children
   pageChildren.push(
     new Paragraph({
@@ -118,7 +114,6 @@ const demolitionInformationPage = async (doc: Document, survey: Survey, surveySu
   pageChildren.push(deviderPar);
 
   const { hazardousMaterials } = surveySummary;
-  console.log("Hazardous materials", hazardousMaterials);
 
   const hazardousMaterialsTableRows = [];
 
