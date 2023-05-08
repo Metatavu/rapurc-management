@@ -174,6 +174,7 @@
   "surveyScreen": {
     "title": "Kartoitus",
     "status": "Tila",
+    "lastModified": "Viimeksi muokattu",
     "navigation": {
       "owner": "Omistajan tiedot",
       "building": "Rakennuksen tiedot",
@@ -345,6 +346,7 @@
       "demolitionInfo": "Purkutiedot",
       "surveyors": "Kartoittajat",
       "demolitionScope": "Purkamisen laajuus",
+      "additionalInformation": "Lisätiedot",
       "dateUnknown": "Ajankohta ei tiedossa",
       "startDate": "Aloitusajankohta",
       "endDate": "Käyttö loppuu",

@@ -13,6 +13,7 @@ interface Props {
   sidePanelContent: JSX.Element;
   headerControls?: JSX.Element;
   back?: boolean;
+  renderLastModifiedDate?: JSX.Element;
 }
 
 /**
@@ -26,6 +27,7 @@ const SidePanelLayout: React.FC<Props> = ({
   sidePanelContent,
   back,
   headerControls,
+  renderLastModifiedDate,
   children
 }) => {
   /**
@@ -38,6 +40,7 @@ const SidePanelLayout: React.FC<Props> = ({
       <Header
         back={ back }
         title={ title }
+        renderLastModifiedDate={ renderLastModifiedDate }
         customControls={ headerControls }
       >
         { headerContent }
