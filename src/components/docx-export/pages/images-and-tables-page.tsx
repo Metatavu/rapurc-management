@@ -2,6 +2,7 @@ import { Paragraph, TextRun, Table, TableRow, TableCell, Document, WidthType } f
 import { Survey } from "generated/client";
 import { SurveySummary } from "types";
 import ImageUtils from "../helpers/image-utils";
+import PageLayout from "../helpers/page-layout";
 
 /**
  * Demolition Information Page
@@ -134,6 +135,12 @@ const imagesAndTablesPage = async (doc: Document, survey: Survey, surveySummary:
 
   doc.addSection({
     properties: {},
+    headers: {
+      default: PageLayout.getHeader(survey, surveySummary)
+    },
+    footers: {
+      default: PageLayout.getFooter()
+    },
     children: pageChildren
   });
 };

@@ -1,6 +1,7 @@
 import { Paragraph, TextRun, Table, TableRow, TableCell, Document, WidthType } from "docx";
 import { Survey } from "generated/client";
 import { SurveySummary } from "types";
+import PageLayout from "../helpers/page-layout";
 
 /**
  * Demolition Information Page
@@ -194,6 +195,12 @@ const demolitionInformationPage = async (doc: Document, survey: Survey, surveySu
 
   doc.addSection({
     properties: {},
+    headers: {
+      default: PageLayout.getHeader(survey, surveySummary)
+    },
+    footers: {
+      default: PageLayout.getFooter()
+    },
     children: pageChildren
   });
 };

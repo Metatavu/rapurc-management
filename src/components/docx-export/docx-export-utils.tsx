@@ -1,16 +1,19 @@
 import { Document, Packer } from "docx";
-import demolitionInformationPage from "./pages/demolition-information-page";
 import documentStyles from "./styles/document-styles";
 import { Survey } from "generated/client";
 import { SurveySummary } from "types";
 import strings from "localization/strings";
+
+import demolitionInformationPage from "./pages/demolition-information-page";
 import imagesAndTablesPage from "./pages/images-and-tables-page";
+import newPageTemplate from "./pages/new-page-template";
 
 namespace DocxExportUtils {
 
   const pageFunctions = [
     demolitionInformationPage,
-    imagesAndTablesPage
+    imagesAndTablesPage,
+    newPageTemplate
   ];
 
   /**
