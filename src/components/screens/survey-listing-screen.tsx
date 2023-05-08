@@ -288,6 +288,7 @@ const SurveyListingScreen: React.FC = () => {
             color="primary"
             name="componentName"
             label="Puhelinnumero"
+            type="tel"
             value={ newMaterial.unit }
             helperText="040 ..."
             onChange={ onNewMaterialChange }
@@ -298,6 +299,7 @@ const SurveyListingScreen: React.FC = () => {
             color="primary"
             name="componentName"
             label="Sähköposti"
+            type="email"
             value={ newMaterial.componentName }
             helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
             onChange={ onNewMaterialChange }
