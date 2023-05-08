@@ -108,6 +108,7 @@ const SurveyListingScreen: React.FC = () => {
             name="componentName"
             label="Ilmoituksen otsikko"
             value="ovi"
+            disabled
           />
         
           <Stack
@@ -131,6 +132,7 @@ const SurveyListingScreen: React.FC = () => {
               name="reusableMaterialId"
               value="valittu rakennusosa"
               label="Materiaali"
+              disabled
             />
           </Stack>
           <TextField
@@ -164,8 +166,9 @@ const SurveyListingScreen: React.FC = () => {
               name="amount"
               value={ newMaterial.amount }
               label="Annettu arvo"
-              type="number"
+              type="tel"
               onChange={ onNewMaterialChange }
+              disabled
             />
           </Stack>
           <Stack
@@ -191,8 +194,9 @@ const SurveyListingScreen: React.FC = () => {
               name="amount"
               value={ newMaterial.amount }
               label="Annettu arvo"
-              type="number"
+              type="tel"
               onChange={ onNewMaterialChange }
+              disabled
             />
           </Stack>
           <Stack spacing={ 2 } marginTop={ 2 }>
@@ -237,9 +241,11 @@ const SurveyListingScreen: React.FC = () => {
               color="primary"
               name="componentName"
               label="Annettu arvo"
+              type="text"
               value={ newMaterial.componentName }
               helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
               onChange={ onNewMaterialChange }
+              disabled
             />
           </Stack>
           <Stack
@@ -261,9 +267,11 @@ const SurveyListingScreen: React.FC = () => {
               color="primary"
               name="componentName"
               label="Annettu arvo"
+              type="text"
               value={ newMaterial.componentName }
               helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
               onChange={ onNewMaterialChange }
+              disabled
             />
           </Stack>
           {/* Yhteystiedot */}
