@@ -102,7 +102,7 @@ const SurveyListingScreen: React.FC = () => {
           <Typography variant="h1" margin={1} textAlign="center">
             Tee ilmoitus kauppapaikkaan
           </Typography>
-          <form onSubmit={handleSubmit}>
+          <form>
             <TextField
               fullWidth
               color="primary"
