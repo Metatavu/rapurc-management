@@ -1,7 +1,7 @@
 import { Button, MenuItem, Paper, Stack, TextField, Typography, Container } from "@mui/material";
 import { Reusable, Unit, Usability, Survey } from "generated/client";
 import strings from "localization/strings";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { ErrorContext } from "components/error-handler/error-handler";
 import { useAppDispatch } from "app/hooks";
 import { fetchSelectedSurvey } from "features/surveys-slice";
@@ -35,7 +35,7 @@ const SurveyListingScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const errorContext = React.useContext(ErrorContext);
   const { surveyId } = useParams<"surveyId">();
-
+  const navigate = useNavigate();
   const [ survey, setSurvey ] = React.useState<Survey | undefined>();
 
   /**
@@ -305,6 +305,7 @@ const SurveyListingScreen: React.FC = () => {
           >
             <Button
               variant="contained"
+              onClick={() => navigate(-1)}
             >
               peruuta
             </Button>

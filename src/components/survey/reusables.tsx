@@ -20,6 +20,7 @@ import FileUploadUtils from "utils/file-upload";
 import { UploadFile } from "types";
 import produce from "immer";
 import { selectLanguage } from "features/locale-slice";
+import { useNavigate } from "react-router-dom";
 
 const WithReusableDataGridDebounce = WithDataGridDebounceFactory<Reusable>();
 
@@ -37,6 +38,7 @@ const Reusables: React.FC<Props> = ({ surveyId }) => {
   const keycloak = useAppSelector(selectKeycloak);
   const errorContext = React.useContext(ErrorContext);
   const selectedLanguage = useAppSelector(selectLanguage);
+  const navigate = useNavigate();
   const [ addingSurveyReusable, setAddingSurveyReusable ] = React.useState<boolean>(false);
   const [ loading, setLoading ] = React.useState(false);
   const [ uploadedFiles, setUploadedFiles ] = React.useState<UploadFile[]>([]);
@@ -1174,7 +1176,7 @@ const Reusables: React.FC<Props> = ({ surveyId }) => {
               fullWidth
               variant="contained"
               color="primary"
-
+              onClick={() => navigate(`/listing/${surveyId}`)}
             >
               { row.listing?.length ? strings.survey.reusables.createdListing : strings.survey.reusables.createListing }
             </SurveyButton>
