@@ -17,7 +17,7 @@ interface FormErrors {
   propertyName?: string;
   address?: string;
   postalcode?: string;
-  name?: string;
+  username?: string;
   phoneNumber?: string;
   email?: string;
 }
@@ -43,7 +43,7 @@ const SurveyListingScreen: React.FC = () => {
   const [propertyName, setpropertyName] = React.useState("");
   const [address, setAddress] = React.useState("");
   const [postalcode, setPostalcode ] = React.useState("");
-  const [name, setName] = React.useState("");
+  const [username, setUsername] = React.useState("");
   const [phoneNumber, setPhoneNumber] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [formErrors, setFormErrors] = React.useState<FormErrors>({});
@@ -79,8 +79,8 @@ const SurveyListingScreen: React.FC = () => {
       errors.postalcode = "Postal code is required";
     }
 
-    if (name.trim() === "") {
-      errors.name = "Name is required";
+    if (username.trim() === "") {
+      errors.username = "Name is required";
     }
 
     if (phoneNumber.trim() === "") {
@@ -199,7 +199,6 @@ const SurveyListingScreen: React.FC = () => {
               value="ovi"
               disabled
             />
-        
             <Stack
               direction="row"
               spacing={ 2 }
@@ -373,10 +372,10 @@ const SurveyListingScreen: React.FC = () => {
               color="primary"
               name="componentName"
               label="Nimi"
-              value={ name }
+              value={ username }
               helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
-              onChange={ e => setName(e.target.value) }
-              error={!!formErrors.name}
+              onChange={ e => setUsername(e.target.value) }
+              error={!!formErrors.username}
             />
             { /* puh */ }
             <TextField
@@ -393,6 +392,7 @@ const SurveyListingScreen: React.FC = () => {
             { /* e-mail */ }
             <TextField
               fullWidth
+              required
               color="primary"
               name="componentName"
               label="Sähköposti"
@@ -428,7 +428,6 @@ const SurveyListingScreen: React.FC = () => {
               <Button
                 type="submit"
                 variant="contained"
-              
               >
                 lähetä
               </Button>
