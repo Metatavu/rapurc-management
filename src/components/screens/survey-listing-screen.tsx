@@ -8,6 +8,20 @@ import { fetchSelectedSurvey } from "features/surveys-slice";
 import * as React from "react";
 import LocalizationUtils from "utils/localization-utils";
 /**
+ * interfaces
+ */
+interface FormErrors {
+  materialInfo?: string;
+  materialAmount?: string;
+  materialAmountInfo?: string;
+  propertyName?: string;
+  address?: string;
+  postalcode?: string;
+  name?: string;
+  phoneNumber?: string;
+  email?: string;
+}
+/**
  * Everything to do with language, api and routing are temporary, this is just a base to be coded on
  */
 /**
@@ -27,16 +41,72 @@ const SurveyListingScreen: React.FC = () => {
   const [materialAmount, setMaterialAmount] = React.useState("");
   const [materialAmountInfo, setmaterialAmountInfo] = React.useState("");
   const [propertyName, setpropertyName] = React.useState("");
-  const [adress, setAdress] = React.useState("");
+  const [address, setAddress] = React.useState("");
   const [postalcode, setPostalcode ] = React.useState("");
   const [name, setName] = React.useState("");
-  const [Phonenumber, setPhonenumber] = React.useState("");
+  const [phoneNumber, setPhoneNumber] = React.useState("");
   const [email, setEmail] = React.useState("");
+  const [formErrors, setFormErrors] = React.useState<FormErrors>({});
+  /**
+   * form validation
+  */
+  const validateForm = () => {
+    const errors: FormErrors = {};
+
+    if (materialInfo.trim() === "") {
+      errors.materialInfo = "Material info is required";
+    }
+
+    if (materialAmount.trim() === "") {
+      errors.materialAmount = "Material amount is required";
+    } else if (Number.isNaN(Number(materialAmount))) {
+      errors.materialAmount = "Material amount must be a number";
+    }
+
+    if (materialAmountInfo.trim() === "") {
+      errors.materialAmountInfo = "Material amount info is required";
+    }
+
+    if (propertyName.trim() === "") {
+      errors.propertyName = "Property name is required";
+    }
+
+    if (address.trim() === "") {
+      errors.address = "Address is required";
+    }
+
+    if (postalcode.trim() === "") {
+      errors.postalcode = "Postal code is required";
+    }
+
+    if (name.trim() === "") {
+      errors.name = "Name is required";
+    }
+
+    if (phoneNumber.trim() === "") {
+      errors.phoneNumber = "Phone number is required";
+    } else if (Number.isNaN(Number(phoneNumber))) {
+      errors.phoneNumber = "Phone number must be a number";
+    }
+
+    if (email.trim() === "") {
+      errors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      errors.email = "Invalid email";
+    }
+
+    setFormErrors(errors);
+
+    return Object.keys(errors).length === 0;
+  };
   /**
    * Submit handle
    */
   const handleSubmit = (e:any) => {
     e.preventDefault();
+    if (validateForm()) {
+      // If validation true --> send info
+    }
   };
   /**
   * Component for reusable materials and building parts (to showcase options TEMPORARY)
@@ -162,6 +232,7 @@ const SurveyListingScreen: React.FC = () => {
               value={materialInfo}
               helperText={ strings.survey.reusables.addNewBuildingPartsDialog.descriptionHelperText }
               onChange={ e => setMaterialInfo(e.target.value) }
+              error={!!formErrors.materialInfo}
             />
             <Stack
               direction="row"
@@ -177,6 +248,7 @@ const SurveyListingScreen: React.FC = () => {
                 label="Arvio materiaalin määrästä"
                 type="number"
                 onChange={ e => setMaterialAmount(e.target.value) }
+                error={!!formErrors.materialAmount}
               />
               <TextField
                 fullWidth
@@ -227,6 +299,7 @@ const SurveyListingScreen: React.FC = () => {
                 value={ materialAmountInfo }
                 helperText={ strings.survey.reusables.addNewBuildingPartsDialog.descriptionHelperText }
                 onChange={ e => setmaterialAmountInfo(e.target.value) }
+                error={!!formErrors.materialAmountInfo}
               />
             </Stack>
             { /* Location of the material */ }
@@ -239,6 +312,7 @@ const SurveyListingScreen: React.FC = () => {
                 value={ propertyName }
                 helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
                 onChange={ e => setpropertyName(e.target.value) }
+                error={!!formErrors.propertyName}
               />
             </Stack>
             <Stack
@@ -251,9 +325,10 @@ const SurveyListingScreen: React.FC = () => {
                 color="primary"
                 name="componentName"
                 label="Katuosoite"
-                value={ adress }
+                value={ address }
                 helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
-                onChange={ e => setAdress(e.target.value) }
+                onChange={ e => setAddress(e.target.value) }
+                error={!!formErrors.address}
               />
               <TextField
                 fullWidth
@@ -279,6 +354,7 @@ const SurveyListingScreen: React.FC = () => {
                 value={ postalcode }
                 helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
                 onChange={ e => setPostalcode(e.target.value) }
+                error={!!formErrors.postalcode}
               />
               <TextField
                 fullWidth
@@ -300,6 +376,7 @@ const SurveyListingScreen: React.FC = () => {
               value={ name }
               helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
               onChange={ e => setName(e.target.value) }
+              error={!!formErrors.name}
             />
             { /* puh */ }
             <TextField
@@ -308,9 +385,10 @@ const SurveyListingScreen: React.FC = () => {
               name="componentName"
               label="Puhelinnumero"
               type="tel"
-              value={ Phonenumber }
+              value={ phoneNumber }
               helperText="040 ..."
-              onChange={ e => setPhonenumber(e.target.value) }
+              onChange={ e => setPhoneNumber(e.target.value) }
+              error={!!formErrors.phoneNumber}
             />
             { /* e-mail */ }
             <TextField
@@ -322,39 +400,40 @@ const SurveyListingScreen: React.FC = () => {
               value={ email }
               helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
               onChange={ e => setEmail(e.target.value) }
+              error={!!formErrors.email}
             />
+            <Stack
+              direction="row"
+              spacing={ 2 }
+              marginTop={ 2 }
+              marginBottom={ 2 }
+              justifyContent="center"
+            >
+              <Button
+                variant="contained"
+                onClick={() => navigate(-1)}
+              >
+                peruuta
+              </Button>
+              <Button
+                variant="contained"
+              >
+                POISTA OMA KÄYTTÖ
+              </Button>
+              <Button
+                variant="contained"
+              >
+                OMAAN KÄYTTÖÖN
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+              
+              >
+                lähetä
+              </Button>
+            </Stack>
           </form>
-          <Stack
-            direction="row"
-            spacing={ 2 }
-            marginTop={ 2 }
-            marginBottom={ 2 }
-            justifyContent="center"
-          >
-            <Button
-              variant="contained"
-              onClick={() => navigate(-1)}
-            >
-              peruuta
-            </Button>
-            <Button
-              variant="contained"
-            >
-              POISTA OMA KÄYTTÖ
-            </Button>
-            <Button
-              variant="contained"
-            >
-              OMAAN KÄYTTÖÖN
-            </Button>
-            <Button
-              type="submit"
-              variant="contained"
-              disabled
-            >
-              lähetä
-            </Button>
-          </Stack>
         </Paper>
       </Stack>
     </Container>
