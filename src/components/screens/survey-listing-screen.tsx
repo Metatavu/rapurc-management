@@ -21,6 +21,24 @@ const SurveyListingScreen: React.FC = () => {
   // const errorContext = React.useContext(ErrorContext);
   // const selectedLanguage = useAppSelector(selectLanguage);
   /**
+   * form values
+   */
+  const [materialInfo, setMaterialInfo] = React.useState("");
+  const [materialAmount, setMaterialAmount] = React.useState("");
+  const [materialAmountInfo, setmaterialAmountInfo] = React.useState("");
+  const [propertyName, setpropertyName] = React.useState("");
+  const [adress, setAdress] = React.useState("");
+  const [postalcode, setPostalcode ] = React.useState("");
+  const [name, setName] = React.useState("");
+  const [Phonenumber, setPhonenumber] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  /**
+   * Submit handle
+   */
+  const handleSubmit = (e:any) => {
+    e.preventDefault();
+  };
+  /**
   * Component for reusable materials and building parts (to showcase options TEMPORARY)
   */
   const [ newMaterial, setNewMaterial ] = React.useState<Reusable>({
@@ -102,7 +120,7 @@ const SurveyListingScreen: React.FC = () => {
           <Typography variant="h1" margin={1} textAlign="center">
             Tee ilmoitus kauppapaikkaan
           </Typography>
-          <form>
+          <form onSubmit={handleSubmit}>
             <TextField
               fullWidth
               color="primary"
@@ -141,9 +159,9 @@ const SurveyListingScreen: React.FC = () => {
               rows={ 2 }
               name="description"
               label="Materiaalin kuvaus"
-              value={newMaterial.description}
+              value={materialInfo}
               helperText={ strings.survey.reusables.addNewBuildingPartsDialog.descriptionHelperText }
-              onChange={ onNewMaterialChange }
+              onChange={ e => setMaterialInfo(e.target.value) }
             />
             <Stack
               direction="row"
@@ -155,10 +173,10 @@ const SurveyListingScreen: React.FC = () => {
                 fullWidth
                 color="primary"
                 name="amount"
-                value={ newMaterial.amount }
+                value={ materialAmount }
                 label="Arvio materiaalin määrästä"
                 type="number"
-                onChange={ onNewMaterialChange }
+                onChange={ e => setMaterialAmount(e.target.value) }
               />
               <TextField
                 fullWidth
@@ -206,9 +224,9 @@ const SurveyListingScreen: React.FC = () => {
                 rows={ 2 }
                 name="description"
                 label="Lisätieto määrästä"
-                value={ newMaterial.description }
+                value={ materialAmountInfo }
                 helperText={ strings.survey.reusables.addNewBuildingPartsDialog.descriptionHelperText }
-                onChange={ onNewMaterialChange }
+                onChange={ e => setmaterialAmountInfo(e.target.value) }
               />
             </Stack>
             { /* Location of the material */ }
@@ -218,9 +236,9 @@ const SurveyListingScreen: React.FC = () => {
                 color="primary"
                 name="componentName"
                 label="Kohteen nimi"
-                value={ newMaterial.componentName }
+                value={ propertyName }
                 helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
-                onChange={ onNewMaterialChange }
+                onChange={ e => setpropertyName(e.target.value) }
               />
             </Stack>
             <Stack
@@ -233,9 +251,9 @@ const SurveyListingScreen: React.FC = () => {
                 color="primary"
                 name="componentName"
                 label="Katuosoite"
-                value={ newMaterial.componentName }
+                value={ adress }
                 helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
-                onChange={ onNewMaterialChange }
+                onChange={ e => setAdress(e.target.value) }
               />
               <TextField
                 fullWidth
@@ -258,9 +276,9 @@ const SurveyListingScreen: React.FC = () => {
                 color="primary"
                 name="componentName"
                 label="Postinumero"
-                value={ newMaterial.componentName }
+                value={ postalcode }
                 helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
-                onChange={ onNewMaterialChange }
+                onChange={ e => setPostalcode(e.target.value) }
               />
               <TextField
                 fullWidth
@@ -279,9 +297,9 @@ const SurveyListingScreen: React.FC = () => {
               color="primary"
               name="componentName"
               label="Nimi"
-              value={ newMaterial.componentName }
+              value={ name }
               helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
-              onChange={ onNewMaterialChange }
+              onChange={ e => setName(e.target.value) }
             />
             { /* puh */ }
             <TextField
@@ -290,9 +308,9 @@ const SurveyListingScreen: React.FC = () => {
               name="componentName"
               label="Puhelinnumero"
               type="tel"
-              value={ newMaterial.unit }
+              value={ Phonenumber }
               helperText="040 ..."
-              onChange={ onNewMaterialChange }
+              onChange={ e => setPhonenumber(e.target.value) }
             />
             { /* e-mail */ }
             <TextField
@@ -301,9 +319,9 @@ const SurveyListingScreen: React.FC = () => {
               name="componentName"
               label="Sähköposti"
               type="email"
-              value={ newMaterial.componentName }
+              value={ email }
               helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
-              onChange={ onNewMaterialChange }
+              onChange={ e => setEmail(e.target.value) }
             />
           </form>
           <Stack
@@ -330,6 +348,7 @@ const SurveyListingScreen: React.FC = () => {
               OMAAN KÄYTTÖÖN
             </Button>
             <Button
+              type="submit"
               variant="contained"
               disabled
             >
