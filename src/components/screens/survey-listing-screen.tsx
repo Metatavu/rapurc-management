@@ -118,15 +118,6 @@ const SurveyListingScreen: React.FC = () => {
           >
             <TextField
               fullWidth
-              select
-              color="primary"
-              name="reusableMaterialId"
-              value="rakennusosat"
-              label="Materiaali"
-              helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartOrMaterialHelperText }
-            />
-            <TextField
-              fullWidth
               select={false}
               color="primary"
               name="reusableMaterialId"
@@ -165,7 +156,7 @@ const SurveyListingScreen: React.FC = () => {
               color="primary"
               name="amount"
               value={ newMaterial.amount }
-              label="Annettu arvo"
+              label="Materiaali määrä"
               type="tel"
               onChange={ onNewMaterialChange }
               disabled
@@ -178,22 +169,11 @@ const SurveyListingScreen: React.FC = () => {
           >
             <TextField
               fullWidth
-              select
-              name="unit"
-              color="primary"
-              value={ newMaterial.unit }
-              label={ strings.survey.reusables.dataGridColumns.unit }
-              onChange={ onNewMaterialChange }
-            >
-              { unitOptions }
-            </TextField>
-            <TextField
-              fullWidth
               select={false}
               color="primary"
               name="amount"
               value={ newMaterial.amount }
-              label="Annettu arvo"
+              label="Yksikkö"
               type="tel"
               onChange={ onNewMaterialChange }
               disabled
