@@ -1,12 +1,11 @@
-import { Button, MenuItem, Paper, Stack, TextField, Typography, Container } from "@mui/material";
-import { Reusable, Unit, Usability, Survey } from "generated/client";
+import { Button, Paper, Stack, TextField, Typography, Container } from "@mui/material";
+import { Reusable, Usability, Survey } from "generated/client";
 import strings from "localization/strings";
 import { useParams } from "react-router-dom";
 import { ErrorContext } from "components/error-handler/error-handler";
 import { useAppDispatch } from "app/hooks";
 import { fetchSelectedSurvey } from "features/surveys-slice";
 import * as React from "react";
-import LocalizationUtils from "utils/localization-utils";
 /**
  * Everything to do with language, api and routing are temporary, this is just a base to be coded on
  */
@@ -73,17 +72,6 @@ const SurveyListingScreen: React.FC = () => {
 
     setNewMaterial({ ...newMaterial, [name]: value });
   };
-
-  const unitOptions = Object.values(Unit)
-    
-    .sort((a, b) =>
-      LocalizationUtils.getLocalizedUnits(a).localeCompare(LocalizationUtils.getLocalizedUnits(b)))
-    
-    .map(unit =>
-      <MenuItem key={ unit } value={ unit }>
-        { LocalizationUtils.getLocalizedUnits(unit) }
-      </MenuItem>
-    );
 
   /**
   * Render listing UI
