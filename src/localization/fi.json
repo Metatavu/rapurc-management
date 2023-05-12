@@ -126,6 +126,17 @@
       "create": "Virhe luotaessa liitettä",
       "delete": "Virhe poistettaessa liitettä",
       "update": "Virhe päivitettäessä liitettä"
+    },
+    "listingScreen": {
+      "materialInfo": "Materiaalin tieto vaaditaan",  
+      "materialAmount": "Materiaalin määrä täytyy olla numerona", 
+      "materialAmountInfo": "Materiaalimäärän tieto vaaditaan", 
+      "propertyName": "Kiinteistön nimi vaaditaan", 
+      "address": "Osoite vaaditaan",
+      "postalcode": "Postinumero vaaditaan",
+      "name": "Nimi vaaditaan",
+      "phone": "Puhelinnumero täytyy olla numero",
+      "email": "Virheellinen sähköposti"
     }
   },
 

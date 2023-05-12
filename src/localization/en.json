@@ -133,7 +133,7 @@
       "propertyName": "Property name is required",
       "address": "Address is required",
       "postalcode": "Postal code is required",
-      "username": "Name is required",
+      "name": "Name is required",
       "phone": "Phone number must be a number",
       "email": "Invalid email"
     }
@@ -514,7 +514,7 @@
     "postalCode": "Postal code",
     "name": "Name",
     "phone": "Phone",
-    "email": "E-mail",
+    "email": "Email",
     "send": "send",
     "ownUse": "For own use",
     "deleteOwnUse": "Delete own use"

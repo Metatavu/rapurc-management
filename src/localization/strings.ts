@@ -150,7 +150,6 @@ export interface Localized extends LocalizedStringsMethods {
       update: string;
     };
     listingScreen: {
-      title: string;
       materialInfo: string;
       materialAmount: string;
       materialAmountInfo: string;
@@ -160,8 +159,9 @@ export interface Localized extends LocalizedStringsMethods {
       name: string;
       phone: string;
       email: string;
-    };
+    }
   };
+
   /**
    * Translations related to navigation
    */
@@ -543,9 +543,6 @@ export interface Localized extends LocalizedStringsMethods {
       image: string;
     };
   };
-  /**
-   *  Translations related to listing
-   */
   listingScreen: {
     title: string;
     materialInfoHelperText: string;
