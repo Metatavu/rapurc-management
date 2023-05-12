@@ -491,5 +491,20 @@
       "images": "Kuvat",
       "image": "Kuva"
     }
+  },
+  "listingScreen": {
+    "title": "Tee ilmoitus kauppapaikkaan",
+    "materialInfoHelperText": "Lisätietoa materiaalista",
+    "materialAmount": "Määrä",
+    "materialAmountInfoHelperText": "Lisätietoa määrästä",
+    "propertyName": "Purkukohteen nimi",
+    "address": "Osoite",
+    "postalCode": "Postinumero",
+    "name": "Nimi",
+    "phone": "Puhelin",
+    "email": "Sähköpostiosoite",
+    "send": "lähetä",
+    "ownUse": "Omaan käyttöön",
+    "deleteOwnUse": "poista oma käyttö"
   }
 }
