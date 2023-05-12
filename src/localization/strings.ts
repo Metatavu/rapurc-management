@@ -149,8 +149,19 @@ export interface Localized extends LocalizedStringsMethods {
       delete: string;
       update: string;
     };
+    listingScreen: {
+      title: string;
+      materialInfo: string;
+      materialAmount: string;
+      materialAmountInfo: string;
+      propertyName: string;
+      address: string;
+      postalcode: string;
+      name: string;
+      phone: string;
+      email: string;
+    };
   };
-
   /**
    * Translations related to navigation
    */
@@ -531,6 +542,24 @@ export interface Localized extends LocalizedStringsMethods {
       images: string;
       image: string;
     };
+  };
+  /**
+   *  Translations related to listing
+   */
+  listingScreen: {
+    title: string;
+    materialInfoHelperText: string;
+    materialAmount: string;
+    materialAmountInfoHelperText: string;
+    propertyName: string;
+    address: string;
+    postalCode: string;
+    name: string;
+    phone: string;
+    email: string;
+    send: string;
+    ownUse: string;
+    deleteOwnUse: string;
   };
 }
 
