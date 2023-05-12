@@ -159,7 +159,7 @@ export interface Localized extends LocalizedStringsMethods {
       name: string;
       phone: string;
       email: string;
-    }
+    };
   };
 
   /**
@@ -543,6 +543,9 @@ export interface Localized extends LocalizedStringsMethods {
       image: string;
     };
   };
+  /**
+   *  Translations related to listing
+   */
   listingScreen: {
     title: string;
     materialInfoHelperText: string;
