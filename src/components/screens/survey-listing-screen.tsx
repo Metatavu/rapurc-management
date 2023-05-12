@@ -255,18 +255,6 @@ const SurveyListingScreen: React.FC = () => {
                 disabled
               />
             </Stack>
-            <Stack spacing={ 2 } marginTop={ 2 }>
-              <TextField
-                multiline
-                rows={ 2 }
-                name="description"
-                label={strings.survey.reusables.dataGridColumns.description }
-                value={ materialAmountInfo }
-                helperText={ strings.listingScreen.materialAmountInfoHelperText }
-                onChange={ e => setmaterialAmountInfo(e.target.value) }
-                error={!!formErrors.materialAmountInfo}
-              />
-            </Stack>
             { /* Location of the material */ }
             <Stack spacing={ 2 } marginTop={ 2 }>
               <TextField
