@@ -930,14 +930,6 @@ const SummaryView: React.FC = () => {
         </Typography>
         <Button
           variant="contained"
-          color="secondary"
-          startIcon={ <Print/> }
-          onClick={ () => setPdfDialogOpen(true) }
-        >
-          { strings.survey.summary.print }
-        </Button>
-        <Button
-          variant="contained"
           color="primary"
           startIcon={ <Print/> }
           onClick={ () => selectedSurvey && DocxExportUtils.generateDocx(selectedSurvey, surveySummary) }

@@ -481,10 +481,33 @@
     "summary": {
       "title": "Yhteenveto",
       "print": "Tulosta",
-      "document": "Dokumentti",
+      "document": "Tallenna DOCX",
       "demolitionInfo": "Purkamista koskevat tiedot",
       "images": "Kuvat",
       "image": "Kuva"
+    }
+  },
+  "docx": {
+    "metadata": {
+      "title": "Purkukartoitus",
+      "modified": "Muokattu",
+      "ready": "Valmis",
+      "creator": "Tekijä"
+    },
+    "page1": {
+      "title": "Purkamista koskevat tiedot"
+    },
+    "page2": {
+      "title": "Purkukohteen tiedot"
+    },
+    "page3": {
+      "title": "Uudelleenkäyttökelpoiset purkutuotteet"
+    },
+    "page4": {
+      "title": "Purkujätemateriaalit"
+    },
+    "page5": {
+      "title": "Haitta-aineita sisältävät materiaalit"
     }
   }
 }

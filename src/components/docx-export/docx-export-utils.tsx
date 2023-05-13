@@ -35,13 +35,14 @@ namespace DocxExportUtils {
    * 
    * @param doc document
    */
-  const clientDocDownload = async (doc: Document) => {
+  const clientDocDownload = async (doc: Document, survey: SurveySummary) => {
     const docBlob = await Packer.toBlob(doc);
     const csvURL = window.URL.createObjectURL(docBlob);
     const tempLink = document.createElement("a");
+    const surveyName = survey.building?.propertyName;
 
     tempLink.href = csvURL;
-    tempLink.setAttribute("download", "filename.docx");
+    tempLink.setAttribute("download", `${surveyName ?? "unnamed"}.docx`);
     tempLink.click();
   };
 
@@ -56,7 +57,7 @@ namespace DocxExportUtils {
 
     await unpackPageFunctions(doc, survey, surveySummary);
 
-    clientDocDownload(doc);
+    clientDocDownload(doc, surveySummary);
   };
 }
 

@@ -527,6 +527,30 @@ export interface Localized extends LocalizedStringsMethods {
       image: string;
     };
   };
+
+  docx: {
+    metadata: {
+      title: string;
+      modified: string;
+      ready: string;
+      creator: string;
+    };
+    page1: {
+      title: string;
+    };
+    page2: {
+      title: string;
+    };
+    page3: {
+      title: string;
+    };
+    page4: {
+      title: string;
+    };
+    page5: {
+      title: string;
+    };
+  }
 }
 
 /**

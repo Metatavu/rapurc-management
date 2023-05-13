@@ -2,6 +2,7 @@ import { Paragraph, TextRun, Header, Footer } from "docx";
 import { Survey } from "generated/client";
 import { SurveySummary } from "types";
 import pageNumber from "./page-number";
+import strings from "localization/strings";
 
 namespace PageLayout {
   // Break text run is used to create line break
@@ -19,7 +20,7 @@ namespace PageLayout {
         new Paragraph({
           children: [
             new TextRun({
-              text: `Author: ${surveySummary.ownerInformation?.ownerName ?? ""}`
+              text: `${strings.docx.metadata.title}`
             }),
             breakText,
             new TextRun({

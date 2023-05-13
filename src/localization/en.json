@@ -487,5 +487,28 @@
       "images": "Images",
       "image": "Image"
     }
+  },
+  "docx": {
+    "metadata": {
+      "title": "Demolition survey",
+      "modified": "Last modified",
+      "ready": "Completion date",
+      "creator": "Creator"
+    },
+    "page1": {
+      "title": "Demolition information"
+    },
+    "page2": {
+      "title": "Building information"
+    },
+    "page3": {
+      "title": "Reusable demolition products"
+    },
+    "page4": {
+      "title": "Waste material"
+    },
+    "page5": {
+      "title": "Hazardous material"
+    }
   }
 }

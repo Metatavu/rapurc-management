@@ -2,6 +2,7 @@ import { Paragraph, TextRun, Table, TableRow, TableCell, Document, WidthType } f
 import { Survey } from "generated/client";
 import { SurveySummary } from "types";
 import PageLayout from "../helpers/page-layout";
+import strings from "localization/strings";
 
 /**
  * Demolition Information Page
@@ -18,7 +19,7 @@ const demolitionInformationPage = async (doc: Document, survey: Survey, surveySu
   pageChildren.push(
     new Paragraph({
       children: [
-        new TextRun("Demolition Information Page")
+        new TextRun(strings.docx.metadata.title)
       ],
       // We can use our custom styles like this:
       style: "headingPara"
