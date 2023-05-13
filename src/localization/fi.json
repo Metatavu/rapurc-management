@@ -174,6 +174,7 @@
   "surveyScreen": {
     "title": "Kartoitus",
     "status": "Tila",
+    "lastModified": "Viimeksi muokattu",
     "navigation": {
       "owner": "Omistajan tiedot",
       "building": "Rakennuksen tiedot",
@@ -337,13 +338,15 @@
       "surname": "Sukunimi",
       "occupation": "Ammatti",
       "phone": "Puhelinnumero",
-      "email": "Sähköpostiosoite"
+      "email": "Sähköpostiosoite",
+      "sendLink": "Lähetä Linkki"
     },
     "info": {
       "title": "Kartoituksen tiedot",
       "demolitionInfo": "Purkutiedot",
       "surveyors": "Kartoittajat",
       "demolitionScope": "Purkamisen laajuus",
+      "additionalInformation": "Lisätiedot",
       "dateUnknown": "Ajankohta ei tiedossa",
       "startDate": "Aloitusajankohta",
       "endDate": "Käyttö loppuu",
@@ -377,6 +380,8 @@
       "dropFile": "Pudota kuvat tähän tai valitse alla olevasta painikkeesta.",
       "viewImage": "Näytä kuvat",
       "moreImage": "Lisää kuvia",
+      "createListing": "Luo ilmoitus",
+      "createdListing": "Ilmoitus luotu",
       "addImage": "Lisää kuva",
       "deleteImage": "Poista kuva",
       "preview": "Esikatselu",
@@ -407,7 +412,8 @@
         "description": "Lisätieto",
         "unit": "Yksikkö",
         "editDescription": "Muokkaa lisätietoa",
-        "images": "Materiaalin kuvat"
+        "images": "Materiaalin kuvat",
+        "listing": "Myynti-ilmoitus"
       },
       "usability": {
         "excellent": "Erinomainen",

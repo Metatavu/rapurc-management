@@ -5,6 +5,7 @@ import SurveysScreen from "components/screens/surveys-screen";
 import NewSurveyScreen from "./screens/new-survey-screen";
 import AdminScreen from "./screens/admin-screen";
 import SurveyScreen from "./screens/survey-screen";
+import ListingScreen from "./screens/survey-listing-screen";
 import ErrorHandler from "./error-handler/error-handler";
 import VisibleWithRole from "./containers/visible-with-role";
 import moment from "moment";
@@ -44,6 +45,14 @@ const App: React.FC = () => {
               element={
                 <VisibleWithRole userRole="admin">
                   <AdminScreen/>
+                </VisibleWithRole>
+              }
+            />
+            <Route
+              path="/listing/:surveyId/*"
+              element={
+                <VisibleWithRole userRole="admin">
+                  <ListingScreen/>
                 </VisibleWithRole>
               }
             />

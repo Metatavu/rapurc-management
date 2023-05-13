@@ -379,6 +379,7 @@ const SurveysScreen: React.FC = () => {
       .filter(surveyWithInfo => filter === SurveyShow.ShowAll || (SurveyShow.ShowMine && surveyWithInfo.creatorId === keycloak?.profile?.id))
       .map(surveyWithInfo =>
         <SurveyItem
+          key={ surveyWithInfo.id }
           title={ surveyWithInfo.ownerName || "" }
           subtitle={ surveyWithInfo.streetAddress || "" }
         >

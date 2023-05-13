@@ -208,6 +208,7 @@ export interface Localized extends LocalizedStringsMethods {
   surveyScreen: {
     title: string;
     status: string;
+    lastModified: string;
     navigation: {
       owner: string;
       building: string;
@@ -378,12 +379,14 @@ export interface Localized extends LocalizedStringsMethods {
       occupation: string;
       phone: string;
       email: string;
+      sendLink: string;
     };
     info: {
       title: string;
       demolitionInfo: string;
       surveyors: string;
       demolitionScope: string;
+      additionalInformation: string;
       dateUnknown: string;
       startDate: string;
       endDate: string;
@@ -417,6 +420,8 @@ export interface Localized extends LocalizedStringsMethods {
       dropFile: string;
       viewImage: string;
       moreImage: string;
+      createListing: string;
+      createdListing: string;
       addImage: string;
       deleteImage: string;
       preview: string;
@@ -448,6 +453,7 @@ export interface Localized extends LocalizedStringsMethods {
         description: string;
         unit: string;
         editDescription: string;
+        listing: string;
       };
       usability: {
         excellent: string;

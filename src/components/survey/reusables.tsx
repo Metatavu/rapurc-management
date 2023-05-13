@@ -562,7 +562,7 @@ const Reusables: React.FC<Props> = ({ surveyId }) => {
       }
     </Stack>
   );
-
+  
   /**
    * Renders add survey reusable dialog
    */
@@ -1159,6 +1159,24 @@ const Reusables: React.FC<Props> = ({ surveyId }) => {
               onClick={ () => onImageDialogOpen(row) }
             >
               { row.images?.length ? strings.survey.reusables.viewImage : strings.survey.reusables.moreImage }
+            </SurveyButton>
+          );
+        }
+      },
+      {
+        field: "addListing",
+        headerName: strings.survey.reusables.dataGridColumns.listing,
+        width: 180,
+        renderCell: (params: GridRenderCellParams) => {
+          const { row } = params;
+          return (
+            <SurveyButton
+              fullWidth
+              variant="contained"
+              color="primary"
+
+            >
+              { row.listing?.length ? strings.survey.reusables.createdListing : strings.survey.reusables.createListing }
             </SurveyButton>
           );
         }

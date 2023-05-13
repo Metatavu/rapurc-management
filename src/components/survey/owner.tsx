@@ -1,4 +1,4 @@
-import { Stack, TextField, Typography, useMediaQuery } from "@mui/material";
+import { Stack, TextField, Typography, useMediaQuery, Button } from "@mui/material";
 import Api from "api";
 import { useAppSelector } from "app/hooks";
 import { ErrorContext } from "components/error-handler/error-handler";
@@ -197,14 +197,30 @@ const Owner: React.FC<Props> = ({ surveyId }) => {
             onOwnerInfoContactPersonPropChange
           )
         }
-        {
-          renderWithDebounceTextField(
-            "email",
-            strings.survey.owner.email,
-            ownerInformation?.contactPerson?.email || "",
-            onOwnerInfoContactPersonPropChange
-          )
-        }
+        <Stack
+          direction="row"
+          alignItems="center"
+          sx={{
+            display: "flex", justifyContent: "space-between", gap: 1
+          }}
+        >
+          {
+            renderWithDebounceTextField(
+              "email",
+              strings.survey.owner.email,
+              ownerInformation?.contactPerson?.email || "",
+              onOwnerInfoContactPersonPropChange
+            )
+          }
+          {/* added a non-functional button, feature added later */}
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ width: "200px", height: "50px" }}
+          >
+            {strings.survey.owner.sendLink}
+          </Button>
+        </Stack>
       </Stack>
     </Stack>
   );
