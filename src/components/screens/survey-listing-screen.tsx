@@ -57,7 +57,6 @@ const SurveyListingScreen: React.FC = () => {
    */
   const [materialInfo, setMaterialInfo] = React.useState("");
   const [materialAmount, setMaterialAmount] = React.useState("");
-  const [materialAmountInfo, setmaterialAmountInfo] = React.useState("");
   const [propertyName, setpropertyName] = React.useState("");
   const [address, setAddress] = React.useState("");
   const [postalcode, setPostalcode ] = React.useState("");
@@ -79,10 +78,6 @@ const SurveyListingScreen: React.FC = () => {
       errors.materialAmount = "Material amount is required";
     } else if (Number.isNaN(Number(materialAmount))) {
       errors.materialAmount = strings.errorHandling.listingScreen.materialAmount;
-    }
-
-    if (materialAmountInfo.trim() === "") {
-      errors.materialAmountInfo = strings.errorHandling.listingScreen.materialAmountInfo;
     }
 
     if (propertyName.trim() === "") {
