@@ -125,6 +125,17 @@
       "create": "Error while creating attachment",
       "delete": "Error while deleting attachment",
       "update": "Error while updating attachment"
+    },
+    "listingScreen": {
+      "materialInfo": "Material information is required",
+      "materialAmount": "Material amount must be a number",
+      "materialAmountInfo": "Material amount info is required",
+      "propertyName": "Property name is required",
+      "address": "Address is required",
+      "postalcode": "Postal code is required",
+      "name": "Name is required",
+      "phone": "Phone number must be a number",
+      "email": "Invalid email"
     }
   },
 
@@ -492,5 +503,20 @@
       "images": "Images",
       "image": "Image"
     }
+  },
+  "listingScreen": {
+    "title": "Make a listing",
+    "materialInfoHelperText": "Additional information",
+    "materialAmount": "Material amount",
+    "materialAmountInfoHelperText": "More information on material amount",
+    "propertyName": "Property name",
+    "address": "Address",
+    "postalCode": "Postal code",
+    "name": "Name",
+    "phone": "Phone",
+    "email": "Email",
+    "send": "send",
+    "ownUse": "For own use",
+    "deleteOwnUse": "Delete own use"
   }
 }
