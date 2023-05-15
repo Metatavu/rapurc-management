@@ -1,12 +1,11 @@
-import { Button, MenuItem, Paper, Stack, TextField, Typography, Container } from "@mui/material";
-import { Reusable, Unit, Usability, Survey } from "generated/client";
+import { Button, Paper, Stack, TextField, Typography, Container } from "@mui/material";
+import { Reusable, Usability, Survey } from "generated/client";
 import strings from "localization/strings";
 import { useParams } from "react-router-dom";
 import { ErrorContext } from "components/error-handler/error-handler";
 import { useAppDispatch } from "app/hooks";
 import { fetchSelectedSurvey } from "features/surveys-slice";
 import * as React from "react";
-import LocalizationUtils from "utils/localization-utils";
 /**
  * Everything to do with language, api and routing are temporary, this is just a base to be coded on
  */
@@ -74,17 +73,6 @@ const SurveyListingScreen: React.FC = () => {
     setNewMaterial({ ...newMaterial, [name]: value });
   };
 
-  const unitOptions = Object.values(Unit)
-    
-    .sort((a, b) =>
-      LocalizationUtils.getLocalizedUnits(a).localeCompare(LocalizationUtils.getLocalizedUnits(b)))
-    
-    .map(unit =>
-      <MenuItem key={ unit } value={ unit }>
-        { LocalizationUtils.getLocalizedUnits(unit) }
-      </MenuItem>
-    );
-
   /**
   * Render listing UI
   */
@@ -108,6 +96,7 @@ const SurveyListingScreen: React.FC = () => {
             name="componentName"
             label="Ilmoituksen otsikko"
             value="ovi"
+            disabled
           />
         
           <Stack
@@ -117,20 +106,12 @@ const SurveyListingScreen: React.FC = () => {
           >
             <TextField
               fullWidth
-              select
-              color="primary"
-              name="reusableMaterialId"
-              value="rakennusosat"
-              label="Materiaali"
-              helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartOrMaterialHelperText }
-            />
-            <TextField
-              fullWidth
               select={false}
               color="primary"
               name="reusableMaterialId"
               value="valittu rakennusosa"
               label="Materiaali"
+              disabled
             />
           </Stack>
           <TextField
@@ -163,9 +144,10 @@ const SurveyListingScreen: React.FC = () => {
               color="primary"
               name="amount"
               value={ newMaterial.amount }
-              label="Annettu arvo"
-              type="number"
+              label="Materiaali määrä"
+              type="tel"
               onChange={ onNewMaterialChange }
+              disabled
             />
           </Stack>
           <Stack
@@ -175,24 +157,14 @@ const SurveyListingScreen: React.FC = () => {
           >
             <TextField
               fullWidth
-              select
-              name="unit"
-              color="primary"
-              value={ newMaterial.unit }
-              label={ strings.survey.reusables.dataGridColumns.unit }
-              onChange={ onNewMaterialChange }
-            >
-              { unitOptions }
-            </TextField>
-            <TextField
-              fullWidth
               select={false}
               color="primary"
               name="amount"
               value={ newMaterial.amount }
-              label="Annettu arvo"
-              type="number"
+              label="Yksikkö"
+              type="tel"
               onChange={ onNewMaterialChange }
+              disabled
             />
           </Stack>
           <Stack spacing={ 2 } marginTop={ 2 }>
@@ -237,9 +209,10 @@ const SurveyListingScreen: React.FC = () => {
               color="primary"
               name="componentName"
               label="Annettu arvo"
+              type="text"
               value={ newMaterial.componentName }
-              helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
               onChange={ onNewMaterialChange }
+              disabled
             />
           </Stack>
           <Stack
@@ -261,9 +234,10 @@ const SurveyListingScreen: React.FC = () => {
               color="primary"
               name="componentName"
               label="Annettu arvo"
+              type="text"
               value={ newMaterial.componentName }
-              helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
               onChange={ onNewMaterialChange }
+              disabled
             />
           </Stack>
           {/* Yhteystiedot */}
@@ -282,6 +256,7 @@ const SurveyListingScreen: React.FC = () => {
             color="primary"
             name="componentName"
             label="Puhelinnumero"
+            type="tel"
             value={ newMaterial.unit }
             helperText="040 ..."
             onChange={ onNewMaterialChange }
@@ -292,6 +267,7 @@ const SurveyListingScreen: React.FC = () => {
             color="primary"
             name="componentName"
             label="Sähköposti"
+            type="email"
             value={ newMaterial.componentName }
             helperText={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartHelperText }
             onChange={ onNewMaterialChange }
