@@ -1176,7 +1176,7 @@ const Reusables: React.FC<Props> = ({ surveyId }) => {
               fullWidth
               variant="contained"
               color="primary"
-              onClick={() => navigate(`/listing/${surveyId}`)}
+              onClick={() => navigate(`/listing/${params.id}`)}
             >
               { row.listing?.length ? strings.survey.reusables.createdListing : strings.survey.reusables.createListing }
             </SurveyButton>
