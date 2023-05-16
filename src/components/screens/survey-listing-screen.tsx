@@ -356,7 +356,7 @@ const SurveyListingScreen: React.FC = () => {
             >
               <Button
                 variant="contained"
-                onClick={() => navigate(-1)}
+                onClick={() => navigate(`/surveys/${surveyId}/reusables`)}
               >
                 { strings.generic.cancel }
               </Button>
