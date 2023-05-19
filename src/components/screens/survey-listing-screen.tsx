@@ -1,5 +1,5 @@
 import { Button, Paper, Stack, TextField, Typography, Container } from "@mui/material";
-import { Reusable, Usability, Survey } from "generated/client";
+import { Reusable, Usability, Survey, ReusableMaterialApi, BuildingsApi } from "generated/client";
 import { useParams, useNavigate } from "react-router-dom";
 import { ErrorContext } from "components/error-handler/error-handler";
 import { useAppDispatch, useAppSelector } from "app/hooks";
@@ -146,10 +146,12 @@ const SurveyListingScreen: React.FC = () => {
     }
   };
   /**
-   * Get the row materialId
+   * Get needed fetch for the form, material row data, Building property name
    */
   const { materialId } = useParams<"materialId">();
   const [ material, setMaterial ] = React.useState<Reusable | undefined>();
+  const [reusableMaterialId, setReusableMaterialId] = React.useState<ReusableMaterialApi | any>();
+  const [buildingPropertyName, setBuildingPropertyName] = React.useState<BuildingsApi | undefined>();
   /**
    * Fetches reusable materials by materialID
    */
@@ -166,10 +168,27 @@ const SurveyListingScreen: React.FC = () => {
     }
   };
   /**
+   * Fetch material name by materialreusableId (work in progress)
+   */
+  const fetchReusableMaterialId = async () => {
+    if (!keycloak?.token || !materialId || !surveyId) {
+      return;
+    }
+    try {
+      if (material?.reusableMaterialId) {
+        const reusableMaterialIdna = await Api.getReusableMaterialApi(keycloak.token).findReusableMaterial({ reusableMaterialId: material.reusableMaterialId });
+        setReusableMaterialId(reusableMaterialIdna);
+      }
+    } catch (error) {
+      errorContext.setError(strings.errorHandling.materials.list, error);
+    }
+  };
+  /**
    * Effect for fetching survey / materials of selected row
    */
   React.useEffect(() => { fetchSurvey(); }, [ surveyId ]);
   React.useEffect(() => { fetchReusableMaterial(); }, [ materialId ]);
+  React.useEffect(() => { fetchReusableMaterialId(); }, [ materialId ]);
 
   if (!survey) {
     return null;
@@ -201,7 +220,7 @@ const SurveyListingScreen: React.FC = () => {
               color="primary"
               name="componentName"
               label="Ilmoituksen otsikko"
-              value="GET"
+              value={material.componentName}
               disabled
             />
             <Stack
@@ -214,7 +233,7 @@ const SurveyListingScreen: React.FC = () => {
                 select={false}
                 color="primary"
                 name="reusableMaterialId"
-                value="GET"
+                value={material.reusableMaterialId}
                 label={strings.survey.reusables.addNewBuildingPartsDialog.buildingPartOrMaterial}
                 disabled
               />
@@ -224,7 +243,7 @@ const SurveyListingScreen: React.FC = () => {
               rows={ 2 }
               name="description"
               label={strings.survey.reusables.dataGridColumns.description }
-              value={materialInfo}
+              value={material.description}
               helperText={ strings.listingScreen.materialInfoHelperText }
               onChange={ e => setMaterialInfo(e.target.value) }
               error={!!formErrors.materialInfo}
@@ -251,7 +270,7 @@ const SurveyListingScreen: React.FC = () => {
                 color="primary"
                 name="amount"
                 value={ newMaterial.amount }
-                label="GET"
+                label={material.amount}
                 type="tel"
                 onChange={ onNewMaterialChange }
                 disabled
@@ -268,7 +287,7 @@ const SurveyListingScreen: React.FC = () => {
                 color="primary"
                 name="amount"
                 value={ newMaterial.amount }
-                label="GET"
+                label={material.unit}
                 onChange={ onNewMaterialChange }
                 disabled
               />
