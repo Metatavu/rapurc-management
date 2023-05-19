@@ -32,30 +32,20 @@ const reusableMaterialsPage = async (doc: Document, survey: Survey, surveySummar
 
   pageChildren.push(dividerPar);
 
-  // const reusableMaterialsTableRows: TableRow[] = [];
   const { reusables, reusableMaterials } = surveySummary;
-  // const images = []:
 
-  // reusables.map(reusable => {
-  //   reusable.images
-  // })
+  // Initialize reusable materials image attachment collection
+  const imageAttachmentCollection = await ImageUtils.getSurveySummaryReusableAttachmentsCollection(doc, reusables);
 
-  // const pictureTest = await ImageUtils.getSurveySummaryReusableImageAttachment(doc, reusables[0].images![0]);
-
-  reusables.forEach(async reusable => {
+  reusables.forEach((reusable, index) => {
     const localReusableMaterialsTableRows: TableRow[] = [];
-    // const images: Promise<PictureRun | undefined>[] = [];
+    // Get reusable specific images
+    const reusableImages = imageAttachmentCollection[index];
+
     const materialObject = reusableMaterials.find(reusableMaterial => reusableMaterial.id === reusable.reusableMaterialId);
     const materialName = materialObject && LocalizationUtils.getLocalizedName(materialObject.localizedNames, localization);
     const materialUsability = LocalizationUtils.getLocalizedUsability(reusable.usability);
     const materialAmount = `${reusable.amount} ${reusable.unit ? LocalizationUtils.getLocalizedUnits(reusable.unit) : ""}`;
-
-    // if (reusable.images) {
-    //   reusable.images.forEach(async image => {
-    //     const reusableImage = ImageUtils.getSurveySummaryReusableImageAttachment(doc, image);
-    //     reusableImage && images.push(reusableImage);
-    //   });
-    // }
 
     const dividerTableRow = new TableRow({
       children: [
@@ -212,50 +202,17 @@ const reusableMaterialsPage = async (doc: Document, survey: Survey, surveySummar
       ]
     });
 
-    const image = await ImageUtils.getSurveySummaryReusableImageAttachment(doc, reusables[0].images![0]);
-
     localReusableMaterialsTableRows.push(reusableMaterialHeaderRow);
     localReusableMaterialsTableRows.push(dividerTableRow);
     localReusableMaterialsTableRows.push(reusableMaterialsRow);
     localReusableMaterialsTableRows.push(reusableMaterialAmountRow);
     localReusableMaterialsTableRows.push(dividerTableRow);
     localReusableMaterialsTableRows.push(reusableMaterialDescriptionRow);
-    localReusableMaterialsTableRows.push(
-      new TableRow({
-        children: [
-          new TableCell({
-            children: [
-              new Paragraph({
-                children: [
-                  image!
-                ]
-              })
-            ],
-            borders: DocumentTableStyles.noBorders
-          }),
-          new TableCell({
-            children: [
-              new Paragraph({
-                text: "Test"
-              })
-            ],
-            columnSpan: 3,
-            borders: DocumentTableStyles.noBorders
-          })
-        ]
-      })
-    );
-
-    // localReusableMaterialsTableRows.push(reusableMaterialImageRow);
-    // localReusableMaterialsTableRows.push(dividerTableRow);
 
     pageChildren.push(
       new Table({
         rows: [
-          reusableMaterialHeaderRow,
-          reusableMaterialsRow,
-          reusableMaterialAmountRow,
-          reusableMaterialDescriptionRow
+          ...localReusableMaterialsTableRows
         ],
         width: {
           size: 100,
@@ -266,30 +223,11 @@ const reusableMaterialsPage = async (doc: Document, survey: Survey, surveySummar
 
     pageChildren.push(dividerPar);
 
-    // const image = await ImageUtils.getSurveySummaryReusableImageAttachment(doc, reusables[0].images![0]);
-    // if (image) {
-    //   console.log("Images are ", image);
-    //   pageChildren.push(
-    //     new Paragraph({
-    //       children: [
-    //         image
-    //       ]
-    //     })
-    //   );
-    // }
-
-    // if (reusable.images && reusable.images.length) {
-    // const images = await ImageUtils.getSurveySummaryReusableImageAttachments(doc, reusable.images);
-    // const images = await ImageUtils.getSurveySummaryReusableImageAttachments(doc, reusables[0].images!);
-    // console.log("Images are ", images);
-    // pageChildren.push(
-    //   new Paragraph({
-    //     children: [
-    //       ...images
-    //     ]
-    //   })
-    // );
-    // }
+    pageChildren.push(
+      new Paragraph({
+        children: reusableImages
+      })
+    );
   });
 
   // Here we push our table to the page children

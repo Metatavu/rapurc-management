@@ -1,6 +1,5 @@
 import { Document, Media, PictureRun } from "docx";
-import { Attachment } from "generated/client";
-// import Jimp from "jimp";
+import { Attachment, Reusable } from "generated/client";
 
 const allowedImageTypes = ["image/gif", "image/jpeg", "image/png"];
 
@@ -70,16 +69,51 @@ namespace ImageUtils {
   };
 
   /**
-   * Get image attachments from survey summary
+   * Get Reusable objects image attachments from survey summary
    * 
    * @param doc docx document
    * @param attachments survey summary attachments
    */
-  export const getSurveySummaryReusableImageAttachment = async (doc: Document, image: string) => {
-    const blobImage = convertBase64ImageToBlob(image);
-    const pictureRunImage = await getReusableImage(doc, blobImage);
+  const getSurveySummaryReusableImageAttachments = async (doc: Document, images: string[]) => {
+    let pictures: PictureRun[] = [];
+    const imageAttachments: Promise<PictureRun | undefined>[] = [];
 
-    return pictureRunImage;
+    images.forEach(image => {
+      const blobImage = convertBase64ImageToBlob(image);
+      const pictureRunImage = getReusableImage(doc, blobImage);
+
+      imageAttachments.push(pictureRunImage);
+    });
+
+    const imageAttachmentsUnfiltered = await Promise.all(imageAttachments);
+
+    pictures = imageAttachmentsUnfiltered.filter(image => image !== undefined) as PictureRun[];
+
+    return pictures;
+  };
+
+  /**
+   * Get attachments collection
+   * 
+   * @param doc docx document
+   * @param attachments survey summary attachments
+   * @returns 
+   */
+  export const getSurveySummaryReusableAttachmentsCollection = async (doc: Document, reusables: Reusable[]) => {
+    const attachmentsCollection: Promise<PictureRun[]>[] = [];
+
+    reusables.forEach(reusable => {
+      if (reusable.images) {
+        const images = getSurveySummaryReusableImageAttachments(doc, reusable.images);
+        attachmentsCollection.push(images);
+      } else {
+        attachmentsCollection.push(Promise.resolve([]));
+      }
+    });
+
+    const attachmentsCollectionUnfiltered = await Promise.all(attachmentsCollection);
+
+    return attachmentsCollectionUnfiltered;
   };
 
   /**
