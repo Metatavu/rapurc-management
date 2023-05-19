@@ -2,10 +2,12 @@ import { Button, Paper, Stack, TextField, Typography, Container } from "@mui/mat
 import { Reusable, Usability, Survey } from "generated/client";
 import { useParams, useNavigate } from "react-router-dom";
 import { ErrorContext } from "components/error-handler/error-handler";
-import { useAppDispatch } from "app/hooks";
+import { useAppDispatch, useAppSelector } from "app/hooks";
 import { fetchSelectedSurvey } from "features/surveys-slice";
 import * as React from "react";
 import strings from "localization/strings";
+import Api from "api";
+import { selectKeycloak } from "features/auth-slice";
 /**
  * interfaces
  */
@@ -30,10 +32,10 @@ interface Props {
 }
 */
 const SurveyListingScreen: React.FC = () => {
-  // const keycloak = useAppSelector(selectKeycloak);
-  // const errorContext = React.useContext(ErrorContext);
+  const keycloak = useAppSelector(selectKeycloak);
+  const errorContext = React.useContext(ErrorContext);
   // const selectedLanguage = useAppSelector(selectLanguage);
-/**
+  /**
   * Component for reusable materials and building parts (to showcase options TEMPORARY)
   */
   const [ newMaterial, setNewMaterial ] = React.useState<Reusable>({
@@ -125,11 +127,9 @@ const SurveyListingScreen: React.FC = () => {
    * Get the SurveyId
    */
   const dispatch = useAppDispatch();
-  const errorContext = React.useContext(ErrorContext);
   const { surveyId } = useParams<"surveyId">();
   const navigate = useNavigate();
   const [ survey, setSurvey ] = React.useState<Survey | undefined>();
-
   /**
    * Fetches survey based on URL survey ID
    */
@@ -145,13 +145,36 @@ const SurveyListingScreen: React.FC = () => {
       errorContext.setError(strings.errorHandling.surveys.find, error);
     }
   };
-
   /**
-   * Effect for fetching surveys. Triggered when survey ID is changed
+   * Get the row materialId
+   */
+  const { materialId } = useParams<"materialId">();
+  const [ material, setMaterial ] = React.useState<Reusable | undefined>();
+  /**
+   * Fetches reusable materials by materialID
+   */
+  const fetchReusableMaterial = async () => {
+    if (!keycloak?.token || !materialId || !surveyId) {
+      return;
+    }
+
+    try {
+      const selectedReusableMaterial = await Api.getSurveyReusablesApi(keycloak.token).findSurveyReusable({ surveyId: surveyId, reusableId: materialId });
+      setMaterial(selectedReusableMaterial);
+    } catch (error) {
+      errorContext.setError(strings.errorHandling.materials.list, error);
+    }
+  };
+  /**
+   * Effect for fetching survey / materials of selected row
    */
   React.useEffect(() => { fetchSurvey(); }, [ surveyId ]);
+  React.useEffect(() => { fetchReusableMaterial(); }, [ materialId ]);
 
   if (!survey) {
+    return null;
+  }
+  if (!material) {
     return null;
   }
 
