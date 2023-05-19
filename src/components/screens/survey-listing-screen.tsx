@@ -1,5 +1,5 @@
 import { Button, Paper, Stack, TextField, Typography, Container } from "@mui/material";
-import { Reusable, Usability, Survey, ReusableMaterialApi, BuildingsApi } from "generated/client";
+import { Reusable, Usability, Survey, ReusableMaterialApi, Building } from "generated/client";
 import { useParams, useNavigate } from "react-router-dom";
 import { ErrorContext } from "components/error-handler/error-handler";
 import { useAppDispatch, useAppSelector } from "app/hooks";
@@ -151,7 +151,7 @@ const SurveyListingScreen: React.FC = () => {
   const { materialId } = useParams<"materialId">();
   const [ material, setMaterial ] = React.useState<Reusable | undefined>();
   const [reusableMaterialId, setReusableMaterialId] = React.useState<ReusableMaterialApi | any>();
-  const [buildingPropertyName, setBuildingPropertyName] = React.useState<BuildingsApi | undefined>();
+  const [ building, setBuilding ] = React.useState<Building>();
   /**
    * Fetches reusable materials by materialID
    */
@@ -184,11 +184,34 @@ const SurveyListingScreen: React.FC = () => {
     }
   };
   /**
+  * Fetch Building property name
+  */
+  const fetchBuilding = async () => {
+    if (!keycloak?.token || !surveyId) {
+      return;
+    }
+
+    try {
+      const fetchedBuildings = await Api.getBuildingsApi(keycloak.token).listBuildings({
+        surveyId: surveyId
+      });
+
+      if (fetchedBuildings.length !== 1) {
+        return;
+      }
+
+      setBuilding(fetchedBuildings[0]);
+    } catch (error) {
+      errorContext.setError(strings.errorHandling.buildings.list, error);
+    }
+  };
+  /**
    * Effect for fetching survey / materials of selected row
    */
   React.useEffect(() => { fetchSurvey(); }, [ surveyId ]);
   React.useEffect(() => { fetchReusableMaterial(); }, [ materialId ]);
   React.useEffect(() => { fetchReusableMaterialId(); }, [ materialId ]);
+  React.useEffect(() => { fetchBuilding(); }, []);
 
   if (!survey) {
     return null;
@@ -233,7 +256,7 @@ const SurveyListingScreen: React.FC = () => {
                 select={false}
                 color="primary"
                 name="reusableMaterialId"
-                value={material.reusableMaterialId}
+                value={reusableMaterialId}
                 label={strings.survey.reusables.addNewBuildingPartsDialog.buildingPartOrMaterial}
                 disabled
               />
@@ -298,7 +321,7 @@ const SurveyListingScreen: React.FC = () => {
                 fullWidth
                 color="primary"
                 name="componentName"
-                label="GET"
+                label={building?.propertyName || ""}
                 value={ propertyName }
                 helperText={ strings.listingScreen.propertyName }
                 onChange={ e => setpropertyName(e.target.value) }
@@ -324,7 +347,7 @@ const SurveyListingScreen: React.FC = () => {
                 fullWidth
                 color="primary"
                 name="componentName"
-                label="GET"
+                label={ building?.address?.streetAddress }
                 type="text"
                 value={ newMaterial.componentName }
                 onChange={ onNewMaterialChange }
@@ -349,7 +372,7 @@ const SurveyListingScreen: React.FC = () => {
                 fullWidth
                 color="primary"
                 name="componentName"
-                label="GET"
+                label={ building?.address?.postCode }
                 type="text"
                 value={ newMaterial.componentName }
                 onChange={ onNewMaterialChange }
