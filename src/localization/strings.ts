@@ -546,6 +546,9 @@ export interface Localized extends LocalizedStringsMethods {
     };
     page2: {
       title: string;
+      ownerContactPerson: string;
+      ownerAndAddress: string;
+      buildingInfo: string;
     };
     page3: {
       title: string;

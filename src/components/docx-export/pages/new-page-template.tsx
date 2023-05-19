@@ -1,6 +1,5 @@
 import { Paragraph, TextRun, Document } from "docx";
 import { Survey } from "generated/client";
-import { SurveySummary } from "types";
 import PageLayout from "../helpers/page-layout";
 
 /**
@@ -8,7 +7,7 @@ import PageLayout from "../helpers/page-layout";
  * 
  * @returns array of docx elements
  */
-const emptyPageTemplate = async (doc: Document, survey: Survey, surveySummary: SurveySummary) => {
+const emptyPageTemplate = async (doc: Document, survey: Survey) => {
   const pageChildren = [];
 
   pageChildren.push(
@@ -23,7 +22,7 @@ const emptyPageTemplate = async (doc: Document, survey: Survey, surveySummary: S
   doc.addSection({
     properties: {},
     headers: {
-      default: PageLayout.getHeader(survey, surveySummary)
+      default: PageLayout.getHeader(survey)
     },
     footers: {
       default: PageLayout.getFooter()

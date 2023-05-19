@@ -504,7 +504,10 @@
       "title": "Purkamista koskevat tiedot"
     },
     "page2": {
-      "title": "Purkukohteen tiedot"
+      "title": "Purkukohteen tiedot",
+      "ownerContactPerson": "Omistajan yhteyshenkilö:",
+      "ownerAndAddress": "Rakennuksen omistaja ja osoite:",
+      "buildingInfo": "Purettavan rakennuksen tiedot:"
     },
     "page3": {
       "title": "Uudelleenkäyttökelpoiset purkutuotteet"

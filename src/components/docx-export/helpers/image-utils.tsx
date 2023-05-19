@@ -36,6 +36,53 @@ namespace ImageUtils {
   };
 
   /**
+   * Obtains a reusable image ...
+   */
+  export const getReusableImage = async (doc: Document, image: Blob) => {
+    if (!allowedImageTypes.includes(image.type)) {
+      return;
+    }
+
+    const imageBuffer = await image.arrayBuffer();
+
+    return Media.addImage(doc, imageBuffer);
+  };
+
+  /**
+   * Convert a base64 string to blob
+   */
+  const convertBase64ImageToBlob = (imageBase64: string) => {
+    const byteCharacters = atob(imageBase64.split(",")[1]);
+    const mimeString = imageBase64
+      .split(",")[0]
+      .split(":")[1]
+      .split(";")[0];
+
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: mimeString });
+
+    return blob;
+  };
+
+  /**
+   * Get image attachments from survey summary
+   * 
+   * @param doc docx document
+   * @param attachments survey summary attachments
+   */
+  export const getSurveySummaryReusableImageAttachment = async (doc: Document, image: string) => {
+    const blobImage = convertBase64ImageToBlob(image);
+    const pictureRunImage = await getReusableImage(doc, blobImage);
+
+    return pictureRunImage;
+  };
+
+  /**
    * Get docx image by url with original dimensions
    * 
    * @param doc docx document

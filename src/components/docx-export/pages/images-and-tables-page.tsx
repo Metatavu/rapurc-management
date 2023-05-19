@@ -133,10 +133,18 @@ const imagesAndTablesPage = async (doc: Document, survey: Survey, surveySummary:
   );
   pageChildren.push(deviderPar);
 
+  pageChildren.push(
+    new Paragraph({
+      children: [
+        ...images
+      ]
+    })
+  );
+
   doc.addSection({
     properties: {},
     headers: {
-      default: PageLayout.getHeader(survey, surveySummary)
+      default: PageLayout.getHeader(survey)
     },
     footers: {
       default: PageLayout.getFooter()

@@ -505,7 +505,10 @@
       "title": "Demolition information"
     },
     "page2": {
-      "title": "Building information"
+      "title": "Building information",
+      "ownerContactPerson": "Omistajan yhteyshenkilö:",
+      "ownerAndAddress": "Rakennuksen omistaja ja osoite:",
+      "buildingInfo": "Purettavan rakennuksen tiedot:"
     },
     "page3": {
       "title": "Reusable demolition products"

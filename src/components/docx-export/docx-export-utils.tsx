@@ -5,15 +5,19 @@ import { SurveySummary } from "types";
 import strings from "localization/strings";
 
 import demolitionInformationPage from "./pages/demolition-information-page";
-import imagesAndTablesPage from "./pages/images-and-tables-page";
-import newPageTemplate from "./pages/new-page-template";
+import ownerAndBuildingInfoPage from "./pages/owner-and-building-info-page";
+import reusableMaterialsPage from "./pages/reusable-materials-page";
+import hazardousMaterialsPage from "./pages/hazardous-materials-page";
+import wasteMaterialsPage from "./pages/waste-materials-page";
 
 namespace DocxExportUtils {
 
   const pageFunctions = [
     demolitionInformationPage,
-    imagesAndTablesPage,
-    newPageTemplate
+    ownerAndBuildingInfoPage,
+    reusableMaterialsPage,
+    wasteMaterialsPage,
+    hazardousMaterialsPage
   ];
 
   /**
