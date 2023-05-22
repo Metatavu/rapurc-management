@@ -347,7 +347,7 @@ const SurveyListingScreen: React.FC = () => {
                 fullWidth
                 color="primary"
                 name="componentName"
-                label={ building?.address?.streetAddress }
+                label={ `${building?.address?.streetAddress} ${building?.address?.city}`}
                 type="text"
                 value={ newMaterial.componentName }
                 onChange={ onNewMaterialChange }
