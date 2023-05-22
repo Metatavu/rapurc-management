@@ -510,7 +510,8 @@
       "title": "Demolition survey",
       "modified": "Last modified",
       "ready": "Completion date",
-      "creator": "Creator"
+      "creator": "Creator",
+      "unknown": "Unknown"
     },
     "page1": {
       "title": "Demolition information"

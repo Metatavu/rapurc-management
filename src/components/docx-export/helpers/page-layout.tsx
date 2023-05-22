@@ -51,7 +51,7 @@ namespace PageLayout {
             new Paragraph({
               children: [
                 new TextRun({
-                  text: `${strings.docx.metadata.creator}: ${survey.metadata.creatorId ?? ""}`
+                  text: `${strings.docx.metadata.creator}: ${survey.creatorDisplayName ?? strings.docx.metadata.unknown}`
                 })
               ],
               alignment: AlignmentType.RIGHT

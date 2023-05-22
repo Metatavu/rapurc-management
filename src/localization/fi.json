@@ -509,7 +509,8 @@
       "title": "Purkukartoitus",
       "modified": "Muokattu",
       "ready": "Valmis",
-      "creator": "Tekijä"
+      "creator": "Tekijä",
+      "unknown": "Ei tiedossa"
     },
     "page1": {
       "title": "Purkamista koskevat tiedot"
