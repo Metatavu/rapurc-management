@@ -511,7 +511,8 @@
       "modified": "Last modified",
       "ready": "Completion date",
       "creator": "Creator",
-      "unknown": "Unknown"
+      "unknown": "Unknown",
+      "unnamed": "Unnamed"
     },
     "page1": {
       "title": "Demolition information"

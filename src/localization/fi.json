@@ -510,7 +510,8 @@
       "modified": "Muokattu",
       "ready": "Valmis",
       "creator": "Tekijä",
-      "unknown": "Ei tiedossa"
+      "unknown": "Ei tiedossa",
+      "unnamed": "Nimetön"
     },
     "page1": {
       "title": "Purkamista koskevat tiedot"

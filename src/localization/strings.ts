@@ -555,6 +555,7 @@ export interface Localized extends LocalizedStringsMethods {
       ready: string;
       creator: string;
       unknown: string;
+      unnamed: string;
     };
     page1: {
       title: string;

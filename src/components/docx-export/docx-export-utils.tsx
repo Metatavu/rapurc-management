@@ -46,7 +46,7 @@ namespace DocxExportUtils {
     const surveyName = survey.building?.propertyName;
 
     tempLink.href = csvURL;
-    tempLink.setAttribute("download", `${surveyName ?? "unnamed"}.docx`);
+    tempLink.setAttribute("download", `${surveyName ?? strings.docx.metadata.unnamed}.docx`);
     tempLink.click();
   };
 
