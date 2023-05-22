@@ -193,73 +193,73 @@ const demolitionInformationPage = async (doc: Document, survey: Survey, surveySu
 
   const { surveyors } = surveySummary;
 
-  const surveyorsTableRows: TableRow[] = [];
-
-  surveyors.forEach(surveyor => {
-    const dividerTableRow = new TableRow({
-      children: [
-        new TableCell({
-          children: [
-            new Paragraph({
-              text: "",
-              style: "Normal"
-            })
-          ],
-          borders: DocumentTableStyles.noBorders
-        })
-      ]
+  if (surveyors.length > 0) {
+    const surveyorsTableRows: TableRow[] = [];
+    surveyors.forEach(surveyor => {
+      const dividerTableRow = new TableRow({
+        children: [
+          new TableCell({
+            children: [
+              new Paragraph({
+                text: "",
+                style: "Normal"
+              })
+            ],
+            borders: DocumentTableStyles.noBorders
+          })
+        ]
+      });
+      const surveyorsTableRow = new TableRow({
+        children: [
+          new TableCell({
+            children: [
+              new Paragraph({
+                text: surveyor.role,
+                style: "Normal"
+              }),
+              new Paragraph({
+                text: `${surveyor.firstName} ${surveyor.lastName}`,
+                style: "Normal"
+              }),
+              new Paragraph({
+                text: surveyor.company,
+                style: "Normal"
+              }),
+              new Paragraph({
+                text: surveyor.email,
+                style: "Normal"
+              }),
+              new Paragraph({
+                text: surveyor.phone,
+                style: "Normal"
+              }),
+              new Paragraph({
+                text: `${strings.survey.info.dataGridColumns.visits}: ${surveyor.visits}`,
+                style: "Normal"
+              }),
+              new Paragraph({
+                text: `${strings.survey.info.dataGridColumns.reportDate}: ${moment(surveyor.reportDate).format("DD.MM.YYYY")}`,
+                style: "Normal"
+              })
+            ],
+            borders: DocumentTableStyles.noBorders
+          })
+        ]
+      });
+      surveyorsTableRows.push(surveyorsTableRow);
+      surveyorsTableRows.push(dividerTableRow);
     });
-    const surveyorsTableRow = new TableRow({
-      children: [
-        new TableCell({
-          children: [
-            new Paragraph({
-              text: surveyor.role,
-              style: "Normal"
-            }),
-            new Paragraph({
-              text: `${surveyor.firstName} ${surveyor.lastName}`,
-              style: "Normal"
-            }),
-            new Paragraph({
-              text: surveyor.company,
-              style: "Normal"
-            }),
-            new Paragraph({
-              text: surveyor.email,
-              style: "Normal"
-            }),
-            new Paragraph({
-              text: surveyor.phone,
-              style: "Normal"
-            }),
-            new Paragraph({
-              text: `${strings.survey.info.dataGridColumns.visits}: ${surveyor.visits}`,
-              style: "Normal"
-            }),
-            new Paragraph({
-              text: `${strings.survey.info.dataGridColumns.reportDate}: ${moment(surveyor.reportDate).format("DD.MM.YYYY")}`,
-              style: "Normal"
-            })
-          ],
-          borders: DocumentTableStyles.noBorders
-        })
-      ]
-    });
-    surveyorsTableRows.push(surveyorsTableRow);
-    surveyorsTableRows.push(dividerTableRow);
-  });
-
-  // Here we push our table to the page children
-  pageChildren.push(
-    new Table({
-      rows: surveyorsTableRows,
-      width: {
-        size: 100,
-        type: WidthType.PERCENTAGE
-      }
-    })
-  );
+    // Here we push our table to the page children
+    pageChildren.push(
+      new Table({
+        rows: surveyorsTableRows,
+        width: {
+          size: 100,
+          type: WidthType.PERCENTAGE
+        }
+      })
+    );
+  }
 
   pageChildren.push(
     new Paragraph({

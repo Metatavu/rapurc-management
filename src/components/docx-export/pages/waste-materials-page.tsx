@@ -31,185 +31,187 @@ const wasteMaterialsPage = async (doc: Document, survey: Survey, surveySummary: 
 
   pageChildren.push(dividerPar);
 
-  const wasteMaterialsTableRows: TableRow[] = [];
   const { wastes, wasteCategories, wasteMaterials, usages } = surveySummary;
+  if (wastes.length > 0) {
+    const wasteMaterialsTableRows: TableRow[] = [];
 
-  wastes.forEach(waste => {
-    const wasteMaterial = wasteMaterials.find(material => material.id === waste.wasteMaterialId);
-    const wasteCategory = wasteCategories.find(category => category.id === wasteMaterial?.wasteCategoryId);
-    const fullEwcCode = wasteCategory ? `${wasteCategory?.ewcCode || ""}${wasteMaterial?.ewcSpecificationCode}` : "";
-    const wasteUsageObject = usages.find(usage => usage.id === waste.usageId);
-    const wasteUsage = wasteUsageObject && LocalizationUtils.getLocalizedName(wasteUsageObject.localizedNames, localization);
-    const wasteAmount = `${waste?.amount || ""}`;
+    wastes.forEach(waste => {
+      const wasteMaterial = wasteMaterials.find(material => material.id === waste.wasteMaterialId);
+      const wasteCategory = wasteCategories.find(category => category.id === wasteMaterial?.wasteCategoryId);
+      const fullEwcCode = wasteCategory ? `${wasteCategory?.ewcCode || ""}${wasteMaterial?.ewcSpecificationCode}` : "";
+      const wasteUsageObject = usages.find(usage => usage.id === waste.usageId);
+      const wasteUsage = wasteUsageObject && LocalizationUtils.getLocalizedName(wasteUsageObject.localizedNames, localization);
+      const wasteAmount = `${waste?.amount || ""}`;
 
-    const dividerTableRow = new TableRow({
-      children: [
-        new TableCell({
-          children: [
-            new Paragraph({
-              text: "",
-              style: "Normal"
-            })
-          ],
-          borders: DocumentTableStyles.noBorders
-        })
-      ]
+      const dividerTableRow = new TableRow({
+        children: [
+          new TableCell({
+            children: [
+              new Paragraph({
+                text: "",
+                style: "Normal"
+              })
+            ],
+            borders: DocumentTableStyles.noBorders
+          })
+        ]
+      });
+
+      const wasteMaterialTableRow = new TableRow({
+        children: [
+          new TableCell({
+            children: [
+              new Paragraph({
+                children: [
+                  new TextRun({
+                    text: `${strings.survey.wasteMaterial.dataGridColumns.material}:`,
+                    bold: true
+                  })
+                ]
+              })
+            ],
+            borders: DocumentTableStyles.noBorders
+          }),
+          new TableCell({
+            children: [
+              new Paragraph({
+                text: wasteMaterial && LocalizationUtils.getLocalizedName(wasteMaterial.localizedNames, localization),
+                style: "Normal"
+              })
+            ],
+            borders: DocumentTableStyles.noBorders
+          })
+        ]
+      });
+
+      const wasteSpecifierTableRow = new TableRow({
+        children: [
+          new TableCell({
+            children: [
+              new Paragraph({
+                children: [
+                  new TextRun({
+                    text: `${strings.survey.wasteMaterial.dataGridColumns.usage}:`,
+                    bold: true
+                  })
+                ]
+              })
+            ],
+            borders: DocumentTableStyles.noBorders
+          }),
+          new TableCell({
+            children: [
+              new Paragraph({
+                text: wasteUsage,
+                style: "Normal"
+              })
+            ],
+            borders: DocumentTableStyles.noBorders
+          })
+        ]
+      });
+
+      const wasteWasteCodeTableRow = new TableRow({
+        children: [
+          new TableCell({
+            children: [
+              new Paragraph({
+                children: [
+                  new TextRun({
+                    text: `${strings.survey.wasteMaterial.dataGridColumns.wasteCode}:`,
+                    bold: true
+                  })
+                ]
+              })
+            ],
+            borders: DocumentTableStyles.noBorders
+          }),
+          new TableCell({
+            children: [
+              new Paragraph({
+                text: fullEwcCode,
+                style: "Normal"
+              })
+            ],
+            borders: DocumentTableStyles.noBorders
+          })
+        ]
+      });
+
+      const wasteWasteAmountTableRow = new TableRow({
+        children: [
+          new TableCell({
+            children: [
+              new Paragraph({
+                children: [
+                  new TextRun({
+                    text: `${strings.survey.wasteMaterial.dataGridColumns.amountInTons}:`,
+                    bold: true
+                  })
+                ]
+              })
+            ],
+            borders: DocumentTableStyles.noBorders
+          }),
+
+          new TableCell({
+            children: [
+              new Paragraph({
+                text: wasteAmount,
+                style: "Normal"
+              })
+            ],
+            borders: DocumentTableStyles.noBorders
+          })
+        ]
+      });
+
+      const wasteWasteAdditionalInformationTableRow = new TableRow({
+        children: [
+          new TableCell({
+            children: [
+              new Paragraph({
+                children: [
+                  new TextRun({
+                    text: `${strings.survey.reusables.dataGridColumns.description}`,
+                    bold: true
+                  })
+                ]
+              })
+            ],
+            borders: DocumentTableStyles.noBorders
+          }),
+          new TableCell({
+            children: [
+              new Paragraph({
+                text: waste.description,
+                style: "Normal"
+              })
+            ],
+            borders: DocumentTableStyles.noBorders
+          })
+        ]
+      });
+
+      wasteMaterialsTableRows.push(wasteMaterialTableRow);
+      wasteMaterialsTableRows.push(wasteSpecifierTableRow);
+      wasteMaterialsTableRows.push(wasteWasteCodeTableRow);
+      wasteMaterialsTableRows.push(wasteWasteAmountTableRow);
+      wasteMaterialsTableRows.push(wasteWasteAdditionalInformationTableRow);
+      wasteMaterialsTableRows.push(dividerTableRow);
     });
 
-    const wasteMaterialTableRow = new TableRow({
-      children: [
-        new TableCell({
-          children: [
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: `${strings.survey.wasteMaterial.dataGridColumns.material}:`,
-                  bold: true
-                })
-              ]
-            })
-          ],
-          borders: DocumentTableStyles.noBorders
-        }),
-        new TableCell({
-          children: [
-            new Paragraph({
-              text: wasteMaterial && LocalizationUtils.getLocalizedName(wasteMaterial.localizedNames, localization),
-              style: "Normal"
-            })
-          ],
-          borders: DocumentTableStyles.noBorders
-        })
-      ]
-    });
-
-    const wasteSpecifierTableRow = new TableRow({
-      children: [
-        new TableCell({
-          children: [
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: `${strings.survey.wasteMaterial.dataGridColumns.usage}:`,
-                  bold: true
-                })
-              ]
-            })
-          ],
-          borders: DocumentTableStyles.noBorders
-        }),
-        new TableCell({
-          children: [
-            new Paragraph({
-              text: wasteUsage,
-              style: "Normal"
-            })
-          ],
-          borders: DocumentTableStyles.noBorders
-        })
-      ]
-    });
-
-    const wasteWasteCodeTableRow = new TableRow({
-      children: [
-        new TableCell({
-          children: [
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: `${strings.survey.wasteMaterial.dataGridColumns.wasteCode}:`,
-                  bold: true
-                })
-              ]
-            })
-          ],
-          borders: DocumentTableStyles.noBorders
-        }),
-        new TableCell({
-          children: [
-            new Paragraph({
-              text: fullEwcCode,
-              style: "Normal"
-            })
-          ],
-          borders: DocumentTableStyles.noBorders
-        })
-      ]
-    });
-
-    const wasteWasteAmountTableRow = new TableRow({
-      children: [
-        new TableCell({
-          children: [
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: `${strings.survey.wasteMaterial.dataGridColumns.amountInTons}:`,
-                  bold: true
-                })
-              ]
-            })
-          ],
-          borders: DocumentTableStyles.noBorders
-        }),
-
-        new TableCell({
-          children: [
-            new Paragraph({
-              text: wasteAmount,
-              style: "Normal"
-            })
-          ],
-          borders: DocumentTableStyles.noBorders
-        })
-      ]
-    });
-
-    const wasteWasteAdditionalInformationTableRow = new TableRow({
-      children: [
-        new TableCell({
-          children: [
-            new Paragraph({
-              children: [
-                new TextRun({
-                  text: `${strings.survey.reusables.dataGridColumns.description}`,
-                  bold: true
-                })
-              ]
-            })
-          ],
-          borders: DocumentTableStyles.noBorders
-        }),
-        new TableCell({
-          children: [
-            new Paragraph({
-              text: waste.description,
-              style: "Normal"
-            })
-          ],
-          borders: DocumentTableStyles.noBorders
-        })
-      ]
-    });
-
-    wasteMaterialsTableRows.push(wasteMaterialTableRow);
-    wasteMaterialsTableRows.push(wasteSpecifierTableRow);
-    wasteMaterialsTableRows.push(wasteWasteCodeTableRow);
-    wasteMaterialsTableRows.push(wasteWasteAmountTableRow);
-    wasteMaterialsTableRows.push(wasteWasteAdditionalInformationTableRow);
-    wasteMaterialsTableRows.push(dividerTableRow);
-  });
-
-  // Here we push our table to the page children
-  pageChildren.push(
-    new Table({
-      rows: wasteMaterialsTableRows,
-      width: {
-        size: 100,
-        type: WidthType.PERCENTAGE
-      }
-    })
-  );
+    // Here we push our table to the page children
+    pageChildren.push(
+      new Table({
+        rows: wasteMaterialsTableRows,
+        width: {
+          size: 100,
+          type: WidthType.PERCENTAGE
+        }
+      })
+    );
+  }
 
   doc.addSection({
     properties: {},

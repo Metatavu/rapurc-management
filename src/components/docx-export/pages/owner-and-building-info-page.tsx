@@ -579,58 +579,60 @@ const ownerAndBuildingInfoPage = async (doc: Document, survey: Survey, surveySum
 
     const { otherStructures } = surveySummary.building;
 
-    const otherStructuresTableRows: TableRow[] = [];
+    if (otherStructures.length > 0) {
+      const otherStructuresTableRows: TableRow[] = [];
 
-    otherStructures.forEach(structure => {
-      const dividerTableRow = new TableRow({
-        children: [
-          new TableCell({
-            children: [
-              new Paragraph({
-                text: "",
-                style: "Normal"
-              })
-            ],
-            borders: DocumentTableStyles.noBorders
-          })
-        ]
+      otherStructures.forEach(structure => {
+        const dividerTableRow = new TableRow({
+          children: [
+            new TableCell({
+              children: [
+                new Paragraph({
+                  text: "",
+                  style: "Normal"
+                })
+              ],
+              borders: DocumentTableStyles.noBorders
+            })
+          ]
+        });
+        const otherStructuresTableRow = new TableRow({
+          children: [
+            new TableCell({
+              children: [
+                new Paragraph({
+                  text: structure.name,
+                  style: "Normal"
+                })
+              ],
+              borders: DocumentTableStyles.noBorders
+            }),
+            new TableCell({
+              children: [
+                new Paragraph({
+                  text: structure.description,
+                  style: "Normal"
+                })
+              ],
+              borders: DocumentTableStyles.noBorders
+            })
+          ]
+        });
+        otherStructuresTableRows.push(dividerTableRow);
+        otherStructuresTableRows.push(otherStructuresTableRow);
+        otherStructuresTableRows.push(dividerTableRow);
       });
-      const otherStructuresTableRow = new TableRow({
-        children: [
-          new TableCell({
-            children: [
-              new Paragraph({
-                text: structure.name,
-                style: "Normal"
-              })
-            ],
-            borders: DocumentTableStyles.noBorders
-          }),
-          new TableCell({
-            children: [
-              new Paragraph({
-                text: structure.description,
-                style: "Normal"
-              })
-            ],
-            borders: DocumentTableStyles.noBorders
-          })
-        ]
-      });
-      otherStructuresTableRows.push(dividerTableRow);
-      otherStructuresTableRows.push(otherStructuresTableRow);
-      otherStructuresTableRows.push(dividerTableRow);
-    });
-    // Here we push our table to the page children
-    pageChildren.push(
-      new Table({
-        rows: otherStructuresTableRows,
-        width: {
-          size: 100,
-          type: WidthType.PERCENTAGE
-        }
-      })
-    );
+      // Here we push our table to the page children
+      pageChildren.push(
+        new Table({
+          rows: otherStructuresTableRows,
+          width: {
+            size: 100,
+            type: WidthType.PERCENTAGE
+          }
+        })
+      );
+    }
   }
 
   doc.addSection({
