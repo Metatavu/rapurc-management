@@ -498,9 +498,38 @@
     "summary": {
       "title": "Yhteenveto",
       "print": "Tulosta",
+      "document": "Tallenna DOCX",
       "demolitionInfo": "Purkamista koskevat tiedot",
       "images": "Kuvat",
       "image": "Kuva"
+    }
+  },
+  "docx": {
+    "metadata": {
+      "title": "Purkukartoitus",
+      "modified": "Muokattu",
+      "ready": "Valmis",
+      "creator": "Tekijä",
+      "unknown": "Ei tiedossa",
+      "unnamed": "Nimetön"
+    },
+    "page1": {
+      "title": "Purkamista koskevat tiedot"
+    },
+    "page2": {
+      "title": "Purkukohteen tiedot",
+      "ownerContactPerson": "Omistajan yhteyshenkilö:",
+      "ownerAndAddress": "Rakennuksen omistaja ja osoite:",
+      "buildingInfo": "Purettavan rakennuksen tiedot:"
+    },
+    "page3": {
+      "title": "Uudelleenkäyttökelpoiset purkutuotteet"
+    },
+    "page4": {
+      "title": "Purkujätemateriaalit"
+    },
+    "page5": {
+      "title": "Haitta-aineita sisältävät materiaalit"
     }
   },
   "listingScreen": {

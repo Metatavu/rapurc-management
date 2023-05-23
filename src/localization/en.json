@@ -499,9 +499,38 @@
     "summary": {
       "title": "Summary",
       "print": "Print",
+      "document": "Document",
       "demolitionInfo": "Demolition information",
       "images": "Images",
       "image": "Image"
+    }
+  },
+  "docx": {
+    "metadata": {
+      "title": "Demolition survey",
+      "modified": "Last modified",
+      "ready": "Completion date",
+      "creator": "Creator",
+      "unknown": "Unknown",
+      "unnamed": "Unnamed"
+    },
+    "page1": {
+      "title": "Demolition information"
+    },
+    "page2": {
+      "title": "Building information",
+      "ownerContactPerson": "Owner's contact person:",
+      "ownerAndAddress": "Building owner and address:",
+      "buildingInfo": "Building info:"
+    },
+    "page3": {
+      "title": "Reusable demolition products"
+    },
+    "page4": {
+      "title": "Waste material"
+    },
+    "page5": {
+      "title": "Hazardous material"
     }
   },
   "listingScreen": {

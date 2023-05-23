@@ -538,11 +538,45 @@ export interface Localized extends LocalizedStringsMethods {
     summary: {
       title: string;
       print: string;
+      document: string;
       demolitionInfo: string;
       images: string;
       image: string;
     };
   };
+
+  /**
+   *  Translations related to docx export
+   */
+  docx: {
+    metadata: {
+      title: string;
+      modified: string;
+      ready: string;
+      creator: string;
+      unknown: string;
+      unnamed: string;
+    };
+    page1: {
+      title: string;
+    };
+    page2: {
+      title: string;
+      ownerContactPerson: string;
+      ownerAndAddress: string;
+      buildingInfo: string;
+    };
+    page3: {
+      title: string;
+    };
+    page4: {
+      title: string;
+    };
+    page5: {
+      title: string;
+    };
+  }
+
   /**
    *  Translations related to listing
    */

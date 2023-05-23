@@ -153,7 +153,7 @@ const SurveyScreen: FC = () => {
     
     return (
       <Typography variant="h5" fontSize={ 18 }>
-        { strings.formatString(`${strings.surveyScreen.lastModified}: ${(moment(modifiedAt).format("D.M.YYYY h:mm"))}`) }
+        { strings.formatString(`${strings.surveyScreen.lastModified}: ${(moment(modifiedAt).format("DD.MM.YYYY HH:mm"))}`) }
       </Typography>
     );
   };
