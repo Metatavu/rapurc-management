@@ -9,10 +9,10 @@ namespace ImageUtils {
    * 
    * @param imageBlob image blob
    */
-  const getBlobImageDimensions = async (imageBlob: Blob) => {
+  const getBlobImageDimensions = async (imageBlob: Blob): Promise<[width: number, height: number]> => {
     const img = new Image();
     img.src = URL.createObjectURL(imageBlob);
-    const imageDimensions = await new Promise((resolve, reject) => {
+    const imageDimensions = await new Promise<[width: number, height: number]>((resolve, reject) => {
       img.onload = () => {
         resolve([img.width, img.height]);
       };
@@ -35,7 +35,9 @@ namespace ImageUtils {
   };
 
   /**
-   * Obtains a reusable image ...
+   * Obtains a reusable image
+   * @param doc 
+   * @param image 
    */
   export const getReusableImage = async (doc: Document, image: Blob) => {
     if (!allowedImageTypes.includes(image.type)) {
@@ -49,6 +51,8 @@ namespace ImageUtils {
 
   /**
    * Convert a base64 string to blob
+   * @param imageBase64 
+
    */
   const convertBase64ImageToBlob = (imageBase64: string) => {
     const byteCharacters = atob(imageBase64.split(",")[1]);
@@ -69,13 +73,11 @@ namespace ImageUtils {
   };
 
   /**
-   * Get Reusable objects image attachments from survey summary
-   * 
-   * @param doc docx document
-   * @param images survey summary images
+   * Returns reusable image attachments
+   * @param doc 
+   * @param images
    */
   const getSurveySummaryReusableImageAttachments = async (doc: Document, images: string[]) => {
-    let pictures: PictureRun[] = [];
     const imageAttachments: Promise<PictureRun | undefined>[] = [];
 
     images.forEach(image => {
@@ -87,9 +89,7 @@ namespace ImageUtils {
 
     const imageAttachmentsUnfiltered = await Promise.all(imageAttachments);
 
-    pictures = imageAttachmentsUnfiltered.filter(image => image !== undefined) as PictureRun[];
-
-    return pictures;
+    return imageAttachmentsUnfiltered.filter((image): image is PictureRun => image !== undefined);
   };
 
   /**
@@ -97,25 +97,16 @@ namespace ImageUtils {
    * 
    * @param doc docx document
    * @param attachments survey summary attachments
-   * @returns 
    */
-  export const getSurveySummaryReusableAttachmentsCollection = async (doc: Document, reusables: Reusable[]) => {
-    const attachmentsCollection: Promise<PictureRun[]>[] = [];
-
-    reusables.forEach(reusable => {
-      if (reusable.images) {
-        const images = getSurveySummaryReusableImageAttachments(doc, reusable.images);
-        attachmentsCollection.push(images);
-      } else {
-        attachmentsCollection.push(Promise.resolve([]));
-      }
-    });
-
-    const attachmentsCollectionUnfiltered = await Promise.all(attachmentsCollection);
-
-    return attachmentsCollectionUnfiltered;
+  export const getSurveySummaryReusableAttachmentsCollection = (doc: Document, reusables: Reusable[]) => {
+    return Promise.all(
+      reusables.map(({ images }) =>
+        (images
+          ? getSurveySummaryReusableImageAttachments(doc, images)
+          : Promise.resolve([]))
+      )
+    );
   };
-
   /**
    * Get docx image by url with original dimensions
    * 
@@ -129,10 +120,10 @@ namespace ImageUtils {
       return null;
     }
 
-    const dimensions = await getBlobImageDimensions(blob) as [number, number];
+    const [width, height] = await getBlobImageDimensions(blob);
     const imageBuffer = await blob.arrayBuffer();
 
-    return Media.addImage(doc, imageBuffer, dimensions[0], dimensions[1]);
+    return Media.addImage(doc, imageBuffer, width, height);
   };
 
   /**
@@ -142,15 +133,11 @@ namespace ImageUtils {
    * @param attachments survey summary attachments
    */
   export const getSurveySummaryImageAttachments = async (doc: Document, attachments: Attachment[]) => {
-    const imageAttachments: Promise<PictureRun | null>[] = [];
+    const possibleImageAttachments = await Promise.all(
+      attachments.map(attachment => getDocxImage(doc, attachment.url))
+    );
 
-    attachments.forEach(attachment => {
-      const image = getDocxImage(doc, attachment.url);
-      imageAttachments.push(image);
-    });
-
-    const imageAttachmentsUnfiltered = await Promise.all(imageAttachments);
-    return imageAttachmentsUnfiltered.filter(image => image !== null) as PictureRun[];
+    return possibleImageAttachments.filter((image): image is PictureRun => image !== null);
   };
 }
 

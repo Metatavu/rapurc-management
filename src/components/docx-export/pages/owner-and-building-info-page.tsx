@@ -8,10 +8,17 @@ import LocalizationUtils from "utils/localization-utils";
 
 /**
  * Demolition Information Page
- * 
- * @returns array of docx elements
+ * @param doc 
+ * @param survey 
+ * @param surveySummary 
+ * @param selectedLanguage 
  */
-const ownerAndBuildingInfoPage = async (doc: Document, survey: Survey, surveySummary: SurveySummary, selectedLanguage: string) => {
+const ownerAndBuildingInfoPage = async (
+  doc: Document,
+  survey: Survey,
+  surveySummary: SurveySummary,
+  selectedLanguage: string
+) => {
   const pageChildren = [];
 
   // Divider paragraph is used to create space between elements (i.e between tables)
@@ -130,8 +137,7 @@ const ownerAndBuildingInfoPage = async (doc: Document, survey: Survey, surveySum
   });
 
   // Assemble the table rows
-  ownerInfoTableRows.push(ownerInfoHeaderRow);
-  ownerInfoTableRows.push(ownerInfoRow);
+  ownerInfoTableRows.push(ownerInfoHeaderRow, ownerInfoRow);
 
   // Here we push our table to the page children
   pageChildren.push(
@@ -638,7 +644,7 @@ const ownerAndBuildingInfoPage = async (doc: Document, survey: Survey, surveySum
   doc.addSection({
     properties: {},
     headers: {
-      default: PageLayout.getHeader(survey)
+      default: PageLayout.getDocumentHeaderAsTable(survey)
     },
     footers: {
       default: PageLayout.getFooter()

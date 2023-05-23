@@ -202,12 +202,14 @@ const reusableMaterialsPage = async (doc: Document, survey: Survey, surveySummar
       ]
     });
 
-    localReusableMaterialsTableRows.push(reusableMaterialHeaderRow);
-    localReusableMaterialsTableRows.push(dividerTableRow);
-    localReusableMaterialsTableRows.push(reusableMaterialsRow);
-    localReusableMaterialsTableRows.push(reusableMaterialAmountRow);
-    localReusableMaterialsTableRows.push(dividerTableRow);
-    localReusableMaterialsTableRows.push(reusableMaterialDescriptionRow);
+    localReusableMaterialsTableRows.push(
+      reusableMaterialHeaderRow,
+      dividerTableRow,
+      reusableMaterialsRow,
+      reusableMaterialAmountRow,
+      dividerTableRow,
+      reusableMaterialDescriptionRow
+    );
 
     pageChildren.push(
       new Table({
@@ -218,43 +220,18 @@ const reusableMaterialsPage = async (doc: Document, survey: Survey, surveySummar
           size: 100,
           type: WidthType.PERCENTAGE
         }
-      })
-    );
-
-    pageChildren.push(dividerPar);
-
-    pageChildren.push(
+      }),
+      dividerPar,
       new Paragraph({
         children: reusableImages
       })
     );
   });
 
-  // Here we push our table to the page children
-  // pageChildren.push(
-  //   new Table({
-  //     rows: reusableMaterialsTableRows,
-  //     width: {
-  //       size: 100,
-  //       type: WidthType.PERCENTAGE
-  //     }
-  //   })
-  // );
-
-  // const images = await ImageUtils.getSurveySummaryReusableImageAttachments(doc, reusables[0].images!);
-  // console.log("Images are ", images);
-  // pageChildren.push(
-  //   new Paragraph({
-  //     children: [
-  //       ...images
-  //     ]
-  //   })
-  // );
-
   doc.addSection({
     properties: {},
     headers: {
-      default: PageLayout.getHeader(survey)
+      default: PageLayout.getDocumentHeaderAsTable(survey)
     },
     footers: {
       default: PageLayout.getFooter()

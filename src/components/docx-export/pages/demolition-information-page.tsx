@@ -163,10 +163,12 @@ const demolitionInformationPage = async (doc: Document, survey: Survey, surveySu
   });
 
   // Assemble the table rows
-  surveyInfoTableRows.push(propertyNameRow);
-  surveyInfoTableRows.push(scopeRow);
-  surveyInfoTableRows.push(startDateRow);
-  surveyInfoTableRows.push(endDateRow);
+  surveyInfoTableRows.push(
+    propertyNameRow,
+    scopeRow,
+    startDateRow,
+    endDateRow
+  );
 
   // Here we push our table to the page children
   pageChildren.push(
@@ -176,11 +178,8 @@ const demolitionInformationPage = async (doc: Document, survey: Survey, surveySu
         size: 100,
         type: WidthType.PERCENTAGE
       }
-    })
-  );
-
-  pageChildren.push(dividerPar);
-  pageChildren.push(
+    }),
+    dividerPar,
     new Paragraph({
       children: [
         new TextRun({
@@ -246,9 +245,9 @@ const demolitionInformationPage = async (doc: Document, survey: Survey, surveySu
           })
         ]
       });
-      surveyorsTableRows.push(surveyorsTableRow);
-      surveyorsTableRows.push(dividerTableRow);
+      surveyorsTableRows.push(surveyorsTableRow, dividerTableRow);
     });
+
     // Here we push our table to the page children
     pageChildren.push(
       new Table({
@@ -279,7 +278,7 @@ const demolitionInformationPage = async (doc: Document, survey: Survey, surveySu
   doc.addSection({
     properties: {},
     headers: {
-      default: PageLayout.getHeader(survey)
+      default: PageLayout.getDocumentHeaderAsTable(survey)
     },
     footers: {
       default: PageLayout.getFooter()

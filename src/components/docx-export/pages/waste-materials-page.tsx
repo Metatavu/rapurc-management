@@ -11,7 +11,12 @@ import DocumentTableStyles from "../styles/document-table-styles";
  * 
  * @returns array of docx elements
  */
-const wasteMaterialsPage = async (doc: Document, survey: Survey, surveySummary: SurveySummary, localization: string) => {
+const wasteMaterialsPage = async (
+  doc: Document,
+  survey: Survey,
+  surveySummary: SurveySummary,
+  localization: string
+) => {
   const pageChildren = [];
 
   // Divider paragraph is used to create space between elements (i.e between tables)
@@ -193,12 +198,14 @@ const wasteMaterialsPage = async (doc: Document, survey: Survey, surveySummary: 
         ]
       });
 
-      wasteMaterialsTableRows.push(wasteMaterialTableRow);
-      wasteMaterialsTableRows.push(wasteSpecifierTableRow);
-      wasteMaterialsTableRows.push(wasteWasteCodeTableRow);
-      wasteMaterialsTableRows.push(wasteWasteAmountTableRow);
-      wasteMaterialsTableRows.push(wasteWasteAdditionalInformationTableRow);
-      wasteMaterialsTableRows.push(dividerTableRow);
+      wasteMaterialsTableRows.push(
+        wasteMaterialTableRow,
+        wasteSpecifierTableRow,
+        wasteWasteCodeTableRow,
+        wasteWasteAmountTableRow,
+        wasteWasteAdditionalInformationTableRow,
+        dividerTableRow
+      );
     });
 
     // Here we push our table to the page children
@@ -216,7 +223,7 @@ const wasteMaterialsPage = async (doc: Document, survey: Survey, surveySummary: 
   doc.addSection({
     properties: {},
     headers: {
-      default: PageLayout.getHeader(survey)
+      default: PageLayout.getDocumentHeaderAsTable(survey)
     },
     footers: {
       default: PageLayout.getFooter()

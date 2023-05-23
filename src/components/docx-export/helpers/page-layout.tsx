@@ -11,7 +11,7 @@ namespace PageLayout {
    * 
    * @param survey survey
    */
-  export const getHeader = (survey: Survey) => {
+  export const getDocumentHeaderAsTable = (survey: Survey) => {
     const tableRows: TableRow[] = [];
     const tableRow = new TableRow({
       children: [
@@ -47,7 +47,6 @@ namespace PageLayout {
               ],
               alignment: AlignmentType.RIGHT
             }),
-            // TODO: fetch the creator name
             new Paragraph({
               children: [
                 new TextRun({

@@ -8,10 +8,17 @@ import DocumentTableStyles from "../styles/document-table-styles";
 
 /**
  * Hazardous materials Page
- * 
- * @returns array of docx elements
+ * @param doc 
+ * @param survey 
+ * @param surveySummary 
+ * @param localization 
  */
-const hazardousMaterialsPage = async (doc: Document, survey: Survey, surveySummary: SurveySummary, localization: string) => {
+const hazardousMaterialsPage = async (
+  doc: Document,
+  survey: Survey,
+  surveySummary: SurveySummary,
+  localization: string
+) => {
   const pageChildren = [];
 
   // Divider paragraph is used to create space between elements (i.e between tables)
@@ -28,8 +35,6 @@ const hazardousMaterialsPage = async (doc: Document, survey: Survey, surveySumma
     }),
     dividerPar
   );
-
-  pageChildren.push(dividerPar);
 
   const { hazardousWastes, hazardousMaterials, wasteCategories, wasteSpecifiers } = surveySummary;
 
@@ -195,12 +200,14 @@ const hazardousMaterialsPage = async (doc: Document, survey: Survey, surveySumma
         ]
       });
 
-      hazardousMaterialsTableRows.push(hazardousMaterialTableRow);
-      hazardousMaterialsTableRows.push(hazardousSpecifierTableRow);
-      hazardousMaterialsTableRows.push(hazardousWasteCodeTableRow);
-      hazardousMaterialsTableRows.push(hazardousWasteAmountTableRow);
-      hazardousMaterialsTableRows.push(hazardousWasteAdditionalInformationTableRow);
-      hazardousMaterialsTableRows.push(dividerTableRow);
+      hazardousMaterialsTableRows.push(
+        hazardousMaterialTableRow,
+        hazardousSpecifierTableRow,
+        hazardousWasteCodeTableRow,
+        hazardousWasteAmountTableRow,
+        hazardousWasteAdditionalInformationTableRow,
+        dividerTableRow
+      );
     });
 
     // Here we push our table to the page children
@@ -218,7 +225,7 @@ const hazardousMaterialsPage = async (doc: Document, survey: Survey, surveySumma
   doc.addSection({
     properties: {},
     headers: {
-      default: PageLayout.getHeader(survey)
+      default: PageLayout.getDocumentHeaderAsTable(survey)
     },
     footers: {
       default: PageLayout.getFooter()
