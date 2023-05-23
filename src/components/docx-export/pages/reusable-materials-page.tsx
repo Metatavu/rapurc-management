@@ -12,7 +12,12 @@ import ImageUtils from "../helpers/image-utils";
  * 
  * @returns array of docx elements
  */
-const reusableMaterialsPage = async (doc: Document, survey: Survey, surveySummary: SurveySummary, localization: string) => {
+const reusableMaterialsPage = async (
+  doc: Document,
+  survey: Survey,
+  surveySummary: SurveySummary,
+  localization: string
+) => {
   const pageChildren = [];
 
   // Divider paragraph is used to create space between elements (i.e between tables)

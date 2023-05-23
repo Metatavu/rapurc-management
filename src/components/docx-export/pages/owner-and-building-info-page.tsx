@@ -147,10 +147,7 @@ const ownerAndBuildingInfoPage = async (
         size: 100,
         type: WidthType.PERCENTAGE
       }
-    })
-  );
-
-  pageChildren.push(
+    }),
     new Paragraph({
       children: [
         new TextRun({
@@ -539,18 +536,20 @@ const ownerAndBuildingInfoPage = async (
   });
 
   // Assemble the table rows
-  buildingInfoTableRows.push(buildingIDRow);
-  buildingInfoTableRows.push(propertyIDRow);
-  buildingInfoTableRows.push(buildingClassRow);
-  buildingInfoTableRows.push(constructionYearRow);
-  buildingInfoTableRows.push(floorAreaRow);
-  buildingInfoTableRows.push(volumeRow);
-  buildingInfoTableRows.push(floorsRow);
-  buildingInfoTableRows.push(basementFloorsRow);
-  buildingInfoTableRows.push(foundationMaterialRow);
-  buildingInfoTableRows.push(supportingStructureRow);
-  buildingInfoTableRows.push(façadeMaterialRow);
-  buildingInfoTableRows.push(roofStructure);
+  buildingInfoTableRows.push(
+    buildingIDRow,
+    propertyIDRow,
+    buildingClassRow,
+    constructionYearRow,
+    floorAreaRow,
+    volumeRow,
+    floorsRow,
+    basementFloorsRow,
+    foundationMaterialRow,
+    supportingStructureRow,
+    façadeMaterialRow,
+    roofStructure
+  );
 
   // Here we push our table to the page children
   pageChildren.push(
@@ -624,10 +623,13 @@ const ownerAndBuildingInfoPage = async (
             })
           ]
         });
-        otherStructuresTableRows.push(dividerTableRow);
-        otherStructuresTableRows.push(otherStructuresTableRow);
-        otherStructuresTableRows.push(dividerTableRow);
+        otherStructuresTableRows.push(
+          dividerTableRow,
+          otherStructuresTableRow,
+          dividerTableRow
+        );
       });
+
       // Here we push our table to the page children
       pageChildren.push(
         new Table({
