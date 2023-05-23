@@ -1,5 +1,5 @@
 import { Button, Paper, Stack, TextField, Typography, Container } from "@mui/material";
-import { Reusable, Usability, Survey, ReusableMaterialApi, Building } from "generated/client";
+import { Reusable, Usability, Survey, ReusableMaterial, Building } from "generated/client";
 import { useParams, useNavigate } from "react-router-dom";
 import { ErrorContext } from "components/error-handler/error-handler";
 import { useAppDispatch, useAppSelector } from "app/hooks";
@@ -8,6 +8,8 @@ import * as React from "react";
 import strings from "localization/strings";
 import Api from "api";
 import { selectKeycloak } from "features/auth-slice";
+import LocalizationUtils from "utils/localization-utils";
+import { selectLanguage } from "features/locale-slice";
 /**
  * interfaces
  */
@@ -23,14 +25,8 @@ interface FormErrors {
   email?: string;
 }
 /**
- * Everything to do with language, api and routing are temporary, this is just a base to be coded on
+ * Render the Form
  */
-/**
- * Component properties
-interface Props {
-  surveyId: string;
-}
-*/
 const SurveyListingScreen: React.FC = () => {
   const keycloak = useAppSelector(selectKeycloak);
   const errorContext = React.useContext(ErrorContext);
@@ -57,6 +53,7 @@ const SurveyListingScreen: React.FC = () => {
   /**
    * form values
    */
+  const selectedLanguage = useAppSelector(selectLanguage);
   const [materialInfo, setMaterialInfo] = React.useState("");
   const [materialAmount, setMaterialAmount] = React.useState("");
   const [propertyName, setpropertyName] = React.useState("");
@@ -150,7 +147,7 @@ const SurveyListingScreen: React.FC = () => {
    */
   const { materialId } = useParams<"materialId">();
   const [ material, setMaterial ] = React.useState<Reusable | undefined>();
-  const [reusableMaterialId, setReusableMaterialId] = React.useState<ReusableMaterialApi | any>();
+  const [ reusableMaterials, setReusableMaterials ] = React.useState<ReusableMaterial[]>([]);
   const [ building, setBuilding ] = React.useState<Building>();
   /**
    * Fetches reusable materials by materialID
@@ -167,18 +164,17 @@ const SurveyListingScreen: React.FC = () => {
       errorContext.setError(strings.errorHandling.materials.list, error);
     }
   };
+
   /**
-   * Fetch material name by materialreusableId (work in progress)
+   * Fetches list of reusable materials and building parts
    */
-  const fetchReusableMaterialId = async () => {
-    if (!keycloak?.token || !materialId || !surveyId) {
+  const fetchReusableMaterials = async () => {
+    if (!keycloak?.token) {
       return;
     }
+
     try {
-      if (material?.reusableMaterialId) {
-        const reusableMaterialIdna = await Api.getReusableMaterialApi(keycloak.token).findReusableMaterial({ reusableMaterialId: material.reusableMaterialId });
-        setReusableMaterialId(reusableMaterialIdna);
-      }
+      setReusableMaterials(await Api.getReusableMaterialApi(keycloak.token).listReusableMaterials());
     } catch (error) {
       errorContext.setError(strings.errorHandling.materials.list, error);
     }
@@ -208,11 +204,22 @@ const SurveyListingScreen: React.FC = () => {
   /**
    * Effect for fetching survey / materials of selected row
    */
-  React.useEffect(() => { fetchSurvey(); }, [ surveyId ]);
-  React.useEffect(() => { fetchReusableMaterial(); }, [ materialId ]);
-  React.useEffect(() => { fetchReusableMaterialId(); }, [ materialId ]);
-  React.useEffect(() => { fetchBuilding(); }, []);
-
+  React.useEffect(() => {
+    fetchSurvey();
+  }, [surveyId]);
+  
+  React.useEffect(() => {
+    fetchReusableMaterial();
+  }, [materialId]);
+  
+  React.useEffect(() => {
+    fetchBuilding();
+  }, []);
+  
+  React.useEffect(() => {
+    fetchReusableMaterials();
+  }, []);
+  
   if (!survey) {
     return null;
   }
@@ -256,8 +263,9 @@ const SurveyListingScreen: React.FC = () => {
                 select={false}
                 color="primary"
                 name="reusableMaterialId"
-                value={reusableMaterialId}
                 label={strings.survey.reusables.addNewBuildingPartsDialog.buildingPartOrMaterial}
+                value={ LocalizationUtils.getLocalizedName(reusableMaterials
+                  .find(materials => (materials.id === material.reusableMaterialId))?.localizedNames || [], selectedLanguage)}
                 disabled
               />
             </Stack>
