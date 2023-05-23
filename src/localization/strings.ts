@@ -149,6 +149,17 @@ export interface Localized extends LocalizedStringsMethods {
       delete: string;
       update: string;
     };
+    listingScreen: {
+      materialInfo: string;
+      materialAmount: string;
+      materialAmountInfo: string;
+      propertyName: string;
+      address: string;
+      postalcode: string;
+      name: string;
+      phone: string;
+      email: string;
+    };
   };
 
   /**
@@ -208,6 +219,7 @@ export interface Localized extends LocalizedStringsMethods {
   surveyScreen: {
     title: string;
     status: string;
+    lastModified: string;
     navigation: {
       owner: string;
       building: string;
@@ -378,12 +390,14 @@ export interface Localized extends LocalizedStringsMethods {
       occupation: string;
       phone: string;
       email: string;
+      sendLink: string;
     };
     info: {
       title: string;
       demolitionInfo: string;
       surveyors: string;
       demolitionScope: string;
+      additionalInformation: string;
       dateUnknown: string;
       startDate: string;
       endDate: string;
@@ -417,6 +431,8 @@ export interface Localized extends LocalizedStringsMethods {
       dropFile: string;
       viewImage: string;
       moreImage: string;
+      createListing: string;
+      createdListing: string;
       addImage: string;
       deleteImage: string;
       preview: string;
@@ -448,6 +464,7 @@ export interface Localized extends LocalizedStringsMethods {
         description: string;
         unit: string;
         editDescription: string;
+        listing: string;
       };
       usability: {
         excellent: string;
@@ -521,10 +538,62 @@ export interface Localized extends LocalizedStringsMethods {
     summary: {
       title: string;
       print: string;
+      document: string;
       demolitionInfo: string;
       images: string;
       image: string;
     };
+  };
+
+  /**
+   *  Translations related to docx export
+   */
+  docx: {
+    metadata: {
+      title: string;
+      modified: string;
+      ready: string;
+      creator: string;
+      unknown: string;
+      unnamed: string;
+    };
+    page1: {
+      title: string;
+    };
+    page2: {
+      title: string;
+      ownerContactPerson: string;
+      ownerAndAddress: string;
+      buildingInfo: string;
+    };
+    page3: {
+      title: string;
+    };
+    page4: {
+      title: string;
+    };
+    page5: {
+      title: string;
+    };
+  }
+
+  /**
+   *  Translations related to listing
+   */
+  listingScreen: {
+    title: string;
+    materialInfoHelperText: string;
+    materialAmount: string;
+    materialAmountInfoHelperText: string;
+    propertyName: string;
+    address: string;
+    postalCode: string;
+    name: string;
+    phone: string;
+    email: string;
+    send: string;
+    ownUse: string;
+    deleteOwnUse: string;
   };
 }
 

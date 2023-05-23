@@ -125,6 +125,17 @@
       "create": "Error while creating attachment",
       "delete": "Error while deleting attachment",
       "update": "Error while updating attachment"
+    },
+    "listingScreen": {
+      "materialInfo": "Material information is required",
+      "materialAmount": "Material amount must be a number",
+      "materialAmountInfo": "Material amount info is required",
+      "propertyName": "Property name is required",
+      "address": "Address is required",
+      "postalcode": "Postal code is required",
+      "name": "Name is required",
+      "phone": "Phone number must be a number",
+      "email": "Invalid email"
     }
   },
 
@@ -174,12 +185,13 @@
   "surveyScreen": {
     "title": "Survey",
     "status": "Status",
+    "lastModified": "Last modified",
     "navigation": {
       "owner": "Owner details",
       "building": "Building information",
       "otherStructures": "Other demolished structures",
       "info": "Survey information",
-      "reusables": "Reusable materials",
+      "reusables": "Reusable demolition products",
       "waste": "Waste materials",
       "hazardous": "Hazardous materials",
       "attachments": "Attachments",
@@ -337,13 +349,15 @@
       "surname": "Surname",
       "occupation": "Occupation",
       "phone": "Phone",
-      "email": "E-mail address"
+      "email": "Email address",
+      "sendLink": "Send link"
     },
     "info": {
       "title": "Survey information",
       "demolitionInfo": "Demolition information",
       "surveyors": "Surveyors",
       "demolitionScope": "Demolition scope",
+      "additionalInformation": "Additional information",
       "dateUnknown": "Date not known",
       "startDate": "Start date",
       "endDate": "Usage end date",
@@ -374,10 +388,12 @@
       }
     },
     "reusables": {
-      "title": "Reusable building parts",
+      "title": "Reusable demolition products",
       "dropFile": "Drop here",
       "viewImage": "View images",
       "moreImage": "More images",
+      "createListing": "Create Listing",
+      "createdListing": "Listing created",
       "addImage": "Add image",
       "deleteImage": "Delete image",
       "preview": "Preview:",
@@ -392,7 +408,7 @@
         "usabilityHelperText": "If it's unknown, choose \"Not validated\"",
         "descriptionHelperText": "Free description, for example, location in the building.",
         "wasteAmountHelperText": "Optional",
-        "imageDescription": "Supported formats: jpg, gif or png\nMax. 4 pictures / building block"
+        "imageDescription": "Supported formats: jpg, gif or png\nMax. 2 pictures / building block"
       },
       "deleteReusableDialog": {
         "title": "Delete reusable building part",
@@ -408,7 +424,8 @@
         "description": "Description",
         "unit": "Unit",
         "editDescription": "Edit description",
-        "images": "Images"
+        "images": "Images",
+        "listing": "Sales listing"
       },
       "usability": {
         "excellent": "Excellent",
@@ -482,9 +499,53 @@
     "summary": {
       "title": "Summary",
       "print": "Print",
+      "document": "Document",
       "demolitionInfo": "Demolition information",
       "images": "Images",
       "image": "Image"
     }
+  },
+  "docx": {
+    "metadata": {
+      "title": "Demolition survey",
+      "modified": "Last modified",
+      "ready": "Completion date",
+      "creator": "Creator",
+      "unknown": "Unknown",
+      "unnamed": "Unnamed"
+    },
+    "page1": {
+      "title": "Demolition information"
+    },
+    "page2": {
+      "title": "Building information",
+      "ownerContactPerson": "Owner's contact person:",
+      "ownerAndAddress": "Building owner and address:",
+      "buildingInfo": "Building info:"
+    },
+    "page3": {
+      "title": "Reusable demolition products"
+    },
+    "page4": {
+      "title": "Waste material"
+    },
+    "page5": {
+      "title": "Hazardous material"
+    }
+  },
+  "listingScreen": {
+    "title": "Make a listing",
+    "materialInfoHelperText": "Additional information",
+    "materialAmount": "Material amount",
+    "materialAmountInfoHelperText": "More information on material amount",
+    "propertyName": "Property name",
+    "address": "Address",
+    "postalCode": "Postal code",
+    "name": "Name",
+    "phone": "Phone",
+    "email": "Email",
+    "send": "send",
+    "ownUse": "For own use",
+    "deleteOwnUse": "Delete own use"
   }
 }

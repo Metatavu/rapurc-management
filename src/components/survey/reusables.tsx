@@ -20,6 +20,7 @@ import FileUploadUtils from "utils/file-upload";
 import { UploadFile } from "types";
 import produce from "immer";
 import { selectLanguage } from "features/locale-slice";
+import { useNavigate } from "react-router-dom";
 
 const WithReusableDataGridDebounce = WithDataGridDebounceFactory<Reusable>();
 
@@ -37,6 +38,7 @@ const Reusables: React.FC<Props> = ({ surveyId }) => {
   const keycloak = useAppSelector(selectKeycloak);
   const errorContext = React.useContext(ErrorContext);
   const selectedLanguage = useAppSelector(selectLanguage);
+  const navigate = useNavigate();
   const [ addingSurveyReusable, setAddingSurveyReusable ] = React.useState<boolean>(false);
   const [ loading, setLoading ] = React.useState(false);
   const [ uploadedFiles, setUploadedFiles ] = React.useState<UploadFile[]>([]);
@@ -562,7 +564,7 @@ const Reusables: React.FC<Props> = ({ surveyId }) => {
       }
     </Stack>
   );
-
+  
   /**
    * Renders add survey reusable dialog
    */
@@ -1159,6 +1161,24 @@ const Reusables: React.FC<Props> = ({ surveyId }) => {
               onClick={ () => onImageDialogOpen(row) }
             >
               { row.images?.length ? strings.survey.reusables.viewImage : strings.survey.reusables.moreImage }
+            </SurveyButton>
+          );
+        }
+      },
+      {
+        field: "addListing",
+        headerName: strings.survey.reusables.dataGridColumns.listing,
+        width: 180,
+        renderCell: (params: GridRenderCellParams) => {
+          const { row } = params;
+          return (
+            <SurveyButton
+              fullWidth
+              variant="contained"
+              color="primary"
+              onClick={() => navigate(`/listing/${surveyId}`)}
+            >
+              { row.listing?.length ? strings.survey.reusables.createdListing : strings.survey.reusables.createListing }
             </SurveyButton>
           );
         }

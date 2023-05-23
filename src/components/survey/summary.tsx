@@ -18,6 +18,7 @@ import FileUploadUtils from "utils/file-upload";
 import { Reusable } from "generated/client";
 import ImageGallery from "styled/generic/image-gallery";
 import { selectLanguage } from "features/locale-slice";
+import DocxExportUtils from "components/docx-export/docx-export-utils";
 
 const initialSurveySummary: SurveySummary = {
   buildingTypes: [],
@@ -411,8 +412,8 @@ const SummaryView: React.FC = () => {
    * 
    * @param value value
    */
-  const renderDataValue = (value?: string | number) => value?.toString() && (
-    <Typography variant="body2">
+  const renderDataValue = (value?: string | number) => value && (
+    <Typography style={{ whiteSpace: "pre-line" }} variant="body2">
       { value.toString() }
     </Typography>
   );
@@ -601,6 +602,14 @@ const SummaryView: React.FC = () => {
               />
             }
             { renderDataCell(strings.survey.info.endDate, moment(selectedSurvey.endDate).format("DD.MM.YYYY")) }
+            { !isMobile &&
+              <Divider
+                variant="inset"
+                orientation="vertical"
+                flexItem
+              />
+            }
+            { renderDataCell(strings.survey.info.additionalInformation, selectedSurvey.additionalInformation ?? "") }
           </Stack>
         </Paper>
       </Stack>
@@ -929,11 +938,11 @@ const SummaryView: React.FC = () => {
         </Typography>
         <Button
           variant="contained"
-          color="secondary"
+          color="primary"
           startIcon={ <Print/> }
-          onClick={ () => setPdfDialogOpen(true) }
+          onClick={ () => selectedSurvey && DocxExportUtils.generateDocx(selectedSurvey, surveySummary) }
         >
-          { strings.survey.summary.print }
+          { strings.survey.summary.document }
         </Button>
       </Stack>
       <Stack spacing={ 4 }>

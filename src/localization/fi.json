@@ -126,6 +126,17 @@
       "create": "Virhe luotaessa liitettä",
       "delete": "Virhe poistettaessa liitettä",
       "update": "Virhe päivitettäessä liitettä"
+    },
+    "listingScreen": {
+      "materialInfo": "Materiaalin tieto vaaditaan",  
+      "materialAmount": "Materiaalin määrä täytyy olla numerona", 
+      "materialAmountInfo": "Materiaalimäärän tieto vaaditaan", 
+      "propertyName": "Kiinteistön nimi vaaditaan", 
+      "address": "Osoite vaaditaan",
+      "postalcode": "Postinumero vaaditaan",
+      "name": "Nimi vaaditaan",
+      "phone": "Puhelinnumero täytyy olla numero",
+      "email": "Virheellinen sähköposti"
     }
   },
 
@@ -174,12 +185,13 @@
   "surveyScreen": {
     "title": "Kartoitus",
     "status": "Tila",
+    "lastModified": "Viimeksi muokattu",
     "navigation": {
       "owner": "Omistajan tiedot",
       "building": "Rakennuksen tiedot",
       "otherStructures": "Muut purettavat rakennukset / rakennelmat",
       "info": "Kartoituksen tiedot",
-      "reusables": "Uudelleenkäytettävät rakennusosat",
+      "reusables": "Uudelleenkäyttökelpoiset purkutuotteet",
       "waste": "Purkujätemateriaalit",
       "hazardous": "Haitta-ainetta sisältävät materiaalit",
       "attachments": "Liitteet",
@@ -337,13 +349,15 @@
       "surname": "Sukunimi",
       "occupation": "Ammatti",
       "phone": "Puhelinnumero",
-      "email": "Sähköpostiosoite"
+      "email": "Sähköpostiosoite",
+      "sendLink": "Lähetä Linkki"
     },
     "info": {
       "title": "Kartoituksen tiedot",
       "demolitionInfo": "Purkutiedot",
       "surveyors": "Kartoittajat",
       "demolitionScope": "Purkamisen laajuus",
+      "additionalInformation": "Lisätiedot",
       "dateUnknown": "Ajankohta ei tiedossa",
       "startDate": "Aloitusajankohta",
       "endDate": "Käyttö loppuu",
@@ -361,8 +375,8 @@
         "role": "Rooli",
         "phone": "Puhelin",
         "email": "Sähköpostiosoite",
-        "reportDate": "Raportointipäivä",
-        "visits": "Käynnit"
+        "reportDate": "Raportointipvm",
+        "visits": "Kohdekäynnit"
       },
       "addNewSurveyorDialog": {
         "title": "Lisää kartoittaja"
@@ -377,6 +391,8 @@
       "dropFile": "Pudota kuvat tähän tai valitse alla olevasta painikkeesta.",
       "viewImage": "Näytä kuvat",
       "moreImage": "Lisää kuvia",
+      "createListing": "Luo ilmoitus",
+      "createdListing": "Ilmoitus luotu",
       "addImage": "Lisää kuva",
       "deleteImage": "Poista kuva",
       "preview": "Esikatselu",
@@ -391,7 +407,7 @@
         "usabilityHelperText": "Jos ei tiedossa, valitse \"ei arvioitu\"",
         "descriptionHelperText": "Vapaa kuvaus esim. sijainnista rakennuksessa tms.",
         "wasteAmountHelperText": "Valinnainen tieto",
-        "imageDescription": "Tuetut formaatit: jpg, gif tai png\nMax. 4 kuvaa / rakennusosa"
+        "imageDescription": "Tuetut formaatit: jpg, gif tai png\nMax. 2 kuvaa / rakennusosa"
       },
       "deleteReusableDialog": {
         "title": "Poista uudelleenkäytettävä osa",
@@ -407,7 +423,8 @@
         "description": "Lisätieto",
         "unit": "Yksikkö",
         "editDescription": "Muokkaa lisätietoa",
-        "images": "Materiaalin kuvat"
+        "images": "Materiaalin kuvat",
+        "listing": "Myynti-ilmoitus"
       },
       "usability": {
         "excellent": "Erinomainen",
@@ -438,7 +455,7 @@
       "dataGridColumns": {
         "material": "Materiaali",
         "wasteCode": "Jätekoodi",
-        "usage": "Jatkokäsittely",
+        "usage": "Käsittely",
         "amount": "Määrä",
         "amountInTons": "Määrä tonneina",
         "description": "Lisätiedot",
@@ -481,9 +498,53 @@
     "summary": {
       "title": "Yhteenveto",
       "print": "Tulosta",
+      "document": "Tallenna DOCX",
       "demolitionInfo": "Purkamista koskevat tiedot",
       "images": "Kuvat",
       "image": "Kuva"
     }
+  },
+  "docx": {
+    "metadata": {
+      "title": "Purkukartoitus",
+      "modified": "Muokattu",
+      "ready": "Valmis",
+      "creator": "Tekijä",
+      "unknown": "Ei tiedossa",
+      "unnamed": "Nimetön"
+    },
+    "page1": {
+      "title": "Purkamista koskevat tiedot"
+    },
+    "page2": {
+      "title": "Purkukohteen tiedot",
+      "ownerContactPerson": "Omistajan yhteyshenkilö:",
+      "ownerAndAddress": "Rakennuksen omistaja ja osoite:",
+      "buildingInfo": "Purettavan rakennuksen tiedot:"
+    },
+    "page3": {
+      "title": "Uudelleenkäyttökelpoiset purkutuotteet"
+    },
+    "page4": {
+      "title": "Purkujätemateriaalit"
+    },
+    "page5": {
+      "title": "Haitta-aineita sisältävät materiaalit"
+    }
+  },
+  "listingScreen": {
+    "title": "Tee ilmoitus kauppapaikkaan",
+    "materialInfoHelperText": "Lisätietoa materiaalista",
+    "materialAmount": "Määrä",
+    "materialAmountInfoHelperText": "Lisätietoa määrästä",
+    "propertyName": "Purkukohteen nimi",
+    "address": "Osoite",
+    "postalCode": "Postinumero",
+    "name": "Nimi",
+    "phone": "Puhelin",
+    "email": "Sähköpostiosoite",
+    "send": "lähetä",
+    "ownUse": "Omaan käyttöön",
+    "deleteOwnUse": "poista oma käyttö"
   }
 }
