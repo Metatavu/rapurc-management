@@ -24,6 +24,8 @@ namespace DocxExportUtils {
    * Unpack page functions
    * 
    * @param doc document
+   * @param survey Survey
+   * @param surveySummary Survey summary
    */
   const unpackPageFunctions = async (doc: Document, survey: Survey, surveySummary: SurveySummary) => {
     const localization = strings.getLanguage();
@@ -38,20 +40,23 @@ namespace DocxExportUtils {
    * Downlaod docx file to client's device
    * 
    * @param doc document
+   * @param survey survey
    */
   const clientDocDownload = async (doc: Document, survey: SurveySummary) => {
     const docBlob = await Packer.toBlob(doc);
-    const csvURL = window.URL.createObjectURL(docBlob);
+    const docURL = window.URL.createObjectURL(docBlob);
     const tempLink = document.createElement("a");
     const surveyName = survey.building?.propertyName;
 
-    tempLink.href = csvURL;
+    tempLink.href = docURL;
     tempLink.setAttribute("download", `${surveyName ?? strings.docx.metadata.unnamed}.docx`);
     tempLink.click();
   };
 
   /**
    * Generate docx file
+   * @param survey survey
+   * @param surveySummary survey summary 
    */
   export const generateDocx = async (survey: Survey, surveySummary: SurveySummary) => {
     const doc = new Document({
