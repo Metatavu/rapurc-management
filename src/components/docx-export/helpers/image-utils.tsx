@@ -72,7 +72,7 @@ namespace ImageUtils {
    * Get Reusable objects image attachments from survey summary
    * 
    * @param doc docx document
-   * @param attachments survey summary attachments
+   * @param images survey summary images
    */
   const getSurveySummaryReusableImageAttachments = async (doc: Document, images: string[]) => {
     let pictures: PictureRun[] = [];
