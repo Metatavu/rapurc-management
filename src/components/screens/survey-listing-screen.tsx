@@ -206,18 +206,15 @@ const SurveyListingScreen: React.FC = () => {
    */
   React.useEffect(() => {
     fetchSurvey();
-  }, [surveyId]);
+  }, [ surveyId ]);
   
   React.useEffect(() => {
     fetchReusableMaterial();
-  }, [materialId]);
-  
-  React.useEffect(() => {
-    fetchBuilding();
-  }, []);
+  }, [ materialId ]);
   
   React.useEffect(() => {
     fetchReusableMaterials();
+    fetchBuilding();
   }, []);
   
   if (!survey) {
@@ -236,21 +233,21 @@ const SurveyListingScreen: React.FC = () => {
         direction="column"
         alignItems="center"
         justifyContent="center"
-        spacing={1}
+        spacing={ 1 }
         overflow="auto"
       >
         <Paper>
-          { /* Otsikko */ }
-          <Typography variant="h1" margin={1} textAlign="center">
+          { /* header */ }
+          <Typography variant="h1" margin={ 1 } textAlign="center">
             { strings.listingScreen.title }
           </Typography>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={ handleSubmit }>
             <TextField
               fullWidth
               color="primary"
               name="componentName"
               label="Ilmoituksen otsikko"
-              value={material.componentName}
+              value={ material.componentName }
               disabled
             />
             <Stack
@@ -260,10 +257,10 @@ const SurveyListingScreen: React.FC = () => {
             >
               <TextField
                 fullWidth
-                select={false}
+                select={ false }
                 color="primary"
                 name="reusableMaterialId"
-                label={strings.survey.reusables.addNewBuildingPartsDialog.buildingPartOrMaterial}
+                label={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartOrMaterial }
                 value={ LocalizationUtils.getLocalizedName(reusableMaterials
                   .find(materials => (materials.id === material.reusableMaterialId))?.localizedNames || [], selectedLanguage)}
                 disabled
@@ -273,18 +270,18 @@ const SurveyListingScreen: React.FC = () => {
               multiline
               rows={ 2 }
               name="description"
-              label={strings.survey.reusables.dataGridColumns.description }
-              value={material.description}
+              label={ strings.survey.reusables.dataGridColumns.description }
+              value={ material.description }
               helperText={ strings.listingScreen.materialInfoHelperText }
               onChange={ e => setMaterialInfo(e.target.value) }
-              error={!!formErrors.materialInfo}
+              error={ !!formErrors.materialInfo }
             />
             <Stack
               direction="row"
               spacing={ 2 }
               marginTop={ 2 }
             >
-              { /* Määrät */ }
+              { /* amounts */ }
               <TextField
                 fullWidth
                 color="primary"
@@ -293,47 +290,41 @@ const SurveyListingScreen: React.FC = () => {
                 label={ strings.survey.reusables.dataGridColumns.amount }
                 type="number"
                 onChange={ e => setMaterialAmount(e.target.value) }
-                error={!!formErrors.materialAmount}
+                error={ !!formErrors.materialAmount }
               />
               <TextField
                 fullWidth
-                select={false}
+                select={ false }
                 color="primary"
                 name="amount"
+                label={ material.amount }
                 value={ newMaterial.amount }
-                label={material.amount}
                 type="tel"
                 onChange={ onNewMaterialChange }
                 disabled
               />
             </Stack>
-            <Stack
-              direction="row"
-              spacing={ 2 }
-              marginTop={ 2 }
-            >
-              <TextField
-                fullWidth
-                select={false}
-                color="primary"
-                name="amount"
-                value={ newMaterial.amount }
-                label={material.unit}
-                onChange={ onNewMaterialChange }
-                disabled
-              />
-            </Stack>
+            <TextField
+              fullWidth
+              select={ false }
+              color="primary"
+              name="amount"
+              label={ strings.listingScreen.unit }
+              value={ material.unit}
+              onChange={ onNewMaterialChange }
+              disabled
+            />
             { /* Location of the material */ }
             <Stack spacing={ 2 } marginTop={ 2 }>
               <TextField
                 fullWidth
                 color="primary"
                 name="componentName"
-                label={building?.propertyName || ""}
+                label={ building?.propertyName || "" }
                 value={ propertyName }
                 helperText={ strings.listingScreen.propertyName }
                 onChange={ e => setpropertyName(e.target.value) }
-                error={!!formErrors.propertyName}
+                error={ !!formErrors.propertyName }
                 disabled
               />
             </Stack>
@@ -349,7 +340,7 @@ const SurveyListingScreen: React.FC = () => {
                 label={ strings.listingScreen.address }
                 value={ address }
                 onChange={ e => setAddress(e.target.value) }
-                error={!!formErrors.address}
+                error={ !!formErrors.address }
               />
               <TextField
                 fullWidth
@@ -374,7 +365,7 @@ const SurveyListingScreen: React.FC = () => {
                 label={ strings.listingScreen.postalCode }
                 value={ postalcode }
                 onChange={ e => setPostalcode(e.target.value) }
-                error={!!formErrors.postalcode}
+                error={ !!formErrors.postalcode }
               />
               <TextField
                 fullWidth
@@ -387,17 +378,17 @@ const SurveyListingScreen: React.FC = () => {
                 disabled
               />
             </Stack>
-            {/* Yhteystiedot */}
+            {/* Contact info */}
             <TextField
               fullWidth
               color="primary"
               name="componentName"
-              label={strings.listingScreen.name}
+              label={ strings.listingScreen.name }
               value={ name }
               onChange={ e => setName(e.target.value) }
-              error={!!formErrors.name}
+              error={ !!formErrors.name }
             />
-            { /* puh */ }
+            { /* tel */ }
             <TextField
               fullWidth
               color="primary"
@@ -406,7 +397,7 @@ const SurveyListingScreen: React.FC = () => {
               type="tel"
               value={ phone }
               onChange={ e => setPhone(e.target.value) }
-              error={!!formErrors.phone}
+              error={ !!formErrors.phone }
             />
             { /* e-mail */ }
             <TextField
@@ -418,7 +409,7 @@ const SurveyListingScreen: React.FC = () => {
               type="email"
               value={ email }
               onChange={ e => setEmail(e.target.value) }
-              error={!!formErrors.email}
+              error={ !!formErrors.email }
             />
             <Stack
               direction="row"
@@ -429,7 +420,7 @@ const SurveyListingScreen: React.FC = () => {
             >
               <Button
                 variant="contained"
-                onClick={() => navigate(`/surveys/${surveyId}/reusables`)}
+                onClick={ () => navigate(`/surveys/${surveyId}/reusables`) }
               >
                 { strings.generic.cancel }
               </Button>
