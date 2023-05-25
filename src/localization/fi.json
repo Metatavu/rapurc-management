@@ -131,7 +131,7 @@
       "materialInfo": "Materiaalin tieto vaaditaan",  
       "materialAmount": "Materiaalin määrä täytyy olla numerona", 
       "materialAmountInfo": "Materiaalimäärän tieto vaaditaan", 
-      "unit": "materiaaliyksikkö vaaditaan",
+      "unit": "Materiaaliyksikkö vaaditaan",
       "propertyName": "Kiinteistön nimi vaaditaan", 
       "address": "Osoite vaaditaan",
       "postalcode": "Postinumero vaaditaan",
