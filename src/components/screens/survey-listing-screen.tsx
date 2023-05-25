@@ -1,11 +1,15 @@
 import { Button, Paper, Stack, TextField, Typography, Container } from "@mui/material";
-import { Reusable, Usability, Survey } from "generated/client";
+import { Reusable, Usability, Survey, ReusableMaterial, Building } from "generated/client";
 import { useParams, useNavigate } from "react-router-dom";
 import { ErrorContext } from "components/error-handler/error-handler";
-import { useAppDispatch } from "app/hooks";
+import { useAppDispatch, useAppSelector } from "app/hooks";
 import { fetchSelectedSurvey } from "features/surveys-slice";
 import * as React from "react";
 import strings from "localization/strings";
+import Api from "api";
+import { selectKeycloak } from "features/auth-slice";
+import LocalizationUtils from "utils/localization-utils";
+import { selectLanguage } from "features/locale-slice";
 /**
  * interfaces
  */
@@ -21,19 +25,13 @@ interface FormErrors {
   email?: string;
 }
 /**
- * Everything to do with language, api and routing are temporary, this is just a base to be coded on
+ * Render the Form
  */
-/**
- * Component properties
-interface Props {
-  surveyId: string;
-}
-*/
 const SurveyListingScreen: React.FC = () => {
-  // const keycloak = useAppSelector(selectKeycloak);
-  // const errorContext = React.useContext(ErrorContext);
+  const keycloak = useAppSelector(selectKeycloak);
+  const errorContext = React.useContext(ErrorContext);
   // const selectedLanguage = useAppSelector(selectLanguage);
-/**
+  /**
   * Component for reusable materials and building parts (to showcase options TEMPORARY)
   */
   const [ newMaterial, setNewMaterial ] = React.useState<Reusable>({
@@ -55,6 +53,7 @@ const SurveyListingScreen: React.FC = () => {
   /**
    * form values
    */
+  const selectedLanguage = useAppSelector(selectLanguage);
   const [materialInfo, setMaterialInfo] = React.useState("");
   const [materialAmount, setMaterialAmount] = React.useState("");
   const [propertyName, setpropertyName] = React.useState("");
@@ -125,11 +124,9 @@ const SurveyListingScreen: React.FC = () => {
    * Get the SurveyId
    */
   const dispatch = useAppDispatch();
-  const errorContext = React.useContext(ErrorContext);
   const { surveyId } = useParams<"surveyId">();
   const navigate = useNavigate();
   const [ survey, setSurvey ] = React.useState<Survey | undefined>();
-
   /**
    * Fetches survey based on URL survey ID
    */
@@ -145,13 +142,85 @@ const SurveyListingScreen: React.FC = () => {
       errorContext.setError(strings.errorHandling.surveys.find, error);
     }
   };
+  /**
+   * Get needed fetch for the form, material row data, Building property name
+   */
+  const { materialId } = useParams<"materialId">();
+  const [ material, setMaterial ] = React.useState<Reusable | undefined>();
+  const [ reusableMaterials, setReusableMaterials ] = React.useState<ReusableMaterial[]>([]);
+  const [ building, setBuilding ] = React.useState<Building>();
+  /**
+   * Fetches reusable materials by materialID
+   */
+  const fetchReusableMaterial = async () => {
+    if (!keycloak?.token || !materialId || !surveyId) {
+      return;
+    }
+
+    try {
+      const selectedReusableMaterial = await Api.getSurveyReusablesApi(keycloak.token).findSurveyReusable({ surveyId: surveyId, reusableId: materialId });
+      setMaterial(selectedReusableMaterial);
+    } catch (error) {
+      errorContext.setError(strings.errorHandling.materials.list, error);
+    }
+  };
 
   /**
-   * Effect for fetching surveys. Triggered when survey ID is changed
+   * Fetches list of reusable materials and building parts
    */
-  React.useEffect(() => { fetchSurvey(); }, [ surveyId ]);
+  const fetchReusableMaterials = async () => {
+    if (!keycloak?.token) {
+      return;
+    }
 
+    try {
+      setReusableMaterials(await Api.getReusableMaterialApi(keycloak.token).listReusableMaterials());
+    } catch (error) {
+      errorContext.setError(strings.errorHandling.materials.list, error);
+    }
+  };
+  /**
+  * Fetch Building property name
+  */
+  const fetchBuilding = async () => {
+    if (!keycloak?.token || !surveyId) {
+      return;
+    }
+
+    try {
+      const fetchedBuildings = await Api.getBuildingsApi(keycloak.token).listBuildings({
+        surveyId: surveyId
+      });
+
+      if (fetchedBuildings.length !== 1) {
+        return;
+      }
+
+      setBuilding(fetchedBuildings[0]);
+    } catch (error) {
+      errorContext.setError(strings.errorHandling.buildings.list, error);
+    }
+  };
+  /**
+   * Effect for fetching survey / materials of selected row
+   */
+  React.useEffect(() => {
+    fetchSurvey();
+  }, [ surveyId ]);
+  
+  React.useEffect(() => {
+    fetchReusableMaterial();
+  }, [ materialId ]);
+  
+  React.useEffect(() => {
+    fetchReusableMaterials();
+    fetchBuilding();
+  }, []);
+  
   if (!survey) {
+    return null;
+  }
+  if (!material) {
     return null;
   }
 
@@ -164,21 +233,21 @@ const SurveyListingScreen: React.FC = () => {
         direction="column"
         alignItems="center"
         justifyContent="center"
-        spacing={1}
+        spacing={ 1 }
         overflow="auto"
       >
         <Paper>
-          { /* Otsikko */ }
-          <Typography variant="h1" margin={1} textAlign="center">
+          { /* header */ }
+          <Typography variant="h1" margin={ 1 } textAlign="center">
             { strings.listingScreen.title }
           </Typography>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={ handleSubmit }>
             <TextField
               fullWidth
               color="primary"
               name="componentName"
               label="Ilmoituksen otsikko"
-              value="GET"
+              value={ material.componentName }
               disabled
             />
             <Stack
@@ -188,11 +257,12 @@ const SurveyListingScreen: React.FC = () => {
             >
               <TextField
                 fullWidth
-                select={false}
+                select={ false }
                 color="primary"
                 name="reusableMaterialId"
-                value="GET"
-                label={strings.survey.reusables.addNewBuildingPartsDialog.buildingPartOrMaterial}
+                label={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartOrMaterial }
+                value={ LocalizationUtils.getLocalizedName(reusableMaterials
+                  .find(materials => (materials.id === material.reusableMaterialId))?.localizedNames || [], selectedLanguage)}
                 disabled
               />
             </Stack>
@@ -200,18 +270,18 @@ const SurveyListingScreen: React.FC = () => {
               multiline
               rows={ 2 }
               name="description"
-              label={strings.survey.reusables.dataGridColumns.description }
-              value={materialInfo}
+              label={ strings.survey.reusables.dataGridColumns.description }
+              value={ material.description }
               helperText={ strings.listingScreen.materialInfoHelperText }
               onChange={ e => setMaterialInfo(e.target.value) }
-              error={!!formErrors.materialInfo}
+              error={ !!formErrors.materialInfo }
             />
             <Stack
               direction="row"
               spacing={ 2 }
               marginTop={ 2 }
             >
-              { /* Määrät */ }
+              { /* amounts */ }
               <TextField
                 fullWidth
                 color="primary"
@@ -220,47 +290,41 @@ const SurveyListingScreen: React.FC = () => {
                 label={ strings.survey.reusables.dataGridColumns.amount }
                 type="number"
                 onChange={ e => setMaterialAmount(e.target.value) }
-                error={!!formErrors.materialAmount}
+                error={ !!formErrors.materialAmount }
               />
               <TextField
                 fullWidth
-                select={false}
+                select={ false }
                 color="primary"
                 name="amount"
+                label={ material.amount }
                 value={ newMaterial.amount }
-                label="GET"
                 type="tel"
                 onChange={ onNewMaterialChange }
                 disabled
               />
             </Stack>
-            <Stack
-              direction="row"
-              spacing={ 2 }
-              marginTop={ 2 }
-            >
-              <TextField
-                fullWidth
-                select={false}
-                color="primary"
-                name="amount"
-                value={ newMaterial.amount }
-                label="GET"
-                onChange={ onNewMaterialChange }
-                disabled
-              />
-            </Stack>
+            <TextField
+              fullWidth
+              select={ false }
+              color="primary"
+              name="amount"
+              label={ strings.listingScreen.unit }
+              value={ material.unit}
+              onChange={ onNewMaterialChange }
+              disabled
+            />
             { /* Location of the material */ }
             <Stack spacing={ 2 } marginTop={ 2 }>
               <TextField
                 fullWidth
                 color="primary"
                 name="componentName"
-                label="GET"
+                label={ building?.propertyName || "" }
                 value={ propertyName }
                 helperText={ strings.listingScreen.propertyName }
                 onChange={ e => setpropertyName(e.target.value) }
-                error={!!formErrors.propertyName}
+                error={ !!formErrors.propertyName }
                 disabled
               />
             </Stack>
@@ -276,13 +340,13 @@ const SurveyListingScreen: React.FC = () => {
                 label={ strings.listingScreen.address }
                 value={ address }
                 onChange={ e => setAddress(e.target.value) }
-                error={!!formErrors.address}
+                error={ !!formErrors.address }
               />
               <TextField
                 fullWidth
                 color="primary"
                 name="componentName"
-                label="GET"
+                label={ `${building?.address?.streetAddress} ${building?.address?.city}`}
                 type="text"
                 value={ newMaterial.componentName }
                 onChange={ onNewMaterialChange }
@@ -301,30 +365,30 @@ const SurveyListingScreen: React.FC = () => {
                 label={ strings.listingScreen.postalCode }
                 value={ postalcode }
                 onChange={ e => setPostalcode(e.target.value) }
-                error={!!formErrors.postalcode}
+                error={ !!formErrors.postalcode }
               />
               <TextField
                 fullWidth
                 color="primary"
                 name="componentName"
-                label="GET"
+                label={ building?.address?.postCode }
                 type="text"
                 value={ newMaterial.componentName }
                 onChange={ onNewMaterialChange }
                 disabled
               />
             </Stack>
-            {/* Yhteystiedot */}
+            {/* Contact info */}
             <TextField
               fullWidth
               color="primary"
               name="componentName"
-              label={strings.listingScreen.name}
+              label={ strings.listingScreen.name }
               value={ name }
               onChange={ e => setName(e.target.value) }
-              error={!!formErrors.name}
+              error={ !!formErrors.name }
             />
-            { /* puh */ }
+            { /* tel */ }
             <TextField
               fullWidth
               color="primary"
@@ -333,7 +397,7 @@ const SurveyListingScreen: React.FC = () => {
               type="tel"
               value={ phone }
               onChange={ e => setPhone(e.target.value) }
-              error={!!formErrors.phone}
+              error={ !!formErrors.phone }
             />
             { /* e-mail */ }
             <TextField
@@ -345,7 +409,7 @@ const SurveyListingScreen: React.FC = () => {
               type="email"
               value={ email }
               onChange={ e => setEmail(e.target.value) }
-              error={!!formErrors.email}
+              error={ !!formErrors.email }
             />
             <Stack
               direction="row"
@@ -356,7 +420,7 @@ const SurveyListingScreen: React.FC = () => {
             >
               <Button
                 variant="contained"
-                onClick={() => navigate(-1)}
+                onClick={ () => navigate(`/surveys/${surveyId}/reusables`) }
               >
                 { strings.generic.cancel }
               </Button>

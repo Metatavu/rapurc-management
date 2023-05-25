@@ -153,6 +153,7 @@ export interface Localized extends LocalizedStringsMethods {
       materialInfo: string;
       materialAmount: string;
       materialAmountInfo: string;
+      unit: string;
       propertyName: string;
       address: string;
       postalcode: string;
@@ -585,6 +586,7 @@ export interface Localized extends LocalizedStringsMethods {
     materialInfoHelperText: string;
     materialAmount: string;
     materialAmountInfoHelperText: string;
+    unit: string;
     propertyName: string;
     address: string;
     postalCode: string;

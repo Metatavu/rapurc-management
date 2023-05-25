@@ -49,7 +49,7 @@ const App: React.FC = () => {
               }
             />
             <Route
-              path="/listing/:surveyId/*"
+              path="/listing/:surveyId/:materialId/*"
               element={
                 <VisibleWithRole userRole="admin">
                   <ListingScreen/>
