@@ -130,6 +130,7 @@
       "materialInfo": "Material information is required",
       "materialAmount": "Material amount must be a number",
       "materialAmountInfo": "Material amount info is required",
+      "priceAmount": "Price is required",
       "unit": "Unit type is required",
       "propertyName": "Property name is required",
       "address": "Address is required",

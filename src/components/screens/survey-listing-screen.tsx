@@ -17,6 +17,7 @@ interface FormErrors {
   materialInfo?: string;
   materialAmount?: string;
   materialAmountInfo?: string;
+  priceAmount?: string;
   propertyName?: string;
   address?: string;
   postalcode?: string;
@@ -57,6 +58,7 @@ const SurveyListingScreen: React.FC = () => {
   const [materialInfo, setMaterialInfo] = React.useState("");
   const [materialAmount, setMaterialAmount] = React.useState("");
   const [propertyName, setpropertyName] = React.useState("");
+  const [priceAmount, setpriceAmount] = React.useState("");
   const [address, setAddress] = React.useState("");
   const [postalcode, setPostalcode ] = React.useState("");
   const [name, setName] = React.useState("");
@@ -81,6 +83,12 @@ const SurveyListingScreen: React.FC = () => {
 
     if (propertyName.trim() === "") {
       errors.propertyName = strings.errorHandling.listingScreen.propertyName;
+    }
+
+    if (priceAmount.trim() === "") {
+      errors.priceAmount = "Price is required";
+    } else if (Number.isNaN(Number(priceAmount))) {
+      errors.priceAmount = strings.errorHandling.listingScreen.priceAmount;
     }
 
     if (address.trim() === "") {
@@ -238,24 +246,31 @@ const SurveyListingScreen: React.FC = () => {
       >
         <Paper>
           { /* header */ }
-          <Typography variant="h1" margin={ 1 } textAlign="center">
+          <Typography variant="h1" margin={ 1 } marginBottom={ 4 } textAlign="center">
             { strings.listingScreen.title }
           </Typography>
           <form onSubmit={ handleSubmit }>
             <TextField
+              variant="outlined"
               fullWidth
               color="primary"
               name="componentName"
               label="Ilmoituksen otsikko"
               value={ material.componentName }
-              disabled
+              sx={{ input: { color: "black" }, label: { color: "black" } }}
+              InputLabelProps={{
+                shrink: true
+              }}
+              inputProps={{ readOnly: true, disableUnderline: true }}
             />
             <Stack
               direction="row"
               spacing={ 2 }
               marginTop={ 2 }
+              marginBottom={ 2 }
             >
               <TextField
+                variant="outlined"
                 fullWidth
                 select={ false }
                 color="primary"
@@ -263,11 +278,17 @@ const SurveyListingScreen: React.FC = () => {
                 label={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartOrMaterial }
                 value={ LocalizationUtils.getLocalizedName(reusableMaterials
                   .find(materials => (materials.id === material.reusableMaterialId))?.localizedNames || [], selectedLanguage)}
-                disabled
+                sx={{ input: { color: "black" }, label: { color: "black" } }}
+                InputLabelProps={{
+                  shrink: true
+                }}
+                inputProps={{ readOnly: true, disableUnderline: true }}
               />
             </Stack>
             <TextField
+              variant="outlined"
               multiline
+              color="primary"
               rows={ 2 }
               name="description"
               label={ strings.survey.reusables.dataGridColumns.description }
@@ -275,6 +296,13 @@ const SurveyListingScreen: React.FC = () => {
               helperText={ strings.listingScreen.materialInfoHelperText }
               onChange={ e => setMaterialInfo(e.target.value) }
               error={ !!formErrors.materialInfo }
+              sx={{
+                input: { color: "black" }, label: { color: "black" }
+              }}
+              InputLabelProps={{
+                shrink: true
+              }}
+              inputProps={{ style: { color: "black" } }}
             />
             <Stack
               direction="row"
@@ -283,6 +311,7 @@ const SurveyListingScreen: React.FC = () => {
             >
               { /* amounts */ }
               <TextField
+                variant="outlined"
                 fullWidth
                 color="primary"
                 name="amount"
@@ -291,8 +320,16 @@ const SurveyListingScreen: React.FC = () => {
                 type="number"
                 onChange={ e => setMaterialAmount(e.target.value) }
                 error={ !!formErrors.materialAmount }
+                sx={{ label: { color: "black" } }}
+                InputLabelProps={{
+                  shrink: false
+                }}
+                inputProps={{
+                  style: { color: "black" }, readOnly: true, disableUnderline: true
+                }}
               />
               <TextField
+                variant="outlined"
                 fullWidth
                 select={ false }
                 color="primary"
@@ -301,22 +338,71 @@ const SurveyListingScreen: React.FC = () => {
                 value={ newMaterial.amount }
                 type="tel"
                 onChange={ onNewMaterialChange }
-                disabled
+                sx={{ label: { color: "black" } }}
+                InputLabelProps={{
+                  shrink: false
+                }}
+                inputProps={{ readOnly: true, disableUnderline: true }}
               />
             </Stack>
-            <TextField
-              fullWidth
-              select={ false }
-              color="primary"
-              name="amount"
-              label={ strings.listingScreen.unit }
-              value={ material.unit}
-              onChange={ onNewMaterialChange }
-              disabled
-            />
+            <Stack
+              direction="row"
+              spacing={ 2 }
+              marginTop={ 2 }
+            >
+              <TextField
+                variant="outlined"
+                fullWidth
+                select={ false }
+                color="primary"
+                name=""
+                label="Kokonaishinta (alv.24%)"
+                value=""
+                type="number"
+                sx={{ label: { color: "black" }, input: { color: "black" } }}
+                InputLabelProps={{
+                  shrink: false
+                }}
+                inputProps={{ readOnly: true, disableUnderline: true }}
+              />
+              <TextField
+                variant="outlined"
+                fullWidth
+                color="primary"
+                name="price"
+                value={ priceAmount }
+                label="€"
+                type="number"
+                onChange={ e => setpriceAmount(e.target.value) }
+                sx={{ label: { color: "black" }, input: { color: "black" } }}
+                inputProps={{ style: { color: "black" } }}
+              />
+            </Stack>
+            <Stack
+              direction="column"
+              spacing={ 2 }
+              marginTop={ 2 }
+            >
+              <TextField
+                variant="outlined"
+                fullWidth
+                select={ false }
+                color="primary"
+                name="amount"
+                label={ strings.listingScreen.unit }
+                value={ material.unit }
+                onChange={ onNewMaterialChange }
+                sx={{ input: { color: "black" }, label: { color: "black" } }}
+                InputLabelProps={{
+                  shrink: true
+                }}
+                inputProps={{ readOnly: true, disableUnderline: true }}
+              />
+            </Stack>
             { /* Location of the material */ }
             <Stack spacing={ 2 } marginTop={ 2 }>
               <TextField
+                variant="outlined"
                 fullWidth
                 color="primary"
                 name="componentName"
@@ -325,7 +411,11 @@ const SurveyListingScreen: React.FC = () => {
                 helperText={ strings.listingScreen.propertyName }
                 onChange={ e => setpropertyName(e.target.value) }
                 error={ !!formErrors.propertyName }
-                disabled
+                sx={{ label: { color: "black" } }}
+                InputLabelProps={{
+                  shrink: false
+                }}
+                inputProps={{ readOnly: true, disableUnderline: true }}
               />
             </Stack>
             <Stack
@@ -334,6 +424,7 @@ const SurveyListingScreen: React.FC = () => {
               marginTop={ 2 }
             >
               <TextField
+                variant="outlined"
                 fullWidth
                 color="primary"
                 name="componentName"
@@ -341,8 +432,14 @@ const SurveyListingScreen: React.FC = () => {
                 value={ address }
                 onChange={ e => setAddress(e.target.value) }
                 error={ !!formErrors.address }
+                sx={{ label: { color: "black" } }}
+                InputLabelProps={{
+                  shrink: false
+                }}
+                inputProps={{ readOnly: true, disableUnderline: true }}
               />
               <TextField
+                variant="outlined"
                 fullWidth
                 color="primary"
                 name="componentName"
@@ -350,7 +447,11 @@ const SurveyListingScreen: React.FC = () => {
                 type="text"
                 value={ newMaterial.componentName }
                 onChange={ onNewMaterialChange }
-                disabled
+                sx={{ label: { color: "black" } }}
+                InputLabelProps={{
+                  shrink: false
+                }}
+                inputProps={{ readOnly: true, disableUnderline: true }}
               />
             </Stack>
             <Stack
@@ -359,6 +460,7 @@ const SurveyListingScreen: React.FC = () => {
               marginTop={ 2 }
             >
               <TextField
+                variant="outlined"
                 fullWidth
                 color="primary"
                 name="componentName"
@@ -366,8 +468,14 @@ const SurveyListingScreen: React.FC = () => {
                 value={ postalcode }
                 onChange={ e => setPostalcode(e.target.value) }
                 error={ !!formErrors.postalcode }
+                sx={{ label: { color: "black" } }}
+                InputLabelProps={{
+                  shrink: false
+                }}
+                inputProps={{ readOnly: true, disableUnderline: true }}
               />
               <TextField
+                variant="outlined"
                 fullWidth
                 color="primary"
                 name="componentName"
@@ -375,7 +483,11 @@ const SurveyListingScreen: React.FC = () => {
                 type="text"
                 value={ newMaterial.componentName }
                 onChange={ onNewMaterialChange }
-                disabled
+                sx={{ label: { color: "black" } }}
+                InputLabelProps={{
+                  shrink: false
+                }}
+                inputProps={{ readOnly: true, disableUnderline: true }}
               />
             </Stack>
             {/* Contact info */}
@@ -387,6 +499,7 @@ const SurveyListingScreen: React.FC = () => {
               value={ name }
               onChange={ e => setName(e.target.value) }
               error={ !!formErrors.name }
+              sx={{ label: { color: "black" }, marginLeft: "2px" }}
             />
             { /* tel */ }
             <TextField
@@ -398,6 +511,7 @@ const SurveyListingScreen: React.FC = () => {
               value={ phone }
               onChange={ e => setPhone(e.target.value) }
               error={ !!formErrors.phone }
+              sx={{ label: { color: "black" }, marginLeft: "2px" }}
             />
             { /* e-mail */ }
             <TextField
@@ -410,6 +524,7 @@ const SurveyListingScreen: React.FC = () => {
               value={ email }
               onChange={ e => setEmail(e.target.value) }
               error={ !!formErrors.email }
+              sx={{ label: { color: "black" }, marginLeft: "2px" }}
             />
             <Stack
               direction="row"
