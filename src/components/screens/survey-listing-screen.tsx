@@ -366,7 +366,6 @@ const SurveyListingScreen: React.FC = () => {
                 inputProps={{ readOnly: true, disableUnderline: true }}
               />
               <TextField
-                variant="outlined"
                 fullWidth
                 color="primary"
                 name="price"
