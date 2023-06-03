@@ -1,4 +1,4 @@
-import { Button, Paper, Stack, TextField, Typography, Container } from "@mui/material";
+import { Button, Paper, Stack, TextField, Typography, Container, Dialog, DialogTitle, DialogContent, DialogActions, FormControlLabel, FormLabel, FormControl, Radio, RadioGroup } from "@mui/material";
 import { Reusable, Usability, Survey, ReusableMaterial, Building } from "generated/client";
 import { useParams, useNavigate } from "react-router-dom";
 import { ErrorContext } from "components/error-handler/error-handler";
@@ -24,13 +24,140 @@ interface FormErrors {
   phone?: string;
   email?: string;
 }
+interface LoginDialogProps {
+  open: boolean;
+  onClose: () => void;
+  onLogin: () => void;
+}
 /**
- * Render the Form
+ * Render login dialog
+ */
+const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }: any) => {
+  const [site, setSite] = React.useState("Site1");
+  const [username, setUsername] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [loginError, setLoginError] = React.useState(" ");
+  /**
+   * Handle site state changes
+   */
+  const handleSiteChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSite(event.target.value);
+  };
+  /**
+   * Handle username state changes
+   */
+  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(event.target.value);
+  };
+  /**
+   * Handle password state change
+   */
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputPassword = event.target.value;
+    setPassword(inputPassword);
+  };
+  /**
+   * Validate login
+  */
+  const validateLogin = (usernameS: string, passwordS: string) => {
+    // Perform your login validation logic here
+    // For demonstration purposes, let's assume username and password must not be empty
+    return usernameS.trim() !== "" && passwordS.trim() !== "";
+  };
+  /**
+   * Handle login
+   */
+  const handleLogin = () => {
+    // Perform login validation here
+    const isValidLogin = validateLogin(username, password);
+
+    if (isValidLogin) {
+      onLogin();
+      onClose();
+    } else {
+      // TODO: localize
+      setLoginError("Invalid username or password");
+    }
+  };
+
+  return (
+    <Dialog open={open} onClose={loginError ? undefined : onClose}>
+      {/* TODO: localize */}
+      <DialogTitle>Login</DialogTitle>
+      <DialogContent>
+        <FormControl component="fieldset">
+          <FormLabel component="legend">Choose Site</FormLabel>
+          <RadioGroup value={ site } onChange={ handleSiteChange }>
+            <FormControlLabel value="Site1" control={<Radio/>} label="Kiertoon"/>
+          </RadioGroup>
+        </FormControl>
+        <TextField
+          autoFocus
+          margin="dense"
+          label="Username"
+          type="text"
+          fullWidth
+          value={username}
+          onChange={handleUsernameChange}
+        />
+        <TextField
+          margin="dense"
+          label="Password"
+          type="password"
+          fullWidth
+          value={password}
+          onChange={handlePasswordChange}
+        />
+        {loginError && (
+          <Typography variant="body2" color="error">
+            {loginError}
+          </Typography>
+        )}
+        <DialogActions>
+          <Button onClick={handleLogin} color="primary">
+            Login
+          </Button>
+        </DialogActions>
+      </DialogContent>
+    </Dialog>
+  );
+};
+/**
+ * Render the Form / App
  */
 const SurveyListingScreen: React.FC = () => {
   const keycloak = useAppSelector(selectKeycloak);
   const errorContext = React.useContext(ErrorContext);
   // const selectedLanguage = useAppSelector(selectLanguage);
+  /**
+   * Login states
+   */
+  const [open, setOpen] = React.useState(true);
+  const [loggedIn, setLoggedIn] = React.useState(false);
+  /**
+   * Login handle
+   */
+  const handleLogin = () => {
+    setLoggedIn(true);
+  };
+  /**
+   * Log out Handle ? future proof
+  const handleLogout = () => {
+    setLoggedIn(false);
+  };
+   */
+  /**
+   * Login Dialog open | future proof?
+  const handleOpenDialog = () => {
+    setOpen(true);
+  };
+   */
+  /**
+   * Login dialog close
+   */
+  const handleCloseDialog = () => {
+    setOpen(false);
+  };
   /**
   * Component for reusable materials and building parts (to showcase options TEMPORARY)
   */
@@ -229,221 +356,230 @@ const SurveyListingScreen: React.FC = () => {
   */
   return (
     <Container maxWidth="md">
-      <Stack
-        direction="column"
-        alignItems="center"
-        justifyContent="center"
-        spacing={ 1 }
-        overflow="auto"
-      >
-        <Paper>
-          { /* header */ }
-          <Typography variant="h1" margin={ 1 } textAlign="center">
-            { strings.listingScreen.title }
-          </Typography>
-          <form onSubmit={ handleSubmit }>
-            <TextField
-              fullWidth
-              color="primary"
-              name="componentName"
-              label="Ilmoituksen otsikko"
-              value={ material.componentName }
-              disabled
-            />
-            <Stack
-              direction="row"
-              spacing={ 2 }
-              marginTop={ 2 }
-            >
+      {loggedIn ? (
+        <Stack
+          direction="column"
+          alignItems="center"
+          justifyContent="center"
+          spacing={ 1 }
+          overflow="auto"
+        >
+          <Paper>
+            { /* header */ }
+            <Typography variant="h1" margin={ 1 } textAlign="center">
+              { strings.listingScreen.title }
+            </Typography>
+            <form onSubmit={ handleSubmit }>
               <TextField
                 fullWidth
-                select={ false }
                 color="primary"
-                name="reusableMaterialId"
-                label={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartOrMaterial }
-                value={ LocalizationUtils.getLocalizedName(reusableMaterials
-                  .find(materials => (materials.id === material.reusableMaterialId))?.localizedNames || [], selectedLanguage)}
+                name="componentName"
+                label="Ilmoituksen otsikko"
+                value={ material.componentName }
                 disabled
               />
-            </Stack>
-            <TextField
-              multiline
-              rows={ 2 }
-              name="description"
-              label={ strings.survey.reusables.dataGridColumns.description }
-              value={ material.description }
-              helperText={ strings.listingScreen.materialInfoHelperText }
-              onChange={ e => setMaterialInfo(e.target.value) }
-              error={ !!formErrors.materialInfo }
-            />
-            <Stack
-              direction="row"
-              spacing={ 2 }
-              marginTop={ 2 }
-            >
-              { /* amounts */ }
+              <Stack
+                direction="row"
+                spacing={ 2 }
+                marginTop={ 2 }
+              >
+                <TextField
+                  fullWidth
+                  select={ false }
+                  color="primary"
+                  name="reusableMaterialId"
+                  label={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartOrMaterial }
+                  value={ LocalizationUtils.getLocalizedName(reusableMaterials
+                    .find(materials => (materials.id === material.reusableMaterialId))?.localizedNames || [], selectedLanguage)}
+                  disabled
+                />
+              </Stack>
               <TextField
-                fullWidth
-                color="primary"
-                name="amount"
-                value={ materialAmount }
-                label={ strings.survey.reusables.dataGridColumns.amount }
-                type="number"
-                onChange={ e => setMaterialAmount(e.target.value) }
-                error={ !!formErrors.materialAmount }
+                multiline
+                rows={ 2 }
+                name="description"
+                label={ strings.survey.reusables.dataGridColumns.description }
+                value={ material.description }
+                helperText={ strings.listingScreen.materialInfoHelperText }
+                onChange={ e => setMaterialInfo(e.target.value) }
+                error={ !!formErrors.materialInfo }
               />
+              <Stack
+                direction="row"
+                spacing={ 2 }
+                marginTop={ 2 }
+              >
+                { /* amounts */ }
+                <TextField
+                  fullWidth
+                  color="primary"
+                  name="amount"
+                  value={ materialAmount }
+                  label={ strings.survey.reusables.dataGridColumns.amount }
+                  type="number"
+                  onChange={ e => setMaterialAmount(e.target.value) }
+                  error={ !!formErrors.materialAmount }
+                />
+                <TextField
+                  fullWidth
+                  select={ false }
+                  color="primary"
+                  name="amount"
+                  label={ material.amount }
+                  value={ newMaterial.amount }
+                  type="tel"
+                  onChange={ onNewMaterialChange }
+                  disabled
+                />
+              </Stack>
               <TextField
                 fullWidth
                 select={ false }
                 color="primary"
                 name="amount"
-                label={ material.amount }
-                value={ newMaterial.amount }
+                label={ strings.listingScreen.unit }
+                value={ material.unit}
+                onChange={ onNewMaterialChange }
+                disabled
+              />
+              { /* Location of the material */ }
+              <Stack spacing={ 2 } marginTop={ 2 }>
+                <TextField
+                  fullWidth
+                  color="primary"
+                  name="componentName"
+                  label={ building?.propertyName || "" }
+                  value={ propertyName }
+                  helperText={ strings.listingScreen.propertyName }
+                  onChange={ e => setpropertyName(e.target.value) }
+                  error={ !!formErrors.propertyName }
+                  disabled
+                />
+              </Stack>
+              <Stack
+                direction="row"
+                spacing={ 2 }
+                marginTop={ 2 }
+              >
+                <TextField
+                  fullWidth
+                  color="primary"
+                  name="componentName"
+                  label={ strings.listingScreen.address }
+                  value={ address }
+                  onChange={ e => setAddress(e.target.value) }
+                  error={ !!formErrors.address }
+                />
+                <TextField
+                  fullWidth
+                  color="primary"
+                  name="componentName"
+                  label={ `${building?.address?.streetAddress} ${building?.address?.city}`}
+                  type="text"
+                  value={ newMaterial.componentName }
+                  onChange={ onNewMaterialChange }
+                  disabled
+                />
+              </Stack>
+              <Stack
+                direction="row"
+                spacing={ 2 }
+                marginTop={ 2 }
+              >
+                <TextField
+                  fullWidth
+                  color="primary"
+                  name="componentName"
+                  label={ strings.listingScreen.postalCode }
+                  value={ postalcode }
+                  onChange={ e => setPostalcode(e.target.value) }
+                  error={ !!formErrors.postalcode }
+                />
+                <TextField
+                  fullWidth
+                  color="primary"
+                  name="componentName"
+                  label={ building?.address?.postCode }
+                  type="text"
+                  value={ newMaterial.componentName }
+                  onChange={ onNewMaterialChange }
+                  disabled
+                />
+              </Stack>
+              {/* Contact info */}
+              <TextField
+                fullWidth
+                color="primary"
+                name="componentName"
+                label={ strings.listingScreen.name }
+                value={ name }
+                onChange={ e => setName(e.target.value) }
+                error={ !!formErrors.name }
+              />
+              { /* tel */ }
+              <TextField
+                fullWidth
+                color="primary"
+                name="componentName"
+                label={ strings.listingScreen.phone }
                 type="tel"
-                onChange={ onNewMaterialChange }
-                disabled
+                value={ phone }
+                onChange={ e => setPhone(e.target.value) }
+                error={ !!formErrors.phone }
               />
-            </Stack>
-            <TextField
-              fullWidth
-              select={ false }
-              color="primary"
-              name="amount"
-              label={ strings.listingScreen.unit }
-              value={ material.unit}
-              onChange={ onNewMaterialChange }
-              disabled
-            />
-            { /* Location of the material */ }
-            <Stack spacing={ 2 } marginTop={ 2 }>
+              { /* e-mail */ }
               <TextField
                 fullWidth
+                required
                 color="primary"
                 name="componentName"
-                label={ building?.propertyName || "" }
-                value={ propertyName }
-                helperText={ strings.listingScreen.propertyName }
-                onChange={ e => setpropertyName(e.target.value) }
-                error={ !!formErrors.propertyName }
-                disabled
+                label={ strings.listingScreen.email }
+                type="email"
+                value={ email }
+                onChange={ e => setEmail(e.target.value) }
+                error={ !!formErrors.email }
               />
-            </Stack>
-            <Stack
-              direction="row"
-              spacing={ 2 }
-              marginTop={ 2 }
-            >
-              <TextField
-                fullWidth
-                color="primary"
-                name="componentName"
-                label={ strings.listingScreen.address }
-                value={ address }
-                onChange={ e => setAddress(e.target.value) }
-                error={ !!formErrors.address }
-              />
-              <TextField
-                fullWidth
-                color="primary"
-                name="componentName"
-                label={ `${building?.address?.streetAddress} ${building?.address?.city}`}
-                type="text"
-                value={ newMaterial.componentName }
-                onChange={ onNewMaterialChange }
-                disabled
-              />
-            </Stack>
-            <Stack
-              direction="row"
-              spacing={ 2 }
-              marginTop={ 2 }
-            >
-              <TextField
-                fullWidth
-                color="primary"
-                name="componentName"
-                label={ strings.listingScreen.postalCode }
-                value={ postalcode }
-                onChange={ e => setPostalcode(e.target.value) }
-                error={ !!formErrors.postalcode }
-              />
-              <TextField
-                fullWidth
-                color="primary"
-                name="componentName"
-                label={ building?.address?.postCode }
-                type="text"
-                value={ newMaterial.componentName }
-                onChange={ onNewMaterialChange }
-                disabled
-              />
-            </Stack>
-            {/* Contact info */}
-            <TextField
-              fullWidth
-              color="primary"
-              name="componentName"
-              label={ strings.listingScreen.name }
-              value={ name }
-              onChange={ e => setName(e.target.value) }
-              error={ !!formErrors.name }
-            />
-            { /* tel */ }
-            <TextField
-              fullWidth
-              color="primary"
-              name="componentName"
-              label={ strings.listingScreen.phone }
-              type="tel"
-              value={ phone }
-              onChange={ e => setPhone(e.target.value) }
-              error={ !!formErrors.phone }
-            />
-            { /* e-mail */ }
-            <TextField
-              fullWidth
-              required
-              color="primary"
-              name="componentName"
-              label={ strings.listingScreen.email }
-              type="email"
-              value={ email }
-              onChange={ e => setEmail(e.target.value) }
-              error={ !!formErrors.email }
-            />
-            <Stack
-              direction="row"
-              spacing={ 2 }
-              marginTop={ 2 }
-              marginBottom={ 2 }
-              justifyContent="center"
-            >
-              <Button
-                variant="contained"
-                onClick={ () => navigate(`/surveys/${surveyId}/reusables`) }
+              <Stack
+                direction="row"
+                spacing={ 2 }
+                marginTop={ 2 }
+                marginBottom={ 2 }
+                justifyContent="center"
               >
-                { strings.generic.cancel }
-              </Button>
-              <Button
-                variant="contained"
-              >
-                { strings.listingScreen.deleteOwnUse }
-              </Button>
-              <Button
-                variant="contained"
-              >
-                { strings.listingScreen.ownUse }
-              </Button>
-              <Button
-                type="submit"
-                variant="contained"
-              >
-                { strings.listingScreen.send }
-              </Button>
-            </Stack>
-          </form>
-        </Paper>
-      </Stack>
+                <Button
+                  variant="contained"
+                  onClick={ () => navigate(`/surveys/${surveyId}/reusables`) }
+                >
+                  { strings.generic.cancel }
+                </Button>
+                <Button
+                  variant="contained"
+                >
+                  { strings.listingScreen.deleteOwnUse }
+                </Button>
+                <Button
+                  variant="contained"
+                >
+                  { strings.listingScreen.ownUse }
+                </Button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                >
+                  { strings.listingScreen.send }
+                </Button>
+              </Stack>
+            </form>
+          </Paper>
+        </Stack>
+      ) : (
+        <></>
+      )}
+      <LoginDialog
+        open={open}
+        onClose={handleCloseDialog}
+        onLogin={handleLogin}
+      />
     </Container>
   );
 };
