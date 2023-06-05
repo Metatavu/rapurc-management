@@ -120,15 +120,6 @@ const SurveyListingScreen: React.FC = () => {
     return Object.keys(errors).length === 0;
   };
   /**
-   * Submit handle
-   */
-  const handleSubmit = (e:any) => {
-    e.preventDefault();
-    if (validateForm()) {
-      // If validation true --> send info
-    }
-  };
-  /**
    * Get the SurveyId
    */
   const dispatch = useAppDispatch();
@@ -231,7 +222,29 @@ const SurveyListingScreen: React.FC = () => {
   if (!material) {
     return null;
   }
-
+  /**
+   * Submit handle. Sending data added later
+   */
+  const handleSubmit = (e:any) => {
+    e.preventDefault();
+    /* const data = {
+      description: material?.description || "",
+      amount: newMaterial?.amount || "",
+      price: priceAmount,
+      unit: material?.unit || "",
+      propertyName: building?.propertyName || "",
+      address: `${building?.address?.streetAddress}, ${building?.address?.city}` || "",
+      postalcode: building?.address?.postCode || "",
+      name: name || "",
+      phone: phone || "",
+      email: email || ""
+    };
+    */
+    if (validateForm()) {
+      // If validation true --> send info
+    }
+  };
+  
   /**
   * Render listing UI
   */
@@ -314,7 +327,7 @@ const SurveyListingScreen: React.FC = () => {
                 variant="outlined"
                 fullWidth
                 color="primary"
-                name="amount"
+                name=""
                 value={ materialAmount }
                 label={ strings.survey.reusables.dataGridColumns.amount }
                 type="number"
@@ -387,7 +400,7 @@ const SurveyListingScreen: React.FC = () => {
                 fullWidth
                 select={ false }
                 color="primary"
-                name="amount"
+                name="unit"
                 label={ strings.listingScreen.unit }
                 value={ material.unit }
                 onChange={ onNewMaterialChange }
@@ -404,7 +417,7 @@ const SurveyListingScreen: React.FC = () => {
                 variant="outlined"
                 fullWidth
                 color="primary"
-                name="componentName"
+                name="propertyName"
                 label={ building?.propertyName || "" }
                 value={ propertyName }
                 helperText={ strings.listingScreen.propertyName }
@@ -426,7 +439,7 @@ const SurveyListingScreen: React.FC = () => {
                 variant="outlined"
                 fullWidth
                 color="primary"
-                name="componentName"
+                name=""
                 label={ strings.listingScreen.address }
                 value={ address }
                 onChange={ e => setAddress(e.target.value) }
@@ -441,7 +454,7 @@ const SurveyListingScreen: React.FC = () => {
                 variant="outlined"
                 fullWidth
                 color="primary"
-                name="componentName"
+                name="address"
                 label={ `${building?.address?.streetAddress} ${building?.address?.city}`}
                 type="text"
                 value={ newMaterial.componentName }
@@ -462,7 +475,7 @@ const SurveyListingScreen: React.FC = () => {
                 variant="outlined"
                 fullWidth
                 color="primary"
-                name="componentName"
+                name=""
                 label={ strings.listingScreen.postalCode }
                 value={ postalcode }
                 onChange={ e => setPostalcode(e.target.value) }
@@ -477,7 +490,7 @@ const SurveyListingScreen: React.FC = () => {
                 variant="outlined"
                 fullWidth
                 color="primary"
-                name="componentName"
+                name="postalCode"
                 label={ building?.address?.postCode }
                 type="text"
                 value={ newMaterial.componentName }
@@ -493,7 +506,7 @@ const SurveyListingScreen: React.FC = () => {
             <TextField
               fullWidth
               color="primary"
-              name="componentName"
+              name="name"
               label={ strings.listingScreen.name }
               value={ name }
               onChange={ e => setName(e.target.value) }
@@ -504,7 +517,7 @@ const SurveyListingScreen: React.FC = () => {
             <TextField
               fullWidth
               color="primary"
-              name="componentName"
+              name="phone"
               label={ strings.listingScreen.phone }
               type="tel"
               value={ phone }
@@ -517,7 +530,7 @@ const SurveyListingScreen: React.FC = () => {
               fullWidth
               required
               color="primary"
-              name="componentName"
+              name="email"
               label={ strings.listingScreen.email }
               type="email"
               value={ email }
