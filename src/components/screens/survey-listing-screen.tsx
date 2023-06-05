@@ -33,6 +33,8 @@ interface LoginDialogProps {
  * Render login dialog
  */
 const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }: any) => {
+  const { surveyId } = useParams<"surveyId">();
+  const navigate = useNavigate();
   const [site, setSite] = React.useState("Site1");
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -75,18 +77,16 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }: any
       onLogin();
       onClose();
     } else {
-      // TODO: localize
-      setLoginError("Invalid username or password");
+      setLoginError(strings.errorHandling.listingScreenLogin.login);
     }
   };
 
   return (
     <Dialog open={open} onClose={loginError ? undefined : onClose}>
-      {/* TODO: localize */}
-      <DialogTitle>Login</DialogTitle>
+      <DialogTitle>{strings.generic.login}</DialogTitle>
       <DialogContent>
         <FormControl component="fieldset">
-          <FormLabel component="legend">Choose Site</FormLabel>
+          <FormLabel component="legend">{strings.listingScreenLogin.helpertext}</FormLabel>
           <RadioGroup value={ site } onChange={ handleSiteChange }>
             <FormControlLabel value="Site1" control={<Radio/>} label="Kiertoon"/>
           </RadioGroup>
@@ -94,28 +94,41 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }: any
         <TextField
           autoFocus
           margin="dense"
-          label="Username"
+          label={strings.generic.username}
           type="text"
           fullWidth
           value={username}
           onChange={handleUsernameChange}
+          required
         />
         <TextField
           margin="dense"
-          label="Password"
+          label={strings.generic.password}
           type="password"
           fullWidth
           value={password}
           onChange={handlePasswordChange}
+          required
         />
         {loginError && (
           <Typography variant="body2" color="error">
             {loginError}
           </Typography>
         )}
-        <DialogActions>
-          <Button onClick={handleLogin} color="primary">
-            Login
+        <DialogActions
+          sx={{ justifyContent: "space-between" }}
+        >
+          <Button
+            onClick={ () => navigate(`/surveys/${surveyId}/reusables`) }
+            color="primary"
+          >
+            {strings.generic.cancel}
+          </Button>
+          <Button
+            onClick={handleLogin}
+            color="primary"
+          >
+            {strings.generic.login}
           </Button>
         </DialogActions>
       </DialogContent>

@@ -8,7 +8,10 @@
     "confirm": "Confirm",
     "cancel": "Cancel",
     "delete": "Delete",
+    "login": "Login",
     "logout": "Log out",
+    "username": "Username",
+    "password": "Password",
     "open": "Open",
     "close": "Close",
     "save": "Save",
@@ -137,6 +140,9 @@
       "name": "Name is required",
       "phone": "Phone number must be a number",
       "email": "Invalid email"
+    },
+    "listingScreenLogin": {
+      "login": "Invalid username or password"
     }
   },
 
@@ -549,5 +555,8 @@
     "send": "send",
     "ownUse": "For own use",
     "deleteOwnUse": "Delete own use"
+  },
+  "listingScreenLogin": {
+    "helpertext": "Choose site"
   }
 }

@@ -8,7 +8,10 @@
     "confirm": "Vahvista",
     "cancel": "Peruuta",
     "delete": "Poista",
+    "login": "Kirjaudu sisälle",
     "logout": "Kirjaudu ulos",
+    "username": "Käyttätunnus",
+    "password": "Salasana",
     "open": "Avaa",
     "close": "Sulje",
     "save": "Tallenna",
@@ -138,6 +141,9 @@
       "name": "Nimi vaaditaan",
       "phone": "Puhelinnumero täytyy olla numero",
       "email": "Virheellinen sähköposti"
+    },
+    "listingScreenLogin": {
+      "login": "Väärä käyttäjätunnus tai salasana"
     }
   },
 
@@ -548,5 +554,8 @@
     "send": "lähetä",
     "ownUse": "Omaan käyttöön",
     "deleteOwnUse": "poista oma käyttö"
+  },
+  "listingScreenLogin": {
+    "helpertext": "Valitse sivu"
   }
 }
