@@ -604,7 +604,9 @@ export interface Localized extends LocalizedStringsMethods {
     deleteOwnUse: string;
   };
   listingScreenLogin: {
-    helpertext: string;
+    helperText: string;
+    registerText: string;
+    registerLink: string;
   }
 }
 

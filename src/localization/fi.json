@@ -556,6 +556,8 @@
     "deleteOwnUse": "poista oma käyttö"
   },
   "listingScreenLogin": {
-    "helpertext": "Valitse sivu"
+    "helperText": "Valitse sivu",
+    "registerText": "Eikö ole tiliä valitulla sivulla?",
+    "registerLink": "Luo tili sivulle"
   }
 }

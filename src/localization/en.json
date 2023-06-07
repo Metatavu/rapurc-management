@@ -557,6 +557,8 @@
     "deleteOwnUse": "Delete own use"
   },
   "listingScreenLogin": {
-    "helpertext": "Choose site"
+    "helperText": "Choose site",
+    "registerText": "Not registered on the chosen site?",
+    "registerLink": "Click here to register for"
   }
 }
