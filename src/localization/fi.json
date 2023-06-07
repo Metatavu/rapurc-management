@@ -557,7 +557,7 @@
   },
   "listingScreenLogin": {
     "helperText": "Valitse sivu",
-    "registerText": "Eikö ole tiliä valitulla sivulla?",
+    "registerText": "Eikö sinulla ole tiliä valitulla sivulla?",
     "registerLink": "Luo tili sivulle"
   }
 }
