@@ -1,4 +1,4 @@
-import { Button, Paper, Stack, TextField, Typography, Container, Dialog, DialogTitle, DialogContent, DialogActions, FormControlLabel, FormLabel, FormControl, Radio, RadioGroup } from "@mui/material";
+import { Button, Paper, Stack, TextField, Typography, Container, Dialog, DialogTitle, DialogContent, DialogActions, FormControlLabel, FormLabel, FormControl, Radio, RadioGroup, Link } from "@mui/material";
 import { Reusable, Usability, Survey, ReusableMaterial, Building } from "generated/client";
 import { useParams, useNavigate } from "react-router-dom";
 import { ErrorContext } from "components/error-handler/error-handler";
@@ -29,21 +29,49 @@ interface LoginDialogProps {
   onClose: () => void;
   onLogin: () => void;
 }
+interface Site {
+  id: string;
+  name: string;
+  url: string;
+}
+/**
+ * list of sites rendered as buttons to select to send the listing form to
+ */
+const siteList: Site[] = [
+  {
+    id: "site1", name: "Kiertoon.fi", url: "https://kiertoon.fi/items"
+  },
+  {
+    id: "site2", name: "tori.fi", url: "https://tori.fi"
+  }
+  // Add more sites as needed
+];
 /**
  * Render login dialog
  */
 const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }: any) => {
   const { surveyId } = useParams<"surveyId">();
   const navigate = useNavigate();
-  const [site, setSite] = React.useState("Site1");
+  const [site, setSite] = React.useState(siteList[0].id);
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [loginError, setLoginError] = React.useState(" ");
+
   /**
    * Handle site state changes
    */
   const handleSiteChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSite(event.target.value);
+  };
+  /**
+   * dynamic registration link
+   */
+  const getRegistrationLink = () => {
+    const selectedSite = siteList.find(siteItem => siteItem.id === site);
+    if (selectedSite) {
+      return selectedSite.url;
+    }
+    return "";
   };
   /**
    * Handle username state changes
@@ -62,8 +90,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }: any
    * Validate login
   */
   const validateLogin = (usernameS: string, passwordS: string) => {
-    // Perform your login validation logic here
-    // For demonstration purposes, let's assume username and password must not be empty
+    // Perform login validation logic here
     return usernameS.trim() !== "" && passwordS.trim() !== "";
   };
   /**
@@ -86,9 +113,20 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }: any
       <DialogTitle>{strings.generic.login}</DialogTitle>
       <DialogContent>
         <FormControl component="fieldset">
-          <FormLabel component="legend">{strings.listingScreenLogin.helpertext}</FormLabel>
-          <RadioGroup value={ site } onChange={ handleSiteChange }>
-            <FormControlLabel value="Site1" control={<Radio/>} label="Kiertoon"/>
+          <FormLabel component="legend">{strings.listingScreenLogin.helperText}</FormLabel>
+          <RadioGroup
+            value={ site }
+            onChange={ handleSiteChange }
+            row
+          >
+            {siteList.map(siteItem => (
+              <FormControlLabel
+                key={ siteItem.id }
+                value={ siteItem.id }
+                control={ <Radio/> }
+                label={ siteItem.name }
+              />
+            ))}
           </RadioGroup>
         </FormControl>
         <TextField
@@ -110,13 +148,37 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }: any
           onChange={handlePasswordChange}
           required
         />
+        <Typography
+          variant="subtitle1"
+        >
+          { strings.listingScreenLogin.registerText }
+          <Typography
+            variant="subtitle1"
+          >
+            <Link
+              href={ getRegistrationLink() }
+              target="_blank"
+              rel="noopener"
+            >
+              { strings.listingScreenLogin.registerLink }
+              {" "}
+              { siteList.find(siteItem => siteItem.id === site)?.name }
+            </Link>
+          </Typography>
+        </Typography>
         {loginError && (
           <Typography variant="body2" color="error">
             {loginError}
           </Typography>
         )}
         <DialogActions
-          sx={{ justifyContent: "space-between" }}
+          sx={
+            {
+              justifyContent: "space-between",
+              padding: 0,
+              marginTop: 1
+            }
+          }
         >
           <Button
             onClick={ () => navigate(`/surveys/${surveyId}/reusables`) }
