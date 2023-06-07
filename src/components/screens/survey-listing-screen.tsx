@@ -40,9 +40,6 @@ interface Site {
 const siteList: Site[] = [
   {
     id: "site1", name: "Kiertoon.fi", url: "https://kiertoon.fi/items"
-  },
-  {
-    id: "site2", name: "tori.fi", url: "https://tori.fi"
   }
   // Add more sites as needed
 ];
