@@ -156,6 +156,7 @@ export interface Localized extends LocalizedStringsMethods {
       materialInfo: string;
       materialAmount: string;
       materialAmountInfo: string;
+      priceAmount: string;
       unit: string;
       propertyName: string;
       address: string;
