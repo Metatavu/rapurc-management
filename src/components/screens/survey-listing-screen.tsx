@@ -107,11 +107,11 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }: any
   };
 
   return (
-    <Dialog open={open} onClose={loginError ? undefined : onClose}>
-      <DialogTitle>{strings.generic.login}</DialogTitle>
+    <Dialog open={ open } onClose={ loginError ? undefined : onClose }>
+      <DialogTitle>{ strings.generic.login }</DialogTitle>
       <DialogContent>
         <FormControl component="fieldset">
-          <FormLabel component="legend">{strings.listingScreenLogin.helperText}</FormLabel>
+          <FormLabel component="legend">{ strings.listingScreenLogin.helperText }</FormLabel>
           <RadioGroup
             value={ site }
             onChange={ handleSiteChange }
@@ -130,20 +130,20 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }: any
         <TextField
           autoFocus
           margin="dense"
-          label={strings.generic.username}
+          label={ strings.generic.username }
           type="text"
           fullWidth
-          value={username}
-          onChange={handleUsernameChange}
+          value={ username}
+          onChange={ handleUsernameChange }
           required
         />
         <TextField
           margin="dense"
-          label={strings.generic.password}
+          label={ strings.generic.password }
           type="password"
           fullWidth
-          value={password}
-          onChange={handlePasswordChange}
+          value={ password }
+          onChange={ handlePasswordChange }
           required
         />
         <Typography
@@ -182,13 +182,13 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }: any
             onClick={ () => navigate(`/surveys/${surveyId}/reusables`) }
             color="primary"
           >
-            {strings.generic.cancel}
+            { strings.generic.cancel }
           </Button>
           <Button
-            onClick={handleLogin}
+            onClick={ handleLogin }
             color="primary"
           >
-            {strings.generic.login}
+            { strings.generic.login }
           </Button>
         </DialogActions>
       </DialogContent>
@@ -775,9 +775,9 @@ const SurveyListingScreen: React.FC = () => {
         <></>
       )}
       <LoginDialog
-        open={open}
-        onClose={handleCloseDialog}
-        onLogin={handleLogin}
+        open={ open }
+        onClose={ handleCloseDialog }
+        onLogin={ handleLogin }
       />
     </Container>
   );
