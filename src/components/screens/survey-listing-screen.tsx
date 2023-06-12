@@ -10,7 +10,7 @@ import Api from "api";
 import { selectKeycloak } from "features/auth-slice";
 import LocalizationUtils from "utils/localization-utils";
 import { selectLanguage } from "features/locale-slice";
-import loginDialog from "components/listing-components/login-dialog";
+import LoginDialog from "components/listing-components/login-dialog";
 
 /**
  * Form errors interface
@@ -279,8 +279,8 @@ const SurveyListingScreen: React.FC = () => {
   };
   
   /**
-  * Render listing UI
-  */
+   * Render listing component
+   */
   return (
     <Container maxWidth="md">
       {loggedIn ? (
@@ -608,7 +608,7 @@ const SurveyListingScreen: React.FC = () => {
       ) : (
         <></>
       )}
-      <loginDialog
+      <LoginDialog
         open={ open }
         onClose={ handleCloseDialog }
         onLogin={ handleLogin }
