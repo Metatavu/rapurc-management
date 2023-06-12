@@ -176,5 +176,4 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
     </Dialog>
   );
 };
-  
 export default LoginDialog;
