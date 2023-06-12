@@ -166,7 +166,7 @@ export interface Localized extends LocalizedStringsMethods {
       email: string;
     };
     listingScreenLogin: {
-      login: string;
+      loginFailed: string;
     }
   };
 

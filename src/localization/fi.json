@@ -144,7 +144,7 @@
       "email": "Virheellinen sähköposti"
     },
     "listingScreenLogin": {
-      "login": "Väärä käyttäjätunnus tai salasana"
+      "loginFailed": "Väärä käyttäjätunnus tai salasana"
     }
   },
 
