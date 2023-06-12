@@ -1,4 +1,4 @@
-import { Button, Paper, Stack, TextField, Typography, Container, Dialog, DialogTitle, DialogContent, DialogActions, FormControlLabel, FormLabel, FormControl, Radio, RadioGroup, Link } from "@mui/material";
+import { Button, Paper, Stack, TextField, Typography, Container } from "@mui/material";
 import { Reusable, Usability, Survey, ReusableMaterial, Building } from "generated/client";
 import { useParams, useNavigate } from "react-router-dom";
 import { ErrorContext } from "components/error-handler/error-handler";
@@ -10,8 +10,10 @@ import Api from "api";
 import { selectKeycloak } from "features/auth-slice";
 import LocalizationUtils from "utils/localization-utils";
 import { selectLanguage } from "features/locale-slice";
+import LoginDialog from "components/listing-components/login-dialog";
+
 /**
- * interfaces
+ * Form errors interface
  */
 interface FormErrors {
   materialInfo?: string;
@@ -25,212 +27,34 @@ interface FormErrors {
   phone?: string;
   email?: string;
 }
-interface LoginDialogProps {
-  open: boolean;
-  onClose: () => void;
-  onLogin: () => void;
-}
-interface Site {
-  id: string;
-  name: string;
-  url: string;
-}
-/**
- * list of sites rendered as buttons to select to send the listing form to
- */
-const siteList: Site[] = [
-  {
-    id: "site1", name: "Kiertoon.fi", url: "https://kiertoon.fi/items"
-  }
-  // Add more sites as needed
-];
-/**
- * Render login dialog
- */
-const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }: any) => {
-  const { surveyId } = useParams<"surveyId">();
-  const navigate = useNavigate();
-  const [site, setSite] = React.useState(siteList[0].id);
-  const [username, setUsername] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [loginError, setLoginError] = React.useState(" ");
 
-  /**
-   * Handle site state changes
-   */
-  const handleSiteChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSite(event.target.value);
-  };
-  /**
-   * dynamic registration link
-   */
-  const getRegistrationLink = () => {
-    const selectedSite = siteList.find(siteItem => siteItem.id === site);
-    if (selectedSite) {
-      return selectedSite.url;
-    }
-    return "";
-  };
-  /**
-   * Handle username state changes
-   */
-  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(event.target.value);
-  };
-  /**
-   * Handle password state change
-   */
-  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputPassword = event.target.value;
-    setPassword(inputPassword);
-  };
-  /**
-   * Validate login
-  */
-  const validateLogin = (usernameS: string, passwordS: string) => {
-    // Perform login validation logic here
-    return usernameS.trim() !== "" && passwordS.trim() !== "";
-  };
-  /**
-   * Handle login
-   */
-  const handleLogin = () => {
-    // Perform login validation here
-    const isValidLogin = validateLogin(username, password);
-
-    if (isValidLogin) {
-      onLogin();
-      onClose();
-    } else {
-      setLoginError(strings.errorHandling.listingScreenLogin.login);
-    }
-  };
-
-  return (
-    <Dialog open={ open } onClose={ loginError ? undefined : onClose }>
-      <DialogTitle>{ strings.generic.login }</DialogTitle>
-      <DialogContent>
-        <FormControl component="fieldset">
-          <FormLabel component="legend">{ strings.listingScreenLogin.helperText }</FormLabel>
-          <RadioGroup
-            value={ site }
-            onChange={ handleSiteChange }
-            row
-          >
-            {siteList.map(siteItem => (
-              <FormControlLabel
-                key={ siteItem.id }
-                value={ siteItem.id }
-                control={ <Radio/> }
-                label={ siteItem.name }
-              />
-            ))}
-          </RadioGroup>
-        </FormControl>
-        <TextField
-          autoFocus
-          margin="dense"
-          label={ strings.generic.username }
-          type="text"
-          fullWidth
-          value={ username}
-          onChange={ handleUsernameChange }
-          required
-        />
-        <TextField
-          margin="dense"
-          label={ strings.generic.password }
-          type="password"
-          fullWidth
-          value={ password }
-          onChange={ handlePasswordChange }
-          required
-        />
-        <Typography
-          variant="subtitle1"
-        >
-          { strings.listingScreenLogin.registerText }
-          <Typography
-            variant="subtitle1"
-          >
-            <Link
-              href={ getRegistrationLink() }
-              target="_blank"
-              rel="noopener"
-            >
-              { strings.listingScreenLogin.registerLink }
-              {" "}
-              { siteList.find(siteItem => siteItem.id === site)?.name }
-            </Link>
-          </Typography>
-        </Typography>
-        {loginError && (
-          <Typography variant="body2" color="error">
-            {loginError}
-          </Typography>
-        )}
-        <DialogActions
-          sx={
-            {
-              justifyContent: "space-between",
-              padding: 0,
-              marginTop: 1
-            }
-          }
-        >
-          <Button
-            onClick={ () => navigate(`/surveys/${surveyId}/reusables`) }
-            color="primary"
-          >
-            { strings.generic.cancel }
-          </Button>
-          <Button
-            onClick={ handleLogin }
-            color="primary"
-          >
-            { strings.generic.login }
-          </Button>
-        </DialogActions>
-      </DialogContent>
-    </Dialog>
-  );
-};
 /**
- * Render the Form / App
+ * Listing screen component
  */
 const SurveyListingScreen: React.FC = () => {
   const keycloak = useAppSelector(selectKeycloak);
   const errorContext = React.useContext(ErrorContext);
-  // const selectedLanguage = useAppSelector(selectLanguage);
+
   /**
    * Login states
    */
   const [open, setOpen] = React.useState(true);
   const [loggedIn, setLoggedIn] = React.useState(false);
+
   /**
    * Login handle
    */
   const handleLogin = () => {
     setLoggedIn(true);
   };
-  /**
-   * Log out Handle ? future proof
-  const handleLogout = () => {
-    setLoggedIn(false);
-  };
-   */
-  /**
-   * Login Dialog open | future proof?
-  const handleOpenDialog = () => {
-    setOpen(true);
-  };
-   */
+
   /**
    * Login dialog close
    */
   const handleCloseDialog = () => {
     setOpen(false);
   };
+
   /**
   * Component for reusable materials and building parts (to showcase options TEMPORARY)
   */
@@ -240,6 +64,7 @@ const SurveyListingScreen: React.FC = () => {
     reusableMaterialId: "",
     metadata: {}
   });
+
   /**
    * Event handler for new material string change
    *
@@ -250,20 +75,22 @@ const SurveyListingScreen: React.FC = () => {
   
     setNewMaterial({ ...newMaterial, [name]: value });
   };
+
   /**
    * form values
    */
   const selectedLanguage = useAppSelector(selectLanguage);
-  const [materialInfo, setMaterialInfo] = React.useState("");
-  const [materialAmount, setMaterialAmount] = React.useState("");
-  const [propertyName, setpropertyName] = React.useState("");
-  const [priceAmount, setpriceAmount] = React.useState("");
-  const [address, setAddress] = React.useState("");
-  const [postalcode, setPostalcode ] = React.useState("");
-  const [name, setName] = React.useState("");
-  const [phone, setPhone] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [formErrors, setFormErrors] = React.useState<FormErrors>({});
+  const [ materialInfo, setMaterialInfo ] = React.useState("");
+  const [ materialAmount, setMaterialAmount ] = React.useState("");
+  const [ propertyName, setpropertyName ] = React.useState("");
+  const [ priceAmount, setpriceAmount ] = React.useState("");
+  const [ address, setAddress ] = React.useState("");
+  const [ postalcode, setPostalcode ] = React.useState("");
+  const [ name, setName ] = React.useState("");
+  const [ phone, setPhone ] = React.useState("");
+  const [ email, setEmail ] = React.useState("");
+  const [ formErrors, setFormErrors ] = React.useState<FormErrors>({});
+
   /**
    * form validation
   */
@@ -318,13 +145,15 @@ const SurveyListingScreen: React.FC = () => {
 
     return Object.keys(errors).length === 0;
   };
+
   /**
    * Get the SurveyId
    */
   const dispatch = useAppDispatch();
-  const { surveyId } = useParams<"surveyId">();
   const navigate = useNavigate();
+  const { surveyId } = useParams<"surveyId">();
   const [ survey, setSurvey ] = React.useState<Survey | undefined>();
+
   /**
    * Fetches survey based on URL survey ID
    */
@@ -340,6 +169,7 @@ const SurveyListingScreen: React.FC = () => {
       errorContext.setError(strings.errorHandling.surveys.find, error);
     }
   };
+
   /**
    * Get needed fetch for the form, material row data, Building property name
    */
@@ -347,6 +177,7 @@ const SurveyListingScreen: React.FC = () => {
   const [ material, setMaterial ] = React.useState<Reusable | undefined>();
   const [ reusableMaterials, setReusableMaterials ] = React.useState<ReusableMaterial[]>([]);
   const [ building, setBuilding ] = React.useState<Building>();
+
   /**
    * Fetches reusable materials by materialID
    */
@@ -377,6 +208,7 @@ const SurveyListingScreen: React.FC = () => {
       errorContext.setError(strings.errorHandling.materials.list, error);
     }
   };
+
   /**
   * Fetch Building property name
   */
@@ -399,6 +231,7 @@ const SurveyListingScreen: React.FC = () => {
       errorContext.setError(strings.errorHandling.buildings.list, error);
     }
   };
+
   /**
    * Effect for fetching survey / materials of selected row
    */
@@ -421,6 +254,7 @@ const SurveyListingScreen: React.FC = () => {
   if (!material) {
     return null;
   }
+
   /**
    * Submit handle. Sending data added later
    */
