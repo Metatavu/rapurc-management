@@ -91,21 +91,9 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
       onLogin();
       onClose();
     } else {
-      setLoginError(strings.errorHandling.listingScreenLogin.login);
+      setLoginError(strings.errorHandling.listingScreenLogin.loginFailed);
     }
   };
-
-  /* 
-  //Log out Handle ? future proof
-  const handleLogout = () => {
-    setLoggedIn(false);
-  };
-
-  //Login Dialog open | future proof
-  const handleOpenDialog = () => {
-    setOpen(true);
-  };
-  */
 
   /**
    * Login Dialog render
