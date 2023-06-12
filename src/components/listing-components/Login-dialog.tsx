@@ -149,7 +149,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
         <Typography variant="subtitle1">
           { strings.listingScreenLogin.registerText }
         </Typography>
-        <Typography variant="subtitle2">
+        <Typography variant="subtitle1">
           <Link href={getRegistrationLink()} target="_blank" rel="noopener">
             { strings.listingScreenLogin.registerLink }
             {" "}
