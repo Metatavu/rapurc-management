@@ -34,7 +34,7 @@ const siteList: Site[] = [
 /**
  * Login Dialog component
  */
-const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => {
+const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => {
   const { surveyId } = useParams<{ surveyId: string }>();
   const navigate = useNavigate();
   const [ site, setSite ] = useState(siteList[0].id);
@@ -176,4 +176,4 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
     </Dialog>
   );
 };
-export default LoginDialog;
+export default loginDialog;
