@@ -10,8 +10,10 @@ import Api from "api";
 import { selectKeycloak } from "features/auth-slice";
 import LocalizationUtils from "utils/localization-utils";
 import { selectLanguage } from "features/locale-slice";
+import LoginDialog from "components/listing-components/login-dialog";
+
 /**
- * interfaces
+ * Form errors interface
  */
 interface FormErrors {
   materialInfo?: string;
@@ -25,13 +27,34 @@ interface FormErrors {
   phone?: string;
   email?: string;
 }
+
 /**
- * Render the Form
+ * Listing screen component
  */
 const SurveyListingScreen: React.FC = () => {
   const keycloak = useAppSelector(selectKeycloak);
   const errorContext = React.useContext(ErrorContext);
-  // const selectedLanguage = useAppSelector(selectLanguage);
+
+  /**
+   * Login states
+   */
+  const [open, setOpen] = React.useState(true);
+  const [loggedIn, setLoggedIn] = React.useState(false);
+
+  /**
+   * Login handle
+   */
+  const handleLogin = () => {
+    setLoggedIn(true);
+  };
+
+  /**
+   * Login dialog close
+   */
+  const handleCloseDialog = () => {
+    setOpen(false);
+  };
+
   /**
   * Component for reusable materials and building parts (to showcase options TEMPORARY)
   */
@@ -41,6 +64,7 @@ const SurveyListingScreen: React.FC = () => {
     reusableMaterialId: "",
     metadata: {}
   });
+
   /**
    * Event handler for new material string change
    *
@@ -51,20 +75,22 @@ const SurveyListingScreen: React.FC = () => {
   
     setNewMaterial({ ...newMaterial, [name]: value });
   };
+
   /**
    * form values
    */
   const selectedLanguage = useAppSelector(selectLanguage);
-  const [materialInfo, setMaterialInfo] = React.useState("");
-  const [materialAmount, setMaterialAmount] = React.useState("");
-  const [propertyName, setpropertyName] = React.useState("");
-  const [priceAmount, setpriceAmount] = React.useState("");
-  const [address, setAddress] = React.useState("");
-  const [postalcode, setPostalcode ] = React.useState("");
-  const [name, setName] = React.useState("");
-  const [phone, setPhone] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [formErrors, setFormErrors] = React.useState<FormErrors>({});
+  const [ materialInfo, setMaterialInfo ] = React.useState("");
+  const [ materialAmount, setMaterialAmount ] = React.useState("");
+  const [ propertyName, setpropertyName ] = React.useState("");
+  const [ priceAmount, setpriceAmount ] = React.useState("");
+  const [ address, setAddress ] = React.useState("");
+  const [ postalcode, setPostalcode ] = React.useState("");
+  const [ name, setName ] = React.useState("");
+  const [ phone, setPhone ] = React.useState("");
+  const [ email, setEmail ] = React.useState("");
+  const [ formErrors, setFormErrors ] = React.useState<FormErrors>({});
+
   /**
    * form validation
   */
@@ -119,13 +145,15 @@ const SurveyListingScreen: React.FC = () => {
 
     return Object.keys(errors).length === 0;
   };
+
   /**
    * Get the SurveyId
    */
   const dispatch = useAppDispatch();
-  const { surveyId } = useParams<"surveyId">();
   const navigate = useNavigate();
+  const { surveyId } = useParams<"surveyId">();
   const [ survey, setSurvey ] = React.useState<Survey | undefined>();
+
   /**
    * Fetches survey based on URL survey ID
    */
@@ -141,6 +169,7 @@ const SurveyListingScreen: React.FC = () => {
       errorContext.setError(strings.errorHandling.surveys.find, error);
     }
   };
+
   /**
    * Get needed fetch for the form, material row data, Building property name
    */
@@ -148,6 +177,7 @@ const SurveyListingScreen: React.FC = () => {
   const [ material, setMaterial ] = React.useState<Reusable | undefined>();
   const [ reusableMaterials, setReusableMaterials ] = React.useState<ReusableMaterial[]>([]);
   const [ building, setBuilding ] = React.useState<Building>();
+
   /**
    * Fetches reusable materials by materialID
    */
@@ -178,6 +208,7 @@ const SurveyListingScreen: React.FC = () => {
       errorContext.setError(strings.errorHandling.materials.list, error);
     }
   };
+
   /**
   * Fetch Building property name
   */
@@ -200,6 +231,7 @@ const SurveyListingScreen: React.FC = () => {
       errorContext.setError(strings.errorHandling.buildings.list, error);
     }
   };
+
   /**
    * Effect for fetching survey / materials of selected row
    */
@@ -222,6 +254,7 @@ const SurveyListingScreen: React.FC = () => {
   if (!material) {
     return null;
   }
+
   /**
    * Submit handle. Sending data added later
    */
@@ -246,331 +279,340 @@ const SurveyListingScreen: React.FC = () => {
   };
   
   /**
-  * Render listing UI
-  */
+   * Render listing component
+   */
   return (
     <Container maxWidth="md">
-      <Stack
-        direction="column"
-        alignItems="center"
-        justifyContent="center"
-        spacing={ 1 }
-        overflow="auto"
-      >
-        <Paper>
-          { /* header */ }
-          <Typography variant="h1" margin={ 1 } marginBottom={ 4 } textAlign="center">
-            { strings.listingScreen.title }
-          </Typography>
-          <form onSubmit={ handleSubmit }>
-            <TextField
-              variant="outlined"
-              fullWidth
-              color="primary"
-              name="componentName"
-              label="Ilmoituksen otsikko"
-              value={ material.componentName }
-              sx={{ input: { color: "black" }, label: { color: "black" } }}
-              InputLabelProps={{
-                shrink: true
-              }}
-              inputProps={{ readOnly: true, disableUnderline: true }}
-            />
-            <Stack
-              direction="row"
-              spacing={ 2 }
-              marginTop={ 2 }
-              marginBottom={ 2 }
-            >
+      {loggedIn ? (
+        <Stack
+          direction="column"
+          alignItems="center"
+          justifyContent="center"
+          spacing={ 1 }
+          overflow="auto"
+        >
+          <Paper>
+            { /* header */ }
+            <Typography variant="h1" margin={ 1 } marginBottom={ 4 } textAlign="center">
+              { strings.listingScreen.title }
+            </Typography>
+            <form onSubmit={ handleSubmit }>
               <TextField
                 variant="outlined"
                 fullWidth
-                select={ false }
                 color="primary"
-                name="reusableMaterialId"
-                label={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartOrMaterial }
-                value={ LocalizationUtils.getLocalizedName(reusableMaterials
-                  .find(materials => (materials.id === material.reusableMaterialId))?.localizedNames || [], selectedLanguage)}
+                name="componentName"
+                label="Ilmoituksen otsikko"
+                value={ material.componentName }
                 sx={{ input: { color: "black" }, label: { color: "black" } }}
                 InputLabelProps={{
                   shrink: true
                 }}
                 inputProps={{ readOnly: true, disableUnderline: true }}
               />
-            </Stack>
-            <TextField
-              variant="outlined"
-              multiline
-              color="primary"
-              rows={ 2 }
-              name="description"
-              label={ strings.survey.reusables.dataGridColumns.description }
-              value={ material.description }
-              helperText={ strings.listingScreen.materialInfoHelperText }
-              onChange={ e => setMaterialInfo(e.target.value) }
-              error={ !!formErrors.materialInfo }
-              sx={{
-                input: { color: "black" }, label: { color: "black" }
-              }}
-              InputLabelProps={{
-                shrink: true
-              }}
-              inputProps={{ style: { color: "black" } }}
-            />
-            <Stack
-              direction="row"
-              spacing={ 2 }
-              marginTop={ 2 }
-            >
-              { /* amounts */ }
+              <Stack
+                direction="row"
+                spacing={ 2 }
+                marginTop={ 2 }
+                marginBottom={ 2 }
+              >
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  select={ false }
+                  color="primary"
+                  name="reusableMaterialId"
+                  label={ strings.survey.reusables.addNewBuildingPartsDialog.buildingPartOrMaterial }
+                  value={ LocalizationUtils.getLocalizedName(reusableMaterials
+                    .find(materials => (materials.id === material.reusableMaterialId))?.localizedNames || [], selectedLanguage)}
+                  sx={{ input: { color: "black" }, label: { color: "black" } }}
+                  InputLabelProps={{
+                    shrink: true
+                  }}
+                  inputProps={{ readOnly: true, disableUnderline: true }}
+                />
+              </Stack>
               <TextField
                 variant="outlined"
-                fullWidth
+                multiline
                 color="primary"
-                name=""
-                value={ materialAmount }
-                label={ strings.survey.reusables.dataGridColumns.amount }
-                type="number"
-                onChange={ e => setMaterialAmount(e.target.value) }
-                error={ !!formErrors.materialAmount }
-                sx={{ label: { color: "black" } }}
+                rows={ 2 }
+                name="description"
+                label={ strings.survey.reusables.dataGridColumns.description }
+                value={ material.description }
+                helperText={ strings.listingScreen.materialInfoHelperText }
+                onChange={ e => setMaterialInfo(e.target.value) }
+                error={ !!formErrors.materialInfo }
+                sx={{
+                  input: { color: "black" }, label: { color: "black" }
+                }}
                 InputLabelProps={{
-                  shrink: false
+                  shrink: true
                 }}
-                inputProps={{
-                  style: { color: "black" }, readOnly: true, disableUnderline: true
-                }}
-              />
-              <TextField
-                variant="outlined"
-                fullWidth
-                select={ false }
-                color="primary"
-                name="amount"
-                label={ material.amount }
-                value={ newMaterial.amount }
-                type="tel"
-                onChange={ onNewMaterialChange }
-                sx={{ label: { color: "black" } }}
-                InputLabelProps={{
-                  shrink: false
-                }}
-                inputProps={{ readOnly: true, disableUnderline: true }}
-              />
-            </Stack>
-            <Stack
-              direction="row"
-              spacing={ 2 }
-              marginTop={ 2 }
-            >
-              <TextField
-                variant="outlined"
-                fullWidth
-                select={ false }
-                color="primary"
-                name=""
-                label="Kokonaishinta (alv.24%)"
-                value=""
-                type="number"
-                sx={{ label: { color: "black" }, input: { color: "black" } }}
-                InputLabelProps={{
-                  shrink: false
-                }}
-                inputProps={{ readOnly: true, disableUnderline: true }}
-              />
-              <TextField
-                fullWidth
-                color="primary"
-                name="price"
-                value={ priceAmount }
-                label="€"
-                type="number"
-                onChange={ e => setpriceAmount(e.target.value) }
-                sx={{ label: { color: "black" }, input: { color: "black" } }}
                 inputProps={{ style: { color: "black" } }}
               />
-            </Stack>
-            <Stack
-              direction="column"
-              spacing={ 2 }
-              marginTop={ 2 }
-            >
-              <TextField
-                variant="outlined"
-                fullWidth
-                select={ false }
-                color="primary"
-                name="unit"
-                label={ strings.listingScreen.unit }
-                value={ material.unit }
-                onChange={ onNewMaterialChange }
-                sx={{ input: { color: "black" }, label: { color: "black" } }}
-                InputLabelProps={{
-                  shrink: true
-                }}
-                inputProps={{ readOnly: true, disableUnderline: true }}
-              />
-            </Stack>
-            { /* Location of the material */ }
-            <Stack spacing={ 2 } marginTop={ 2 }>
-              <TextField
-                variant="outlined"
-                fullWidth
-                color="primary"
-                name="propertyName"
-                label={ building?.propertyName || "" }
-                value={ propertyName }
-                helperText={ strings.listingScreen.propertyName }
-                onChange={ e => setpropertyName(e.target.value) }
-                error={ !!formErrors.propertyName }
-                sx={{ label: { color: "black" } }}
-                InputLabelProps={{
-                  shrink: false
-                }}
-                inputProps={{ readOnly: true, disableUnderline: true }}
-              />
-            </Stack>
-            <Stack
-              direction="row"
-              spacing={ 2 }
-              marginTop={ 2 }
-            >
-              <TextField
-                variant="outlined"
-                fullWidth
-                color="primary"
-                name=""
-                label={ strings.listingScreen.address }
-                value={ address }
-                onChange={ e => setAddress(e.target.value) }
-                error={ !!formErrors.address }
-                sx={{ label: { color: "black" } }}
-                InputLabelProps={{
-                  shrink: false
-                }}
-                inputProps={{ readOnly: true, disableUnderline: true }}
-              />
-              <TextField
-                variant="outlined"
-                fullWidth
-                color="primary"
-                name="address"
-                label={ `${building?.address?.streetAddress} ${building?.address?.city}`}
-                type="text"
-                value={ newMaterial.componentName }
-                onChange={ onNewMaterialChange }
-                sx={{ label: { color: "black" } }}
-                InputLabelProps={{
-                  shrink: false
-                }}
-                inputProps={{ readOnly: true, disableUnderline: true }}
-              />
-            </Stack>
-            <Stack
-              direction="row"
-              spacing={ 2 }
-              marginTop={ 2 }
-            >
-              <TextField
-                variant="outlined"
-                fullWidth
-                color="primary"
-                name=""
-                label={ strings.listingScreen.postalCode }
-                value={ postalcode }
-                onChange={ e => setPostalcode(e.target.value) }
-                error={ !!formErrors.postalcode }
-                sx={{ label: { color: "black" } }}
-                InputLabelProps={{
-                  shrink: false
-                }}
-                inputProps={{ readOnly: true, disableUnderline: true }}
-              />
-              <TextField
-                variant="outlined"
-                fullWidth
-                color="primary"
-                name="postalCode"
-                label={ building?.address?.postCode }
-                type="text"
-                value={ newMaterial.componentName }
-                onChange={ onNewMaterialChange }
-                sx={{ label: { color: "black" } }}
-                InputLabelProps={{
-                  shrink: false
-                }}
-                inputProps={{ readOnly: true, disableUnderline: true }}
-              />
-            </Stack>
-            {/* Contact info */}
-            <TextField
-              fullWidth
-              color="primary"
-              name="name"
-              label={ strings.listingScreen.name }
-              value={ name }
-              onChange={ e => setName(e.target.value) }
-              error={ !!formErrors.name }
-              sx={{ label: { color: "black" }, marginLeft: "2px" }}
-            />
-            { /* tel */ }
-            <TextField
-              fullWidth
-              color="primary"
-              name="phone"
-              label={ strings.listingScreen.phone }
-              type="tel"
-              value={ phone }
-              onChange={ e => setPhone(e.target.value) }
-              error={ !!formErrors.phone }
-              sx={{ label: { color: "black" }, marginLeft: "2px" }}
-            />
-            { /* e-mail */ }
-            <TextField
-              fullWidth
-              required
-              color="primary"
-              name="email"
-              label={ strings.listingScreen.email }
-              type="email"
-              value={ email }
-              onChange={ e => setEmail(e.target.value) }
-              error={ !!formErrors.email }
-              sx={{ label: { color: "black" }, marginLeft: "2px" }}
-            />
-            <Stack
-              direction="row"
-              spacing={ 2 }
-              marginTop={ 2 }
-              marginBottom={ 2 }
-              justifyContent="center"
-            >
-              <Button
-                variant="contained"
-                onClick={ () => navigate(`/surveys/${surveyId}/reusables`) }
+              <Stack
+                direction="row"
+                spacing={ 2 }
+                marginTop={ 2 }
               >
-                { strings.generic.cancel }
-              </Button>
-              <Button
-                variant="contained"
+                { /* amounts */ }
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  color="primary"
+                  name=""
+                  value={ materialAmount }
+                  label={ strings.survey.reusables.dataGridColumns.amount }
+                  type="number"
+                  onChange={ e => setMaterialAmount(e.target.value) }
+                  error={ !!formErrors.materialAmount }
+                  sx={{ label: { color: "black" } }}
+                  InputLabelProps={{
+                    shrink: false
+                  }}
+                  inputProps={{
+                    style: { color: "black" }, readOnly: true, disableUnderline: true
+                  }}
+                />
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  select={ false }
+                  color="primary"
+                  name="amount"
+                  label={ material.amount }
+                  value={ newMaterial.amount }
+                  type="tel"
+                  onChange={ onNewMaterialChange }
+                  sx={{ label: { color: "black" } }}
+                  InputLabelProps={{
+                    shrink: false
+                  }}
+                  inputProps={{ readOnly: true, disableUnderline: true }}
+                />
+              </Stack>
+              <Stack
+                direction="row"
+                spacing={ 2 }
+                marginTop={ 2 }
               >
-                { strings.listingScreen.deleteOwnUse }
-              </Button>
-              <Button
-                variant="contained"
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  select={ false }
+                  color="primary"
+                  name=""
+                  label="Kokonaishinta (alv.24%)"
+                  value=""
+                  type="number"
+                  sx={{ label: { color: "black" }, input: { color: "black" } }}
+                  InputLabelProps={{
+                    shrink: false
+                  }}
+                  inputProps={{ readOnly: true, disableUnderline: true }}
+                />
+                <TextField
+                  fullWidth
+                  color="primary"
+                  name="price"
+                  value={ priceAmount }
+                  label="€"
+                  type="number"
+                  onChange={ e => setpriceAmount(e.target.value) }
+                  sx={{ label: { color: "black" }, input: { color: "black" } }}
+                  inputProps={{ style: { color: "black" } }}
+                />
+              </Stack>
+              <Stack
+                direction="column"
+                spacing={ 2 }
+                marginTop={ 2 }
               >
-                { strings.listingScreen.ownUse }
-              </Button>
-              <Button
-                type="submit"
-                variant="contained"
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  select={ false }
+                  color="primary"
+                  name="unit"
+                  label={ strings.listingScreen.unit }
+                  value={ material.unit }
+                  onChange={ onNewMaterialChange }
+                  sx={{ input: { color: "black" }, label: { color: "black" } }}
+                  InputLabelProps={{
+                    shrink: true
+                  }}
+                  inputProps={{ readOnly: true, disableUnderline: true }}
+                />
+              </Stack>
+              { /* Location of the material */ }
+              <Stack spacing={ 2 } marginTop={ 2 }>
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  color="primary"
+                  name="propertyName"
+                  label={ building?.propertyName || "" }
+                  value={ propertyName }
+                  helperText={ strings.listingScreen.propertyName }
+                  onChange={ e => setpropertyName(e.target.value) }
+                  error={ !!formErrors.propertyName }
+                  sx={{ label: { color: "black" } }}
+                  InputLabelProps={{
+                    shrink: false
+                  }}
+                  inputProps={{ readOnly: true, disableUnderline: true }}
+                />
+              </Stack>
+              <Stack
+                direction="row"
+                spacing={ 2 }
+                marginTop={ 2 }
               >
-                { strings.listingScreen.send }
-              </Button>
-            </Stack>
-          </form>
-        </Paper>
-      </Stack>
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  color="primary"
+                  name=""
+                  label={ strings.listingScreen.address }
+                  value={ address }
+                  onChange={ e => setAddress(e.target.value) }
+                  error={ !!formErrors.address }
+                  sx={{ label: { color: "black" } }}
+                  InputLabelProps={{
+                    shrink: false
+                  }}
+                  inputProps={{ readOnly: true, disableUnderline: true }}
+                />
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  color="primary"
+                  name="address"
+                  label={ `${building?.address?.streetAddress} ${building?.address?.city}`}
+                  type="text"
+                  value={ newMaterial.componentName }
+                  onChange={ onNewMaterialChange }
+                  sx={{ label: { color: "black" } }}
+                  InputLabelProps={{
+                    shrink: false
+                  }}
+                  inputProps={{ readOnly: true, disableUnderline: true }}
+                />
+              </Stack>
+              <Stack
+                direction="row"
+                spacing={ 2 }
+                marginTop={ 2 }
+              >
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  color="primary"
+                  name=""
+                  label={ strings.listingScreen.postalCode }
+                  value={ postalcode }
+                  onChange={ e => setPostalcode(e.target.value) }
+                  error={ !!formErrors.postalcode }
+                  sx={{ label: { color: "black" } }}
+                  InputLabelProps={{
+                    shrink: false
+                  }}
+                  inputProps={{ readOnly: true, disableUnderline: true }}
+                />
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  color="primary"
+                  name="postalCode"
+                  label={ building?.address?.postCode }
+                  type="text"
+                  value={ newMaterial.componentName }
+                  onChange={ onNewMaterialChange }
+                  sx={{ label: { color: "black" } }}
+                  InputLabelProps={{
+                    shrink: false
+                  }}
+                  inputProps={{ readOnly: true, disableUnderline: true }}
+                />
+              </Stack>
+              {/* Contact info */}
+              <TextField
+                fullWidth
+                color="primary"
+                name="name"
+                label={ strings.listingScreen.name }
+                value={ name }
+                onChange={ e => setName(e.target.value) }
+                error={ !!formErrors.name }
+                sx={{ label: { color: "black" }, marginLeft: "2px" }}
+              />
+              { /* tel */ }
+              <TextField
+                fullWidth
+                color="primary"
+                name="phone"
+                label={ strings.listingScreen.phone }
+                type="tel"
+                value={ phone }
+                onChange={ e => setPhone(e.target.value) }
+                error={ !!formErrors.phone }
+                sx={{ label: { color: "black" }, marginLeft: "2px" }}
+              />
+              { /* e-mail */ }
+              <TextField
+                fullWidth
+                required
+                color="primary"
+                name="email"
+                label={ strings.listingScreen.email }
+                type="email"
+                value={ email }
+                onChange={ e => setEmail(e.target.value) }
+                error={ !!formErrors.email }
+                sx={{ label: { color: "black" }, marginLeft: "2px" }}
+              />
+              <Stack
+                direction="row"
+                spacing={ 2 }
+                marginTop={ 2 }
+                marginBottom={ 2 }
+                justifyContent="center"
+              >
+                <Button
+                  variant="contained"
+                  onClick={ () => navigate(`/surveys/${surveyId}/reusables`) }
+                >
+                  { strings.generic.cancel }
+                </Button>
+                <Button
+                  variant="contained"
+                >
+                  { strings.listingScreen.deleteOwnUse }
+                </Button>
+                <Button
+                  variant="contained"
+                >
+                  { strings.listingScreen.ownUse }
+                </Button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                >
+                  { strings.listingScreen.send }
+                </Button>
+              </Stack>
+            </form>
+          </Paper>
+        </Stack>
+      ) : (
+        <></>
+      )}
+      <LoginDialog
+        open={ open }
+        onClose={ handleCloseDialog }
+        onLogin={ handleLogin }
+      />
     </Container>
   );
 };

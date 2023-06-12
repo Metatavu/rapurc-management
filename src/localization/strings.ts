@@ -22,7 +22,10 @@ export interface Localized extends LocalizedStringsMethods {
     confirm: string;
     cancel: string;
     delete: string;
+    login: string;
     logout: string;
+    username: string,
+    password: string,
     open: string;
     close: string;
     save: string;
@@ -162,6 +165,9 @@ export interface Localized extends LocalizedStringsMethods {
       phone: string;
       email: string;
     };
+    listingScreenLogin: {
+      loginFailed: string;
+    }
   };
 
   /**
@@ -598,6 +604,12 @@ export interface Localized extends LocalizedStringsMethods {
     ownUse: string;
     deleteOwnUse: string;
   };
+  listingScreenLogin: {
+    helperText: string;
+    title: string;
+    registerText: string;
+    registerLink: string;
+  }
 }
 
 /**
