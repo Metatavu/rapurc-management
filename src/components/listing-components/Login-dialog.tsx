@@ -148,13 +148,13 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
         />
         <Typography variant="subtitle1">
           { strings.listingScreenLogin.registerText }
-          <Typography variant="subtitle1">
-            <Link href={getRegistrationLink()} target="_blank" rel="noopener">
-              { strings.listingScreenLogin.registerLink }
-              {" "}
-              { siteList.find(siteItem => siteItem.id === site)?.name }
-            </Link>
-          </Typography>
+        </Typography>
+        <Typography variant="subtitle2">
+          <Link href={getRegistrationLink()} target="_blank" rel="noopener">
+            { strings.listingScreenLogin.registerLink }
+            {" "}
+            { siteList.find(siteItem => siteItem.id === site)?.name }
+          </Link>
         </Typography>
         {loginError && (
           <Typography variant="body2" color="error">
