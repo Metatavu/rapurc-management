@@ -8,7 +8,7 @@
     "confirm": "Vahvista",
     "cancel": "Peruuta",
     "delete": "Poista",
-    "login": "Kirjaudu sisälle",
+    "login": "Kirjaudu sisään",
     "logout": "Kirjaudu ulos",
     "username": "Käyttätunnus",
     "password": "Salasana",
@@ -557,7 +557,8 @@
     "deleteOwnUse": "poista oma käyttö"
   },
   "listingScreenLogin": {
-    "helperText": "Valitse sivu",
+    "helperText": "Valitse sivu, minne haluat luoda ilmoituksen",
+    "title": "Sinun tulee kirjautua sisään sivustolle, jolle olet luomassa ilmoitusta",
     "registerText": "Eikö sinulla ole tiliä valitulla sivulla?",
     "registerLink": "Luo tili sivulle"
   }

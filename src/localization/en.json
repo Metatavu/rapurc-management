@@ -558,7 +558,8 @@
     "deleteOwnUse": "Delete own use"
   },
   "listingScreenLogin": {
-    "helperText": "Choose site",
+    "helperText": "Select the site where you want to post the listing",
+    "title": "You will need to login to the site where you are submitting the listing",
     "registerText": "Not registered on the chosen site?",
     "registerLink": "Click here to register for"
   }

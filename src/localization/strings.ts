@@ -606,6 +606,7 @@ export interface Localized extends LocalizedStringsMethods {
   };
   listingScreenLogin: {
     helperText: string;
+    title: string;
     registerText: string;
     registerLink: string;
   }
