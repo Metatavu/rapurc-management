@@ -8,7 +8,7 @@ import strings from "localization/strings";
  */
 interface LoginDialogProps {
   open: boolean;
-  onClose: () => void;
+  onClose: (event: any, reason: any) => void;
   onLogin: () => void;
 }
   
@@ -80,16 +80,39 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
   const validateLogin = (usernameS: string, passwordS: string) => {
     return usernameS.trim() !== "" && passwordS.trim() !== "";
   };
-  
+
   /**
    * Handle login
    */
-  const handleLogin = () => {
+  const handleLogin = async (event: React.ChangeEvent<HTMLFormElement>) => {
+    event.preventDefault();
     const isValidLogin = validateLogin(username, password);
-  
     if (isValidLogin) {
-      onLogin();
-      onClose();
+      try {
+        const urlSearchParams = new URLSearchParams();
+        urlSearchParams.append("username", username);
+        urlSearchParams.append("password", password);
+        urlSearchParams.append("client_id", "management");
+        urlSearchParams.append("grant_type", "password");
+        const response = await fetch("https://auth.kiertoon.fi/auth/realms/cityloops/protocol/openid-connect/token", {
+          method: "POST",
+          headers: {
+            "Access-Control-Allow-Origin": "https://auth.kiertoon.fi/auth/realms/cityloops/protocol/openid-connect/token",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: urlSearchParams.toString()
+        });
+        if (response.ok) {
+          //  const data = await response.json();
+          //  console.log("Login successful:", data);
+          onLogin();
+          onClose(loginError, undefined);
+        } else {
+          setLoginError(strings.errorHandling.listingScreenLogin.loginFailed);
+        }
+      } catch (error) {
+        //  console.error("error: ", error);
+      }
     } else {
       setLoginError(strings.errorHandling.listingScreenLogin.loginFailed);
     }
@@ -99,67 +122,78 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
    * Login Dialog render
    */
   return (
-    <Dialog open={ open } onClose={ loginError ? undefined : onClose }>
+    <Dialog
+      open={ open }
+      disableEscapeKeyDown={true}
+      onClose={(event, reason) => {
+        if (reason !== "backdropClick") {
+          onClose(event, reason);
+        }
+      }
+      }
+    >
       <DialogTitle>{ strings.listingScreenLogin.title }</DialogTitle>
       <DialogContent>
-        <FormControl component="fieldset">
-          <FormLabel component="legend">{ strings.listingScreenLogin.helperText }</FormLabel>
-          <RadioGroup value={ site } onChange={ handleSiteChange } row>
-            {siteList.map(siteItem => (
-              <FormControlLabel
-                key={ siteItem.id }
-                value={ siteItem.id }
-                control={ <Radio/> }
-                label={ siteItem.name }
-              />
-            ))}
-          </RadioGroup>
-        </FormControl>
-        <TextField
-          autoFocus
-          margin="dense"
-          label={ strings.generic.username }
-          type="text"
-          fullWidth
-          value={ username }
-          onChange={ handleUsernameChange }
-          required
-        />
-        <TextField
-          margin="dense"
-          label={ strings.generic.password }
-          type="password"
-          fullWidth
-          value={ password }
-          onChange={ handlePasswordChange }
-          required
-        />
-        <Typography variant="subtitle1">
-          { strings.listingScreenLogin.registerText }
-        </Typography>
-        <Typography variant="subtitle1">
-          <Link href={getRegistrationLink()} target="_blank" rel="noopener">
-            { strings.listingScreenLogin.registerLink }
-            {" "}
-            { siteList.find(siteItem => siteItem.id === site)?.name }
-          </Link>
-        </Typography>
-        {loginError && (
-          <Typography variant="body2" color="error">
-            { loginError }
+        <form onSubmit={handleLogin}>
+          <FormControl component="fieldset">
+            <FormLabel component="legend">{ strings.listingScreenLogin.helperText }</FormLabel>
+            <RadioGroup value={ site } onChange={ handleSiteChange } row>
+              {siteList.map(siteItem => (
+                <FormControlLabel
+                  key={ siteItem.id }
+                  value={ siteItem.id }
+                  control={ <Radio/> }
+                  label={ siteItem.name }
+                />
+              ))}
+            </RadioGroup>
+          </FormControl>
+          <TextField
+            autoFocus
+            margin="dense"
+            label={ strings.generic.username }
+            type="text"
+            fullWidth
+            value={ username }
+            onChange={ handleUsernameChange }
+            required
+          />
+          <TextField
+            margin="dense"
+            label={ strings.generic.password }
+            type="password"
+            fullWidth
+            value={ password }
+            onChange={ handlePasswordChange }
+            required
+          />
+          <Typography variant="subtitle1">
+            { strings.listingScreenLogin.registerText }
           </Typography>
-        )}
-        <DialogActions sx={{
-          justifyContent: "space-between", padding: 0, marginTop: 1
-        }}
-        >
-          <Button onClick={() => navigate(`/surveys/${surveyId}/reusables`)} color="primary">
-            { strings.generic.cancel }
-          </Button>
-          <Button onClick={handleLogin} color="primary">
-            { strings.generic.login }
-          </Button>
-        </DialogActions>
+          <Typography variant="subtitle1">
+            <Link href={getRegistrationLink()} target="_blank" rel="noopener">
+              { strings.listingScreenLogin.registerLink }
+              {" "}
+              { siteList.find(siteItem => siteItem.id === site)?.name }
+            </Link>
+          </Typography>
+          {loginError && (
+            <Typography variant="body2" color="error">
+              { loginError }
+            </Typography>
+          )}
+          <DialogActions sx={{
+            justifyContent: "space-between", padding: 0, marginTop: 1
+          }}
+          >
+            <Button onClick={() => navigate(`/surveys/${surveyId}/reusables`)} color="primary">
+              { strings.generic.cancel }
+            </Button>
+            <Button type="submit" color="primary">
+              { strings.generic.login }
+            </Button>
+          </DialogActions>
+        </form>
       </DialogContent>
     </Dialog>
   );
