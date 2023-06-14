@@ -120,9 +120,6 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
       setLoginError(strings.errorHandling.listingScreenLogin.loginFailed);
     }
   };
-  React.useEffect(() => {
-    // console.log("Refresh Token: ", refreshToken);
-  }, [refreshToken]);
   /**
    * Token refresh logic
    */
