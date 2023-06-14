@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Dialog, DialogTitle, DialogContent, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, TextField, Typography, Link, DialogActions, Button } from "@mui/material";
 import strings from "localization/strings";
@@ -37,11 +37,12 @@ const siteList: Site[] = [
 const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => {
   const { surveyId } = useParams<{ surveyId: string }>();
   const navigate = useNavigate();
-  const [ site, setSite ] = useState(siteList[0].id);
-  const [ username, setUsername ] = useState("");
-  const [ password, setPassword ] = useState("");
-  const [ loginError, setLoginError ] = useState("");
-
+  const [ site, setSite ] = React.useState(siteList[0].id);
+  const [ username, setUsername ] = React.useState("");
+  const [ password, setPassword ] = React.useState("");
+  const [ loginError, setLoginError ] = React.useState("");
+  const [accessToken, setAccessToken] = React.useState("");
+  const [refreshToken, setRefreshToken] = React.useState("");
   /**
    * Handle state change in choosing the site
    */
@@ -103,8 +104,10 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
           body: urlSearchParams.toString()
         });
         if (response.ok) {
-          //  const data = await response.json();
-          //  console.log("Login successful:", data);
+          const data = await response.json();
+          setAccessToken(data);
+          // console.log("Login successful:", data);
+          setRefreshToken(data.refresh_token);
           onLogin();
           onClose(loginError, undefined);
         } else {
@@ -117,8 +120,69 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
       setLoginError(strings.errorHandling.listingScreenLogin.loginFailed);
     }
   };
-
+  React.useEffect(() => {
+    // console.log("Refresh Token: ", refreshToken);
+  }, [refreshToken]);
   /**
+   * Token refresh logic
+   */
+  const handleTokenRefresh = async () => {
+    try {
+      const urlSearchParams = new URLSearchParams();
+      urlSearchParams.append("grant_type", "refresh_token");
+      urlSearchParams.append("refresh_token", refreshToken);
+      urlSearchParams.append("client_id", "management");
+      const response = await fetch("https://auth.kiertoon.fi/auth/realms/cityloops/protocol/openid-connect/token", {
+        method: "POST",
+        headers: {
+          "Access-Control-Allow-Origin": "https://auth.kiertoon.fi/auth/realms/cityloops/protocol/openid-connect/token",
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: urlSearchParams.toString()
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setAccessToken(data);
+        setRefreshToken(data.refresh_token);
+        // console.log("Token refreshed:", data.refresh_token);
+      } else {
+        // console.log("Token refresh failed");
+      }
+    } catch (error) {
+      // console.error("Error refreshing token:", error);
+    }
+  };
+  /**
+   * Check if token is expiring
+   * @param token 
+   * @returns 
+   */
+  const isTokenExpiring = (token: any) => {
+    if (!token || !token.expires_in) {
+      return false; // Token or expiration time not available
+    }
+    const expirationTime = new Date(token.expires_in).getTime();
+    const currentTime = new Date().getTime();
+
+    // Set the threshold time before expiration for refreshing the token (in milliseconds)
+    const refreshThreshold = 4 * 60 * 1000; // 4 minutes
+  
+    // Check if the token is expiring within the refresh threshold
+    return expirationTime - currentTime < refreshThreshold;
+  };
+  React.useEffect(() => {
+    const refreshTimeout = setTimeout(() => {
+      if (isTokenExpiring(accessToken)) {
+        handleTokenRefresh();
+      }
+    }, 4 * 60 * 1000); // Refresh the token 4 minutes before expiration
+  
+    return () => {
+      clearTimeout(refreshTimeout);
+    };
+  }, [accessToken, refreshToken]); // Add refreshToken as a dependency here  
+
+  /*
    * Login Dialog render
    */
   return (
