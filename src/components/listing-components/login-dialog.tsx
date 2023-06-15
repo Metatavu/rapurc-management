@@ -19,6 +19,7 @@ interface Site {
   id: string;
   name: string;
   url: string;
+  token: string;
 }
 
 /**
@@ -26,7 +27,7 @@ interface Site {
  */
 const siteList: Site[] = [
   {
-    id: "site1", name: "Kiertoon.fi", url: "https://kiertoon.fi/items"
+    id: "site1", name: "Kiertoon.fi", url: "https://kiertoon.fi/items", token: "https://auth.kiertoon.fi/auth/realms/cityloops/protocol/openid-connect/token"
   }
 // Add more sites as needed
 ];
@@ -60,7 +61,16 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
     }
     return "";
   };
-  
+  /**
+   * Get site Token fetch url
+   */
+  const getTokenSiteUrl = () => {
+    const selectedSite = siteList.find(siteItem => siteItem.id === site);
+    if (selectedSite) {
+      return selectedSite.token;
+    }
+    return "";
+  };
   /**
    * Handle login username input changes
    */
@@ -95,10 +105,10 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
         urlSearchParams.append("password", password);
         urlSearchParams.append("client_id", "management");
         urlSearchParams.append("grant_type", "password");
-        const response = await fetch("https://auth.kiertoon.fi/auth/realms/cityloops/protocol/openid-connect/token", {
+        const response = await fetch(getTokenSiteUrl(), {
           method: "POST",
           headers: {
-            "Access-Control-Allow-Origin": "https://auth.kiertoon.fi/auth/realms/cityloops/protocol/openid-connect/token",
+            "Access-Control-Allow-Origin": "",
             "Content-Type": "application/x-www-form-urlencoded"
           },
           body: urlSearchParams.toString()
@@ -129,10 +139,10 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
       urlSearchParams.append("grant_type", "refresh_token");
       urlSearchParams.append("refresh_token", refreshToken);
       urlSearchParams.append("client_id", "management");
-      const response = await fetch("https://auth.kiertoon.fi/auth/realms/cityloops/protocol/openid-connect/token", {
+      const response = await fetch(getTokenSiteUrl(), {
         method: "POST",
         headers: {
-          "Access-Control-Allow-Origin": "https://auth.kiertoon.fi/auth/realms/cityloops/protocol/openid-connect/token",
+          "Access-Control-Allow-Origin": "",
           "Content-Type": "application/x-www-form-urlencoded"
         },
         body: urlSearchParams.toString()
