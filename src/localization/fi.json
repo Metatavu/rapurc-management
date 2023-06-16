@@ -144,7 +144,8 @@
       "email": "Virheellinen sähköposti"
     },
     "listingScreenLogin": {
-      "loginFailed": "Väärä käyttäjätunnus tai salasana"
+      "loginFailed": "Väärä käyttäjätunnus tai salasana",
+      "serverError": "Valitun sivun kanssa on yhteysongelmia. Yritä myöhemmin uudelleen."
     }
   },
 
