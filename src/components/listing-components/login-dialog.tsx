@@ -2,6 +2,7 @@ import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Dialog, DialogTitle, DialogContent, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, TextField, Typography, Link, DialogActions, Button } from "@mui/material";
 import strings from "localization/strings";
+import { ErrorContext } from "components/error-handler/error-handler";
 
 /**
  * Dialog interface
@@ -36,8 +37,9 @@ const siteList: Site[] = [
  * Login Dialog component
  */
 const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => {
-  const { surveyId } = useParams<{ surveyId: string }>();
   const navigate = useNavigate();
+  const errorContext = React.useContext(ErrorContext);
+  const { surveyId } = useParams<{ surveyId: string }>();
   const [ site, setSite ] = React.useState(siteList[0].id);
   const [ username, setUsername ] = React.useState("");
   const [ password, setPassword ] = React.useState("");
@@ -61,6 +63,7 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
     }
     return "";
   };
+
   /**
    * Get site Token fetch url
    */
@@ -71,6 +74,7 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
     }
     return "";
   };
+
   /**
    * Handle login username input changes
    */
@@ -116,12 +120,13 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
         if (response.ok) {
           const data = await response.json();
           setAccessToken(data);
-          // console.log("Login successful:", data);
           setRefreshToken(data.refresh_token);
           onLogin();
           onClose(loginError, undefined);
-        } else {
+        } if (response.status === 401) {
           setLoginError(strings.errorHandling.listingScreenLogin.loginFailed);
+        } else {
+          setLoginError(strings.errorHandling.listingScreenLogin.serverError);
         }
       } catch (error) {
         //  console.error("error: ", error);
@@ -130,6 +135,7 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
       setLoginError(strings.errorHandling.listingScreenLogin.loginFailed);
     }
   };
+
   /**
    * Token refresh logic
    */
@@ -151,14 +157,14 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
         const data = await response.json();
         setAccessToken(data);
         setRefreshToken(data.refresh_token);
-        // console.log("Token refreshed:", data.refresh_token);
-      } else {
-        // console.log("Token refresh failed");
+      } if (response.status === 404) {
+        errorContext.setError(strings.errorHandling.listingScreenLogin.serverError);
       }
     } catch (error) {
-      // console.error("Error refreshing token:", error);
+      errorContext.setError(strings.errorHandling.listingScreenLogin.serverError);
     }
   };
+
   /**
    * Check if token is expiring
    * @param token 
@@ -166,15 +172,13 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
    */
   const isTokenExpiring = (token: any) => {
     if (!token || !token.expires_in) {
-      return false; // Token or expiration time not available
+      return false;
     }
     const expirationTime = new Date(token.expires_in).getTime();
     const currentTime = new Date().getTime();
 
     // Set the threshold time before expiration for refreshing the token (in milliseconds)
     const refreshThreshold = 4 * 60 * 1000; // 4 minutes
-  
-    // Check if the token is expiring within the refresh threshold
     return expirationTime - currentTime < refreshThreshold;
   };
   React.useEffect(() => {
@@ -187,7 +191,7 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
     return () => {
       clearTimeout(refreshTimeout);
     };
-  }, [accessToken, refreshToken]); // Add refreshToken as a dependency here  
+  }, [accessToken, refreshToken]);
 
   /*
    * Login Dialog render
@@ -205,10 +209,14 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
     >
       <DialogTitle>{ strings.listingScreenLogin.title }</DialogTitle>
       <DialogContent>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={ handleLogin }>
           <FormControl component="fieldset">
             <FormLabel component="legend">{ strings.listingScreenLogin.helperText }</FormLabel>
-            <RadioGroup value={ site } onChange={ handleSiteChange } row>
+            <RadioGroup
+              value={ site }
+              onChange={ handleSiteChange }
+              row={ true }
+            >
               {siteList.map(siteItem => (
                 <FormControlLabel
                   key={ siteItem.id }
