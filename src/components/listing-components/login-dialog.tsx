@@ -44,8 +44,8 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
   const [ username, setUsername ] = React.useState("");
   const [ password, setPassword ] = React.useState("");
   const [ loginError, setLoginError ] = React.useState("");
-  const [accessToken, setAccessToken] = React.useState("");
-  const [refreshToken, setRefreshToken] = React.useState("");
+  const [ accessToken, setAccessToken ] = React.useState("");
+  const [ refreshToken, setRefreshToken ] = React.useState("");
   /**
    * Handle state change in choosing the site
    */
@@ -98,17 +98,60 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
 
   /**
    * Handle login
+   * @param event 
    */
   const handleLogin = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
     const isValidLogin = validateLogin(username, password);
     if (isValidLogin) {
+      const selectedSite = siteList.find(siteItem => siteItem.id === site);
+      if (selectedSite && selectedSite.name === "Kiertoon.fi") {
+        try {
+          const urlSearchParams = new URLSearchParams();
+          urlSearchParams.append("username", username);
+          urlSearchParams.append("password", password);
+          urlSearchParams.append("client_id", "management");
+          urlSearchParams.append("grant_type", "password");
+          const response = await fetch(getTokenSiteUrl(), {
+            method: "POST",
+            headers: {
+              "Access-Control-Allow-Origin": "",
+              "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: urlSearchParams.toString()
+          });
+          if (response.ok) {
+            const data = await response.json();
+            setAccessToken(data);
+            setRefreshToken(data.refresh_token);
+            onLogin();
+            onClose(loginError, undefined);
+          } if (response.status === 401) {
+            setLoginError(strings.errorHandling.listingScreenLogin.loginFailed);
+          } else {
+            setLoginError(strings.errorHandling.listingScreenLogin.serverError);
+          }
+        } catch (error) {
+          setLoginError(strings.errorHandling.listingScreenLogin.serverError);
+        }
+      }
+      //  Insert future sites fetch logic
+    } else {
+      setLoginError(strings.errorHandling.listingScreenLogin.loginFailed);
+    }
+  };
+
+  /**
+   * Token refresh logic
+   */
+  const handleTokenRefresh = async () => {
+    const selectedSite = siteList.find(siteItem => siteItem.id === site);
+    if (selectedSite && selectedSite.name === "Kiertoon.fi") {
       try {
         const urlSearchParams = new URLSearchParams();
-        urlSearchParams.append("username", username);
-        urlSearchParams.append("password", password);
+        urlSearchParams.append("grant_type", "refresh_token");
+        urlSearchParams.append("refresh_token", refreshToken);
         urlSearchParams.append("client_id", "management");
-        urlSearchParams.append("grant_type", "password");
         const response = await fetch(getTokenSiteUrl(), {
           method: "POST",
           headers: {
@@ -121,47 +164,12 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
           const data = await response.json();
           setAccessToken(data);
           setRefreshToken(data.refresh_token);
-          onLogin();
-          onClose(loginError, undefined);
-        } if (response.status === 401) {
-          setLoginError(strings.errorHandling.listingScreenLogin.loginFailed);
-        } else {
-          setLoginError(strings.errorHandling.listingScreenLogin.serverError);
+        } if (response.status === 404) {
+          errorContext.setError(strings.errorHandling.listingScreenLogin.serverError);
         }
       } catch (error) {
-        //  console.error("error: ", error);
-      }
-    } else {
-      setLoginError(strings.errorHandling.listingScreenLogin.loginFailed);
-    }
-  };
-
-  /**
-   * Token refresh logic
-   */
-  const handleTokenRefresh = async () => {
-    try {
-      const urlSearchParams = new URLSearchParams();
-      urlSearchParams.append("grant_type", "refresh_token");
-      urlSearchParams.append("refresh_token", refreshToken);
-      urlSearchParams.append("client_id", "management");
-      const response = await fetch(getTokenSiteUrl(), {
-        method: "POST",
-        headers: {
-          "Access-Control-Allow-Origin": "",
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: urlSearchParams.toString()
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setAccessToken(data);
-        setRefreshToken(data.refresh_token);
-      } if (response.status === 404) {
         errorContext.setError(strings.errorHandling.listingScreenLogin.serverError);
       }
-    } catch (error) {
-      errorContext.setError(strings.errorHandling.listingScreenLogin.serverError);
     }
   };
 
