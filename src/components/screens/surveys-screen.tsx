@@ -423,6 +423,11 @@ const SurveysScreen: React.FC = () => {
         valueFormatter: ({ value }) => LocalizationUtils.getLocalizedSurveyStatus(value as SurveyStatus)
       },
       {
+        field: "creator",
+        headerName: strings.surveysScreen.dataGridColumns.creator,
+        width: 150
+      },
+      {
         field: "buildingId",
         headerName: strings.surveysScreen.dataGridColumns.buildingId,
         width: 200
@@ -430,16 +435,17 @@ const SurveysScreen: React.FC = () => {
       {
         field: "classificationCode",
         headerName: strings.surveysScreen.dataGridColumns.classificationCode,
-        flex: 1
+        width: 300
       },
       {
         field: "ownerName",
         headerName: strings.surveysScreen.dataGridColumns.ownerName,
-        flex: 1
+        width: 180
       },
       {
         field: "propertyName",
         headerName: strings.surveysScreen.dataGridColumns.propertyName,
+        width: 100,
         flex: 1
       },
       {
@@ -450,6 +456,7 @@ const SurveysScreen: React.FC = () => {
       {
         field: "streetAddress",
         headerName: strings.surveysScreen.dataGridColumns.streetAddress,
+        width: 150,
         flex: 1
       }
     ];

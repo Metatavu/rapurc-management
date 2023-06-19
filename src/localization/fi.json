@@ -159,6 +159,7 @@
     "filter": "Suodata",
     "dataGridColumns": {
       "status": "Tila",
+      "creator":"Tekijä",
       "buildingId": "Rakennustunnus",
       "classificationCode": "Rakennusluokka",
       "ownerName": "Omistaja",

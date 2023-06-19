@@ -187,6 +187,7 @@ export interface Localized extends LocalizedStringsMethods {
     filter: string;
     dataGridColumns: {
       status: string;
+      creator: string;
       buildingId: string;
       classificationCode: string;
       ownerName: string;
