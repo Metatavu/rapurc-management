@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Dialog, DialogTitle, DialogContent, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, TextField, Typography, Link, DialogActions, Button } from "@mui/material";
 import strings from "localization/strings";
 import { ErrorContext } from "components/error-handler/error-handler";
+import { fetchLogin, handleTokenRefresh } from "./handle-listing-login";
 
 /**
  * Dialog interface
@@ -65,17 +66,6 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
   };
 
   /**
-   * Get site Token fetch url
-   */
-  const getTokenSiteUrl = () => {
-    const selectedSite = siteList.find(siteItem => siteItem.id === site);
-    if (selectedSite) {
-      return selectedSite.token;
-    }
-    return "";
-  };
-
-  /**
    * Handle login username input changes
    */
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,38 +94,20 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
     event.preventDefault();
     const isValidLogin = validateLogin(username, password);
     if (isValidLogin) {
-      const selectedSite = siteList.find(siteItem => siteItem.id === site);
-      if (selectedSite && selectedSite.name === "Kiertoon.fi") {
-        try {
-          const urlSearchParams = new URLSearchParams();
-          urlSearchParams.append("username", username);
-          urlSearchParams.append("password", password);
-          urlSearchParams.append("client_id", "management");
-          urlSearchParams.append("grant_type", "password");
-          const response = await fetch(getTokenSiteUrl(), {
-            method: "POST",
-            headers: {
-              "Access-Control-Allow-Origin": "",
-              "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: urlSearchParams.toString()
-          });
-          if (response.ok) {
-            const data = await response.json();
-            setAccessToken(data);
-            setRefreshToken(data.refresh_token);
-            onLogin();
-            onClose(loginError, undefined);
-          } if (response.status === 401) {
-            setLoginError(strings.errorHandling.listingScreenLogin.loginFailed);
-          } else {
-            setLoginError(strings.errorHandling.listingScreenLogin.serverError);
-          }
-        } catch (error) {
-          setLoginError(strings.errorHandling.listingScreenLogin.serverError);
-        }
+      const { accessToken: newAccessToken, refreshToken: newRefreshToken, error } = await fetchLogin({
+        selectedSite: siteList.find(siteItem => siteItem.id === site),
+        username: username,
+        password: password
+      });
+
+      if (error) {
+        setLoginError(error);
+      } else {
+        setAccessToken(newAccessToken);
+        setRefreshToken(newRefreshToken);
+        onLogin();
+        onClose(loginError, undefined);
       }
-      //  Insert future sites fetch logic
     } else {
       setLoginError(strings.errorHandling.listingScreenLogin.loginFailed);
     }
@@ -144,32 +116,16 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
   /**
    * Token refresh logic
    */
-  const handleTokenRefresh = async () => {
-    const selectedSite = siteList.find(siteItem => siteItem.id === site);
-    if (selectedSite && selectedSite.name === "Kiertoon.fi") {
-      try {
-        const urlSearchParams = new URLSearchParams();
-        urlSearchParams.append("grant_type", "refresh_token");
-        urlSearchParams.append("refresh_token", refreshToken);
-        urlSearchParams.append("client_id", "management");
-        const response = await fetch(getTokenSiteUrl(), {
-          method: "POST",
-          headers: {
-            "Access-Control-Allow-Origin": "",
-            "Content-Type": "application/x-www-form-urlencoded"
-          },
-          body: urlSearchParams.toString()
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setAccessToken(data);
-          setRefreshToken(data.refresh_token);
-        } if (response.status === 404) {
-          errorContext.setError(strings.errorHandling.listingScreenLogin.serverError);
-        }
-      } catch (error) {
-        errorContext.setError(strings.errorHandling.listingScreenLogin.serverError);
-      }
+  const tokenRefresh = async () => {
+    const { accessToken: newAccessToken, refreshToken: newRefreshToken, error } = await handleTokenRefresh({
+      selectedSite: siteList.find(siteItem => siteItem.id === site),
+      refreshToken: refreshToken
+    });
+    if (error) {
+      errorContext.setError(error);
+    } else {
+      setAccessToken(newAccessToken);
+      setRefreshToken(newRefreshToken);
     }
   };
 
@@ -192,7 +148,7 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
   React.useEffect(() => {
     const refreshTimeout = setTimeout(() => {
       if (isTokenExpiring(accessToken)) {
-        handleTokenRefresh();
+        tokenRefresh();
       }
     }, 4 * 60 * 1000); // Refresh the token 4 minutes before expiration
   
