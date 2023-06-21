@@ -47,6 +47,8 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
   const [ loginError, setLoginError ] = React.useState("");
   const [ accessToken, setAccessToken ] = React.useState("");
   const [ refreshToken, setRefreshToken ] = React.useState("");
+  const [tokenExpiring, setTokenExpiring] = React.useState(false);
+
   /**
    * Handle state change in choosing the site
    */
@@ -128,7 +130,9 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
       setRefreshToken(newRefreshToken);
     }
   };
-
+  
+  // var for token refresh timer
+  let expirationTime = 0;
   /**
    * Check if token is expiring
    * @param token 
@@ -138,24 +142,59 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
     if (!token || !token.expires_in) {
       return false;
     }
-    const expirationTime = new Date(token.expires_in).getTime();
-    const currentTime = new Date().getTime();
 
-    // Set the threshold time before expiration for refreshing the token (in milliseconds)
-    const refreshThreshold = 4 * 60 * 1000; // 4 minutes
-    return expirationTime - currentTime < refreshThreshold;
+    if (expirationTime === 0) {
+      expirationTime = Math.floor(Date.now() / 1000) + token.expires_in;
+    }
+
+    const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+    const countdown = expirationTime - currentTime;
+    const refreshThreshold = 4 * 60; // 4 minutes
+
+    if (countdown <= 0) {
+      expirationTime = 0;
+      return true;
+    }
+    if (countdown <= refreshThreshold) {
+      expirationTime = currentTime + token.expires_in;
+      return true;
+    }
+
+    return countdown <= refreshThreshold;
   };
+
+  React.useEffect(() => {
+    /**
+     * Mount tokenCheck
+     */
+    const initializeTokenExpiration = () => {
+      if (isTokenExpiring(accessToken)) {
+        setTokenExpiring(true);
+        expirationTime = 0;
+      }
+    };
+    initializeTokenExpiration();
+  });
+  
   React.useEffect(() => {
     const refreshTimeout = setTimeout(() => {
       if (isTokenExpiring(accessToken)) {
-        tokenRefresh();
+        setTokenExpiring(true);
+        expirationTime = 0;
       }
-    }, 4 * 60 * 1000); // Refresh the token 4 minutes before expiration
-  
+    }, 3 * 60 * 1000);
+
     return () => {
       clearTimeout(refreshTimeout);
     };
-  }, [accessToken, refreshToken]);
+  }, [accessToken]);
+
+  React.useEffect(() => {
+    if (tokenExpiring) {
+      tokenRefresh();
+      setTokenExpiring(false);
+    }
+  }, [tokenExpiring]);
 
   /*
    * Login Dialog render
