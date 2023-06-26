@@ -308,7 +308,7 @@ const SurveyListingScreen: React.FC = () => {
                 InputLabelProps={{
                   shrink: true
                 }}
-                inputProps={{ readOnly: true, disableUnderline: true }}
+                inputProps={{ readOnly: true, disableunderline: true.toString() }}
               />
               <Stack
                 direction="row"
@@ -329,7 +329,7 @@ const SurveyListingScreen: React.FC = () => {
                   InputLabelProps={{
                     shrink: true
                   }}
-                  inputProps={{ readOnly: true, disableUnderline: true }}
+                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
                 />
               </Stack>
               <TextField
@@ -368,11 +368,8 @@ const SurveyListingScreen: React.FC = () => {
                   onChange={ e => setMaterialAmount(e.target.value) }
                   error={ !!formErrors.materialAmount }
                   sx={{ label: { color: "black" } }}
-                  InputLabelProps={{
-                    shrink: false
-                  }}
                   inputProps={{
-                    style: { color: "black" }, readOnly: true, disableUnderline: true
+                    style: { color: "black" }
                   }}
                 />
                 <TextField
@@ -389,7 +386,7 @@ const SurveyListingScreen: React.FC = () => {
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ readOnly: true, disableUnderline: true }}
+                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
                 />
               </Stack>
               <Stack
@@ -405,12 +402,12 @@ const SurveyListingScreen: React.FC = () => {
                   name=""
                   label="Kokonaishinta (alv.24%)"
                   value=""
-                  type="number"
+                  type="text"
                   sx={{ label: { color: "black" }, input: { color: "black" } }}
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ readOnly: true, disableUnderline: true }}
+                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
                 />
                 <TextField
                   fullWidth
@@ -442,7 +439,7 @@ const SurveyListingScreen: React.FC = () => {
                   InputLabelProps={{
                     shrink: true
                   }}
-                  inputProps={{ readOnly: true, disableUnderline: true }}
+                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
                 />
               </Stack>
               { /* Location of the material */ }
@@ -461,7 +458,7 @@ const SurveyListingScreen: React.FC = () => {
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ readOnly: true, disableUnderline: true }}
+                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
                 />
               </Stack>
               <Stack
@@ -482,7 +479,7 @@ const SurveyListingScreen: React.FC = () => {
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ readOnly: true, disableUnderline: true }}
+                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
                 />
                 <TextField
                   variant="outlined"
@@ -497,7 +494,7 @@ const SurveyListingScreen: React.FC = () => {
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ readOnly: true, disableUnderline: true }}
+                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
                 />
               </Stack>
               <Stack
@@ -518,7 +515,7 @@ const SurveyListingScreen: React.FC = () => {
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ readOnly: true, disableUnderline: true }}
+                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
                 />
                 <TextField
                   variant="outlined"
@@ -533,7 +530,7 @@ const SurveyListingScreen: React.FC = () => {
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ readOnly: true, disableUnderline: true }}
+                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
                 />
               </Stack>
               {/* Contact info */}
