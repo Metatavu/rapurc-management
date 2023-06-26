@@ -202,6 +202,14 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
     }
   }, [tokenExpiring]);
 
+  /**
+   * TEMPORARY SKIP LOGIN, DELETE WHEN FORM UI is 100% done
+   */
+  const skipLoginTemp = () => {
+    onLogin();
+    onClose(loginError, undefined);
+  };
+
   /*
    * Login Dialog render
    */
@@ -277,6 +285,8 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
             <Button onClick={() => navigate(`/surveys/${surveyId}/reusables`)} color="primary">
               { strings.generic.cancel }
             </Button>
+            {/* SKIP BUTTON FOR LOGIN TEMPORARY, DELETE WHEN FORM UI 100% DONE */}
+            <Button onClick={skipLoginTemp}> SKIP LOGIN TEMP </Button>
             <Button type="submit" color="primary">
               { strings.generic.login }
             </Button>
