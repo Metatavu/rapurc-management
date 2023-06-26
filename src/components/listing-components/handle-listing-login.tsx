@@ -1,17 +1,27 @@
 import strings from "localization/strings";
 
+/**
+ * Interface for site props
+ */
 interface Site {
   id: string;
   name: string;
   url: string;
   token: string;
 }
-  
+
+/**
+ * Interface for login params from login-dialog.tsx
+ */
 interface LoginParams {
   selectedSite: Site | undefined;
   username: string;
   password: string;
 }
+
+/**
+ * Interface for refreshing token on login-dialog.tsx side
+ */
 interface tokenParams {
   selectedSite: Site | undefined;
   refreshToken: string;
@@ -67,7 +77,7 @@ const fetchLogin = async (params: LoginParams): Promise<{ accessToken: string; r
 };
 
 /**
- * Handle token refresh
+ * Handle 3rd party token refresh
  */
 const handleTokenRefresh = async (params: tokenParams): Promise<{ accessToken: string; refreshToken: string; error: string }> => {
   const { selectedSite, refreshToken } = params;

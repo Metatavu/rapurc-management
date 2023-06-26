@@ -25,7 +25,7 @@ interface Site {
 }
 
 /**
- * list of sites rendered as buttons to select to send the listing form to
+ * List of sites rendered as buttons to select to send the listing form to
  */
 const siteList: Site[] = [
   {
@@ -131,7 +131,7 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
     }
   };
   
-  // var for token refresh timer
+  // Var for token refresh timer
   let expirationTime = 0;
   /**
    * Check if token is expiring
@@ -165,7 +165,7 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
 
   React.useEffect(() => {
     /**
-     * Mount tokenCheck
+     * Initialize IsTokenExpiring
      */
     const initializeTokenExpiration = () => {
       if (isTokenExpiring(accessToken)) {
@@ -176,6 +176,9 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
     initializeTokenExpiration();
   });
   
+  /**
+   * Reset the timer on token expiration time
+   */
   React.useEffect(() => {
     const refreshTimeout = setTimeout(() => {
       if (isTokenExpiring(accessToken)) {
@@ -189,6 +192,9 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
     };
   }, [accessToken]);
 
+  /**
+   * Check if token is expiring --> refresh token || false
+   */
   React.useEffect(() => {
     if (tokenExpiring) {
       tokenRefresh();
