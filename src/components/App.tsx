@@ -12,6 +12,8 @@ import moment from "moment";
 import "moment/locale/fi";
 import { useAppSelector } from "app/hooks";
 import { selectLanguage } from "features/locale-slice";
+import GroupDialogScreen from "./screens/group-dialog-screen";
+import GroupManagementScreen from "./screens/group-management-screen";
 
 /**
  * Application component
@@ -41,6 +43,10 @@ const App: React.FC = () => {
               element={ <SurveyScreen/> }
             />
             <Route
+              path="/groups/:groupId*"
+              element={ <GroupManagementScreen/> }
+            />
+            <Route
               path="/admin/*"
               element={
                 <VisibleWithRole userRole="admin">
@@ -58,7 +64,7 @@ const App: React.FC = () => {
             />
             <Route
               path="/"
-              element={ <SurveysScreen/> }
+              element={ <GroupDialogScreen/> }
             />
           </Routes>
         </Router>

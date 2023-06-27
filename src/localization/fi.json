@@ -131,12 +131,12 @@
       "update": "Virhe päivitettäessä liitettä"
     },
     "listingScreen": {
-      "materialInfo": "Materiaalin tieto vaaditaan",  
-      "materialAmount": "Materiaalin määrä täytyy olla numerona", 
-      "materialAmountInfo": "Materiaalimäärän tieto vaaditaan", 
+      "materialInfo": "Materiaalin tieto vaaditaan",
+      "materialAmount": "Materiaalin määrä täytyy olla numerona",
+      "materialAmountInfo": "Materiaalimäärän tieto vaaditaan",
       "priceAmount": "Hinta vaaditaan",
       "unit": "Materiaaliyksikkö vaaditaan",
-      "propertyName": "Kiinteistön nimi vaaditaan", 
+      "propertyName": "Kiinteistön nimi vaaditaan",
       "address": "Osoite vaaditaan",
       "postalcode": "Postinumero vaaditaan",
       "name": "Nimi vaaditaan",
@@ -145,6 +145,11 @@
     },
     "listingScreenLogin": {
       "loginFailed": "Väärä käyttäjätunnus tai salasana"
+    },
+    "groupDialogsScreen": {
+      "listGroups": "Virhe haettaessa ryhmiä",
+      "createGroup": "Virhe luotaessa ryhmää",
+      "createGroupRequest": "Virhe luotaessa ryhmään liittymispyyntöä"
     }
   },
 
@@ -189,7 +194,7 @@
     "createManually": "Luo manuaalisesti",
     "createSurvey": "Luo kartoitus"
   },
-  
+
   "surveyScreen": {
     "title": "Kartoitus",
     "status": "Tila",
@@ -206,7 +211,7 @@
       "summary": "Yhteenveto"
     }
   },
-  
+
   "adminScreen": {
     "title": "Ylläpito",
     "description": "Hallitse alasvetovalikoiden sisältöjä.",
@@ -561,5 +566,35 @@
     "title": "Sinun tulee kirjautua sisään sivustolle, jolle olet luomassa ilmoitusta",
     "registerText": "Eikö sinulla ole tiliä valitulla sivulla?",
     "registerLink": "Luo tili sivulle"
+  },
+  "groupDialogsScreen": {
+    "createNewGroup": "Luo uusi ryhmä" ,
+    "cancel": "Peruuta",
+    "welcomeDialog": {
+      "title": "Tervetuloa purkukartoitus.fi palveluun!",
+      "joinGroup": "Liity Rhymään" ,
+      "content": "Käyttääksesi palvelua on sinun kuuluttava organisaatiosi ryhmään. Ryhmässä näet organisaatiosi jäsenten luomat kartoitukset ja voit luoda sinne uusia kartoítuksia. Jos organisaatiollasi ei ole vielä ryhmää, voit luoda uuden. Jos organisaatiollasi on jo ryhmä järjestelmässä, voit liittyä siihen pyytämällä jäsenyyttä.\n Jos haluat liittyä olemassaolevaan ryhmään, valite 'Liity ryhmään' tai jos haluat luoda kokonaan uuden ryhmän, valitse 'Luo uusi ryhmä'."
+    },
+    "createDialog": {
+      "title": "Luo uusi ryhmä",
+      "placeholder": "Anna ryhmän nimi",
+      "helperText": "Ryhmä on jo olemassa"
+    },
+    "createDoneDialog": {
+      "title": "Ryhmän luonti onnistui!",
+      "goToGroupManagement": "Siirry kartoituksiin",
+      "content": "Voit nyt tehdä uusia kartoituksia ja kutsua jäseniä ryhmääsi. Ryhmän hallinta löytyy ylänavigaatiosta 'Hallinta'."
+    },
+    "joinDialog": {
+      "title": "Liity ryhmään",
+      "sendRequest": "Lähetä liittymispyyntö",
+      "content": "Pystyäksesi tekemään kartoituksia on sinun kuuluttava johonkin ryhmään. Hae organisaatiosi ryhmää alla olevasta listasta. Jos organisaatiollasi ei ole ryhmää, voit luoda uuden ryhmän valitsemalla 'Luo uusi ryhmä'.",
+      "placeholder": "Hae ryhmää"
+    },
+    "requestSentDialog": {
+      "title": "Liity ryhmään",
+      "requestSent": "Pyyntö lähetetty",
+      "content": "Liittymispyyntö lähetetty ryhmään XAMK. Saat ilmoituksen sähköpostiisi, kun pyyntö on hyväksytty. \n Hyväksynnän jälkeen pääset tarkastelemaan organisaatiosi kartoituksia ja luomaan uusia."
+    }
   }
 }

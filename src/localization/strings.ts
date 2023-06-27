@@ -167,6 +167,11 @@ export interface Localized extends LocalizedStringsMethods {
     };
     listingScreenLogin: {
       loginFailed: string;
+    };
+    groupDialogsScreen: {
+      listGroups: string;
+      createGroup: string;
+      createGroupRequest: string;
     }
   };
 
@@ -609,6 +614,40 @@ export interface Localized extends LocalizedStringsMethods {
     title: string;
     registerText: string;
     registerLink: string;
+  }
+
+  /**
+   * Translatations related to group dialogs
+   */
+  groupDialogsScreen: {
+    createNewGroup: string;
+    cancel: string;
+    welcomeDialog: {
+      title: string;
+      joinGroup: string
+      content: string;
+    };
+    createDialog: {
+      title: string;
+      placeholder: string;
+      helperText: string;
+    };
+    createDoneDialog: {
+      title: string;
+      goToGroupManagement: string;
+      content: string;
+    };
+    joinDialog: {
+      title: string;
+      sendRequest: string;
+      content: string;
+      placeholder: string;
+    };
+    requestSentDialog: {
+      title: string;
+      requestSent: string;
+      content: string;
+    }
   }
 }
 
