@@ -19,7 +19,7 @@ import LocalizationUtils from "utils/localization-utils";
 import SurveyUtils from "utils/survey";
 import WhiteOutlinedInput from "../../styled/generic/inputs";
 import { SurveyStatus } from "../../generated/client/models/SurveyStatus";
-import { Building, OwnerInformation, Survey } from "generated/client";
+import { Building, OwnerInformation } from "generated/client";
 
 /**
  * Surveys screen component
@@ -423,13 +423,9 @@ const SurveysScreen: React.FC = () => {
         valueFormatter: ({ value }) => LocalizationUtils.getLocalizedSurveyStatus(value as SurveyStatus)
       },
       {
-        field: "creator",
+        field: "creatorDisplayName",
         headerName: strings.surveysScreen.dataGridColumns.creator,
-        width: 150,
-        valueGetter: params => {
-          const survey = params.row as Survey;
-          return survey.creatorDisplayName ?? strings.docx.metadata.unknown;
-        }
+        width: 150
       },
       {
         field: "buildingId",
