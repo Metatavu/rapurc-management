@@ -20,7 +20,6 @@ const GroupDialogScreen: FC = () => {
   const keycloak = useAppSelector(selectKeycloak);
   const navigate = useNavigate();
   const errorContext = useContext(ErrorContext);
-  // TODO: This should be set to redux
   const [usersGroups, setUsersGroups] = useState<UserGroup[]>([]);
   const [allGroups, setAllGroups] = useState<UserGroup[]>([]);
   const [ filteredGroups, setFilteredGroups ] = useState<UserGroup[]>([]);
@@ -81,6 +80,7 @@ const GroupDialogScreen: FC = () => {
     if (!usersGroups.length) {
       setDialogStatus(GroupDialogStatus.WELCOME);
     } else {
+      // TODO: Surveys should be the route and group management is accesed from the nav button.
       navigate(`/groups/${usersGroups[0].id}`);
     }
   };
@@ -160,11 +160,12 @@ const GroupDialogScreen: FC = () => {
 
     setLoading(true);
     try {
-      await Api.getUserGroupsApi(keycloak.token).createUserGroup({
+      const createdGroup = await Api.getUserGroupsApi(keycloak.token).createUserGroup({
         userGroup: {
           name: newGroupName
         }
       });
+      dispatch(setUserGroups([...usersGroups, createdGroup]));
       setDialogStatus(GroupDialogStatus.CREATE_DONE);
     } catch (error) {
       errorContext.setError(strings.errorHandling.groupDialogsScreen.createGroup);
@@ -267,7 +268,7 @@ const GroupDialogScreen: FC = () => {
     <GenericDialog
       open={ true }
       onClose={ () => {} }
-      onConfirm={ () => navigate("/groups")}
+      onConfirm={ () => navigate(`/groups/${usersGroups[0].id}`)}
       title={ strings.groupDialogsScreen.createDoneDialog.title }
       positiveButtonText={ strings.groupDialogsScreen.createDoneDialog.goToGroupManagement }
       hideClose={ true }

@@ -150,6 +150,12 @@
       "listGroups": "Virhe haettaessa ryhmiä",
       "createGroup": "Virhe luotaessa ryhmää",
       "createGroupRequest": "Virhe luotaessa ryhmään liittymispyyntöä"
+    },
+    "groupManagementScreen": {
+      "listMembers": "Virhe listattaessa ryhmän jäseniä",
+      "inviteMember": "Virhe lähetettäessä jäsenkutsua",
+      "pendingRequests": "Virhe listattaessa odottavia pyyntöjä",
+      "pendingInvites": "Virhe listattaessa odottavia kutsuja"
     }
   },
 
@@ -595,6 +601,29 @@
       "title": "Liity ryhmään",
       "requestSent": "Pyyntö lähetetty",
       "content": "Liittymispyyntö lähetetty ryhmään XAMK. Saat ilmoituksen sähköpostiisi, kun pyyntö on hyväksytty. \n Hyväksynnän jälkeen pääset tarkastelemaan organisaatiosi kartoituksia ja luomaan uusia."
+    }
+  },
+  "groupManagementScreen": {
+    "groupMembers": "Ryhmän jäsenet",
+    "pendingInvites": "Lähetetyt kutsut ({0})",
+    "pendingRequests": "Jäsenpyynnöt ({0})",
+    "inviteUser": "Kutsu käyttäjä",
+    "sendInvite": "Kutsu käyttäjä",
+    "invitePlaceholder": "Anna sähköpostiosoite",
+    "inviteMember": "Kutsu jäseniä",
+    "groupManagement": "Ryhmän hallinta {0}",
+    "groupMembersScreen": {
+      "name": "Nimi",
+      "email": "Sähköposti",
+      "role": "Rooli",
+      "control": "Hallitse"
+    },
+    "pendingInvitesScreen": {
+      "resend": "Lähetä kutsu uudelleen"
+    },
+    "pendingRequestsScreen": {
+      "reject": "Hylkää",
+      "accept": "Hyväksy"
     }
   }
 }

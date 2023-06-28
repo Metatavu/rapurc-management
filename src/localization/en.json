@@ -149,6 +149,12 @@
       "listGroups": "Error while fetching groups",
       "createGroup": "Error while creating group",
       "createGroupRequest": "Error while creating group join request"
+    },
+    "groupManagementScreen": {
+      "listMembers": "Error while listing group members",
+      "inviteMember": "Error while sending member invite",
+      "pendingRequests": "Error while listing pending requests",
+      "pendingInvites": "Error while listing pending invites"
     }
   },
 
@@ -596,6 +602,29 @@
       "title": "Join the group",
       "requestSent": "Request sent",
       "content": "Join request sent to group {0}. You will receive a notification in your email when the request has been approved. \n After approval, you can view your organization's maps and create new ones."
+    }
+  },
+  "groupManagementScreen": {
+    "groupMembers": "Group members",
+    "pendingInvites": "Pending invites ({0})",
+    "pendingRequests": "Pending requests ({0})",
+    "inviteUser": "Invite user",
+    "sendInvite": "Send Invite",
+    "invitePlaceholder": "Enter an email address",
+    "inviteMember": "Invite member",
+    "groupManagement": "Group management {0}",
+    "groupMembersScreen": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "control": "Control"
+    },
+    "pendingInvitesScreen": {
+      "resend": "Resend invitation"
+    },
+    "pendingRequestsScreen": {
+      "reject": "Reject",
+      "accept": "Accept"
     }
   }
 }

@@ -4,13 +4,14 @@ import { useAppDispatch, useAppSelector } from "app/hooks";
 import { ErrorContext } from "components/error-handler/error-handler";
 import GenericDialog from "components/generic/generic-dialog";
 import SidePanelLayout from "components/layouts/side-panel-layout";
-import StackLayout from "components/layouts/stack-layout";
 import { selectKeycloak } from "features/auth-slice";
 import { setUserGroups } from "features/group-slice";
-import { JoinRequestStatus, UserGroup } from "generated/client";
+import { GroupJoinInvite, GroupJoinRequest, JoinRequestStatus, User, UserGroup } from "generated/client";
 import strings from "localization/strings";
 import React, { ChangeEvent, FC, useContext, useEffect, useState } from "react";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import GroupIcon from "@mui/icons-material/Group";
+import SendIcon from "@mui/icons-material/Send";
 import GroupRoutes from "./group-management-routes";
 import NavigationItem from "components/layout-components/navigation-item";
 import { useParams } from "react-router-dom";
@@ -25,11 +26,11 @@ const GroupManagementScreen: FC = () => {
   const [ inviteDialogOpen, setInviteDialogOpen ] = useState(false);
   const [ inviteMemberEmail, setInviteMemberEmail ] = useState("");
   const [ usersGroups, setUsersGroups ] = useState<UserGroup[]>([]);
+  const [ groupMembers, setGroupMembers ] = useState<User[]>([]);
+  const [ pendingRequests, setPendingRequests ] = useState<GroupJoinRequest[]>([]);
+  const [ pendingInvites, setPendingInvites ] = useState<GroupJoinInvite[]>([]);
   const [loading, setLoading] = useState(false);
   const { groupId } = useParams();
-
-  console.log("grou0p id from params is ", groupId);
-  console.log("users groups", usersGroups);
 
   /**
    * Gets groups user is group admin of
@@ -55,101 +56,93 @@ const GroupManagementScreen: FC = () => {
   };
 
   /**
+   * Load user group members
+   *
+   * @returns list of user groups group members
+   */
+  const loadGroupMembers = async () => {
+    if (!keycloak?.token || !groupId) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const allMembers = await Api.getUserGroupsApi(keycloak.token).listGroupMembers({
+        groupId: groupId
+      });
+
+      setGroupMembers(allMembers);
+    } catch (error) {
+      errorContext.setError(strings.errorHandling.groupManagementScreen.inviteMember);
+    }
+    setLoading(false);
+  };
+
+  /**
+   * Load pending user group requests
+   *
+   * @returns a list of user group pending requests
+   */
+  const loadPendingRequests = async () => {
+    if (!keycloak?.token || !groupId) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const foundPendingRequests = await Api.getGroupJoinRequestsApi(keycloak.token).listGroupJoinRequests({
+        groupId: groupId,
+        status: JoinRequestStatus.Pending
+      });
+
+      console.log("pending requests", foundPendingRequests);
+      setPendingRequests(foundPendingRequests);
+    } catch (error) {
+      errorContext.setError(strings.errorHandling.groupManagementScreen.pendingRequests);
+    }
+    setLoading(false);
+  };
+
+  /**
+   * Load pending user group invites
+   *
+   * @returns a list of user group pending invites
+   */
+  const loadPendingInvites = async () => {
+    if (!keycloak?.token || !groupId) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const allInvites = await Api.getGroupJoinInvitesApi(keycloak.token).listGroupJoinInvites({
+        groupId: groupId
+      });
+
+      const foundPendingInvites = allInvites.filter(invite => invite.status === JoinRequestStatus.Pending);
+      setPendingInvites(foundPendingInvites);
+    } catch (error) {
+      errorContext.setError(strings.errorHandling.groupManagementScreen.pendingInvites);
+    }
+    setLoading(false);
+  };
+
+  /**
+   * Load all data required for screen
+   */
+  const loadData = async () => {
+    await loadGroups();
+    await loadGroupMembers();
+    await loadPendingRequests();
+    await loadPendingInvites();
+  };
+
+  /**
    * Effect that loads user keycloak groups
    */
   useEffect(() => {
-    // TODO: Conditional here if the userGroups are not available
-    loadGroups();
-  }, []);
-
-  // TODO: Data grid example
-  // /**
-  //  * Render survey data table for desktop
-  //  */
-  // const renderSurveyDataTable = () => {
-  //   const columns: GridColDef[] = [
-  //     {
-  //       field: "status",
-  //       headerName: strings.surveysScreen.dataGridColumns.status,
-  //       width: 150,
-  //       valueFormatter: ({ value }) => LocalizationUtils.getLocalizedSurveyStatus(value as SurveyStatus)
-  //     },
-  //     {
-  //       field: "buildingId",
-  //       headerName: strings.surveysScreen.dataGridColumns.buildingId,
-  //       width: 200
-  //     },
-  //     {
-  //       field: "classificationCode",
-  //       headerName: strings.surveysScreen.dataGridColumns.classificationCode,
-  //       flex: 1
-  //     },
-  //     {
-  //       field: "ownerName",
-  //       headerName: strings.surveysScreen.dataGridColumns.ownerName,
-  //       flex: 1
-  //     },
-  //     {
-  //       field: "propertyName",
-  //       headerName: strings.surveysScreen.dataGridColumns.propertyName,
-  //       flex: 1
-  //     },
-  //     {
-  //       field: "city",
-  //       headerName: strings.surveysScreen.dataGridColumns.city,
-  //       width: 200
-  //     },
-  //     {
-  //       field: "streetAddress",
-  //       headerName: strings.surveysScreen.dataGridColumns.streetAddress,
-  //       flex: 1
-  //     }
-  //   ];
-
-  //   const filteredRows = surveysWithInfo
-  //     .filter(surveyWithInfo => !addressFilter || surveyWithInfo.streetAddress?.includes(addressFilter))
-  //     .filter(surveyWithInfo => filter === SurveyShow.ShowAll || (filter === SurveyShow.ShowMine && surveyWithInfo.creatorId === keycloak?.profile?.id));
-
-  //   return (
-  //     <Paper>
-  //       <DataGrid
-  //         checkboxSelection
-  //         autoHeight
-  //         loading={ loading }
-  //         rows={ filteredRows }
-  //         columns={ columns }
-  //         pageSize={ 10 }
-  //         disableSelectionOnClick
-  //         onRowClick={ onSurveyTableRowClick }
-  //         onSelectionModelChange={ selectedIds => setSelectedSurveyIds(selectedIds as string[]) }
-  //       />
-  //     </Paper>
-  //   );
-  // };
-
-  // if (loading) {
-  //   return (
-  //     <Box
-  //       style={{
-  //         position: "absolute",
-  //         left: 0,
-  //         right: 0,
-  //         bottom: 0,
-  //         top: 0,
-  //         display: "flex",
-  //         justifyContent: "center",
-  //         alignItems: "center",
-  //         backgroundColor: "rgba(0,158,158,0.85)",
-  //         color: "#fff"
-  //       }}
-  //     >
-  //       <Stack spacing={ 2 } alignItems="center">
-  //         <Typography>Ladataan kartoituksia</Typography>
-  //         <CircularProgress color="inherit"/>
-  //       </Stack>
-  //     </Box>
-  //   );
-  // }
+    loadData();
+  }, [groupId]);
 
   /**
    * Handle invite member email changes
@@ -161,17 +154,31 @@ const GroupManagementScreen: FC = () => {
   };
 
   /**
+   * Get group name from groupId
+   */
+  const getGroupName = () => {
+    if (!usersGroups || !groupId) return "";
+
+    const currentGroup = usersGroups.find(group => group.id === groupId);
+
+    if (!currentGroup) return "";
+
+    return ` - ${currentGroup.name}`;
+  };
+
+  // TODO: This should be in it's own UE to re render when an invite is sent.
+  /**
    * Creates a new group invite
    */
   const inviteMember = async () => {
-    if (!keycloak?.token || !keycloak?.tokenParsed || !groupId) return;
+    if (!keycloak?.token || !groupId || !inviteMemberEmail) return;
 
     setLoading(true);
     try {
       await Api.getGroupJoinInvitesApi(keycloak.token).createGroupJoinInvite({
         groupId: groupId,
         groupJoinInvite: {
-          email: keycloak.tokenParsed.email,
+          email: inviteMemberEmail,
           groupId: groupId,
           status: JoinRequestStatus.Pending
         }
@@ -180,31 +187,30 @@ const GroupManagementScreen: FC = () => {
       setLoading(false);
       setInviteDialogOpen(false);
     } catch (error) {
-      errorContext.setError("Error while creating group invite");
+      errorContext.setError(strings.errorHandling.groupManagementScreen.inviteMember);
     }
   };
 
   /**
-   * TODO: strings
-   * @returns
+   * Render side panel headers
    */
   const renderSidePanelHeaders = () => (
 
     <List>
       <NavigationItem
-        // icon={ <PersonOutlined/> }
+        icon={ <GroupIcon/> }
         to="members"
-        title="members"
+        title={ strings.groupManagementScreen.groupMembers }
       />
       <NavigationItem
-        // icon={ <Apartment/> }
+        icon={ <SendIcon/> }
         to="pendingInvites"
-        title="pendingInvites"
+        title={ strings.formatString(strings.groupManagementScreen.pendingInvites, String(pendingInvites.length) || "") as string }
       />
       <NavigationItem
-        // icon={ <NoteAdd/> }
+        icon={ <PersonAddIcon/> }
         to="pendingRequests"
-        title="pendingRequests"
+        title={ strings.formatString(strings.groupManagementScreen.pendingRequests, String(pendingRequests.length) || "") as string }
       />
     </List>
   );
@@ -219,8 +225,8 @@ const GroupManagementScreen: FC = () => {
       onClose={ () => setInviteDialogOpen(false) }
       onCancel={ () => setInviteDialogOpen(false) }
       onConfirm={ inviteMember }
-      title="Send invite"
-      positiveButtonText="Send invite"
+      title={ strings.groupManagementScreen.sendInvite }
+      positiveButtonText={ strings.groupManagementScreen.sendInvite }
       cancelButtonText={ strings.groupDialogsScreen.cancel }
     >
       <Typography>
@@ -228,7 +234,7 @@ const GroupManagementScreen: FC = () => {
           fullWidth
           name="inviteMemberEmail"
           value={ inviteMemberEmail }
-          placeholder="Anna sähköpostiosoite"
+          placeholder={ strings.groupManagementScreen.invitePlaceholder }
           onChange={ onInviteMemberEmailChange }
         />
       </Typography>
@@ -236,8 +242,7 @@ const GroupManagementScreen: FC = () => {
   );
 
   /**
-   * TODO: commments and strings
-   * @returns
+   * Renders invite button
    */
   const renderInviteButton = () => {
     return (
@@ -245,36 +250,47 @@ const GroupManagementScreen: FC = () => {
         onClick={ () => setInviteDialogOpen(true) }
         startIcon={ <PersonAddIcon/> }
       >
-        Invite member
+        { strings.groupManagementScreen.inviteMember }
       </Button>
     );
   };
 
-  if (loading) {
+  /**
+   * Renders loading spinner
+   */
+  const renderLoadingSpinner = () => {
     return (
-      <StackLayout title="">
-        <Box
-          display="flex"
-          flex={ 1 }
-          justifyContent="center"
-          alignItems="center"
-        >
-          <CircularProgress color="inherit" size={ 60 }/>
-        </Box>
-      </StackLayout>
+      <Box
+        display="flex"
+        flex={ 1 }
+        justifyContent="center"
+        alignItems="center"
+      >
+        <CircularProgress color="inherit" size={ 60 }/>
+      </Box>
     );
-  }
+  };
 
   return (
     <>
       { renderInviteDialog() }
       <SidePanelLayout
-        title="Group Management"
+      // TODO: Missing subtitle
+        title={ strings.formatString(strings.groupManagementScreen.groupManagement, getGroupName()) as string }
         sidePanelContent={ renderSidePanelHeaders() }
         back
         headerContent={ renderInviteButton() }
       >
-        <GroupRoutes groupId={ groupId }/>
+        {
+          loading ?
+            renderLoadingSpinner() :
+            <GroupRoutes
+              groupId={ groupId }
+              groupMembers={ groupMembers }
+              pendingRequests={ pendingRequests }
+              pendingInvites={ pendingInvites }
+            />
+        }
       </SidePanelLayout>
     </>
   );

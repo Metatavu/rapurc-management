@@ -172,6 +172,12 @@ export interface Localized extends LocalizedStringsMethods {
       listGroups: string;
       createGroup: string;
       createGroupRequest: string;
+    },
+    groupManagementScreen: {
+      listMembers: string;
+      inviteMember: string;
+      pendingRequests: string;
+      pendingInvites: string;
     }
   };
 
@@ -647,6 +653,33 @@ export interface Localized extends LocalizedStringsMethods {
       title: string;
       requestSent: string;
       content: string;
+    }
+  }
+
+  /**
+   * Translations related to group management
+   */
+  groupManagementScreen: {
+    groupMembers: string;
+    pendingInvites: string;
+    pendingRequests: string;
+    inviteUser: string;
+    sendInvite: string;
+    invitePlaceholder: string;
+    inviteMember: string;
+    groupManagement: string;
+    groupMembersScreen: {
+      name: string;
+      email: string;
+      role: string;
+      control: string;
+    },
+    pendingInvitesScreen: {
+      resend: string;
+    },
+    pendingRequestsScreen: {
+      reject: string;
+      accept: string;
     }
   }
 }
