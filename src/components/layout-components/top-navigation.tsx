@@ -77,12 +77,14 @@ const TopNavigation: React.FC = () => {
       >
         { strings.navigation.surveys }
       </Button>
-      <Button
-        variant="text"
-        onClick={ () => navigateToGroupManagement() }
-      >
-        { strings.navigation.groups }
-      </Button>
+      <VisibleWithRole userRole="admin">
+        <Button
+          variant="text"
+          onClick={ () => navigateToGroupManagement() }
+        >
+          { strings.navigation.groups }
+        </Button>
+      </VisibleWithRole>
       <VisibleWithRole userRole="admin">
         <Button
           variant="text"
