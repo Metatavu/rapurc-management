@@ -268,12 +268,12 @@ const GroupDialogScreen: FC = () => {
    */
   const renderCreateDoneDialog = () => (
     <GenericDialog
-      open={ true }
+      open
       onClose={ () => {} }
       onConfirm={ () => navigate(`/groups/${usersGroups[0].id}`)}
       title={ strings.groupDialogsScreen.createDoneDialog.title }
       positiveButtonText={ strings.groupDialogsScreen.createDoneDialog.goToGroupManagement }
-      hideClose={ true }
+      hideClose
     >
       <Typography>
         { strings.groupDialogsScreen.createDoneDialog.content }
