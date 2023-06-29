@@ -15,6 +15,8 @@ interface Props {
 
 /**
  * Component for Group Members
+ *
+ * @param props component properties
  */
 const GroupMembers: FC<Props> = ({ groupMembers }) => {
   /**
