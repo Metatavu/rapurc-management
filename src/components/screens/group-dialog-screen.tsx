@@ -290,7 +290,7 @@ const GroupDialogScreen: FC = () => {
     return (
       <GenericDialog
         error={ false }
-        open={ true }
+        open
         onClose={ () => {} }
         onCancel={ () => setDialogStatus(GroupDialogStatus.WELCOME) }
         onConfirm={ joinGroup }
@@ -298,7 +298,7 @@ const GroupDialogScreen: FC = () => {
         positiveButtonText={ strings.groupDialogsScreen.joinDialog.sendRequest }
         cancelButtonText={ strings.groupDialogsScreen.createNewGroup }
         disabled={ !isChecked }
-        hideClose={ true }
+        hideClose
       >
         <Typography>
           { strings.groupDialogsScreen.joinDialog.content }
