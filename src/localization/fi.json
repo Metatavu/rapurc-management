@@ -608,7 +608,7 @@
     "pendingInvites": "Lähetetyt kutsut ({0})",
     "pendingRequests": "Jäsenpyynnöt ({0})",
     "inviteUser": "Kutsu käyttäjä",
-    "sendInvite": "Kutsu käyttäjä",
+    "sendInvite": "Lähetä kutsu",
     "invitePlaceholder": "Anna sähköpostiosoite",
     "inviteMember": "Kutsu jäseniä",
     "groupManagement": "Ryhmän hallinta {0}",
