@@ -249,7 +249,7 @@ const GroupDialogScreen: FC = () => {
       positiveButtonText={ strings.groupDialogsScreen.createNewGroup }
       cancelButtonText={ strings.groupDialogsScreen.cancel }
       disabled={ !newGroupName }
-      hideClose={ true }
+      hideClose
     >
       <TextField
         fullWidth
