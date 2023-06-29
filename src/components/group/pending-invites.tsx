@@ -14,6 +14,8 @@ interface Props {
 
 /**
  * Component for pending invites
+ *
+ * @param props component properties
  */
 const PendingInvites: FC<Props> = ({ pendingInvites }) => {
   /**
