@@ -189,26 +189,28 @@ const GroupDialogScreen: FC = () => {
     setJoinedGroup(matchedGroup?.name);
 
     // TODO: currently set up to only join one group at a time
-    if (groupsToJoin.length === 1) {
-      if (!matchedGroup?.id) return;
+    if (groupsToJoin.length !== 1) {
+      errorContext.setError("Joining multiple groups not yet supported");
+      return;
+    }
 
+    if (!matchedGroup?.id) return;
+
+    setLoading(true);
+
+    try {
+      await Api.getGroupJoinRequestsApi(keycloak.token).createGroupJoinRequest({
+        groupId: matchedGroup.id,
+        groupJoinRequest: {
+          email: keycloak.tokenParsed.email,
+          groupId: matchedGroup.id
+        }
+      });
+
+      setDialogStatus(GroupDialogStatus.REQUEST_SENT);
       setLoading(true);
-      try {
-        await Api.getGroupJoinRequestsApi(keycloak.token).createGroupJoinRequest({
-          groupId: matchedGroup.id,
-          groupJoinRequest: {
-            email: keycloak.tokenParsed.email,
-            groupId: matchedGroup.id
-          }
-        });
-
-        setDialogStatus(GroupDialogStatus.REQUEST_SENT);
-        setLoading(true);
-      } catch (error) {
-        errorContext.setError(strings.errorHandling.groupDialogsScreen.createGroupRequest);
-      }
-    } else {
-      errorContext.setError("Joining mutliple groups not yet supported");
+    } catch (error) {
+       errorContext.setError(strings.errorHandling.groupDialogsScreen.createGroupRequest);
     }
   };
 
