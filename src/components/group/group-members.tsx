@@ -79,7 +79,6 @@ const GroupMembers: FC<Props> = ({ groupMembers }) => {
           columns={ columns }
           pageSize={ 10 }
           disableSelectionOnClick
-          onRowClick={ () => {} }
         />
       </Paper>
     );
