@@ -578,7 +578,7 @@
     "cancel": "Peruuta",
     "welcomeDialog": {
       "title": "Tervetuloa purkukartoitus.fi palveluun!",
-      "joinGroup": "Liity Rhymään" ,
+      "joinGroup": "Liity Ryhmään" ,
       "content": "Käyttääksesi palvelua on sinun kuuluttava organisaatiosi ryhmään. Ryhmässä näet organisaatiosi jäsenten luomat kartoitukset ja voit luoda sinne uusia kartoítuksia. Jos organisaatiollasi ei ole vielä ryhmää, voit luoda uuden. Jos organisaatiollasi on jo ryhmä järjestelmässä, voit liittyä siihen pyytämällä jäsenyyttä.\n Jos haluat liittyä olemassaolevaan ryhmään, valite 'Liity ryhmään' tai jos haluat luoda kokonaan uuden ryhmän, valitse 'Luo uusi ryhmä'."
     },
     "createDialog": {
