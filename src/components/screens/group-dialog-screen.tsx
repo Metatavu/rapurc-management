@@ -227,7 +227,7 @@ const GroupDialogScreen: FC = () => {
       title={ strings.groupDialogsScreen.welcomeDialog.title }
       positiveButtonText={ strings.groupDialogsScreen.createNewGroup }
       cancelButtonText={ strings.groupDialogsScreen.welcomeDialog.joinGroup }
-      hideClose={ true }
+      hideClose
     >
       <Typography>
         { strings.groupDialogsScreen.welcomeDialog.content }
