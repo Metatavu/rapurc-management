@@ -54,7 +54,6 @@ const PendingInvites: FC<Props> = ({ pendingInvites }) => {
           columns={ columns }
           pageSize={ 10 }
           disableSelectionOnClick
-          onRowClick={ () => {} }
         />
       </Paper>
     );
