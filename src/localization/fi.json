@@ -600,7 +600,7 @@
     "requestSentDialog": {
       "title": "Liity ryhmään",
       "requestSent": "Pyyntö lähetetty",
-      "content": "Liittymispyyntö lähetetty ryhmään XAMK. Saat ilmoituksen sähköpostiisi, kun pyyntö on hyväksytty. \n Hyväksynnän jälkeen pääset tarkastelemaan organisaatiosi kartoituksia ja luomaan uusia."
+      "content": "Liittymispyyntö lähetetty ryhmään {0}. Saat ilmoituksen sähköpostiisi, kun pyyntö on hyväksytty. \n Hyväksynnän jälkeen pääset tarkastelemaan organisaatiosi kartoituksia ja luomaan uusia."
     }
   },
   "groupManagementScreen": {
