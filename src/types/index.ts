@@ -105,6 +105,9 @@ export interface SurveySummary {
   attachments: Attachment[];
 }
 
+/**
+ * Checkbox state data
+ */
 export interface CheckboxData {
   name: string;
   checked: boolean;
