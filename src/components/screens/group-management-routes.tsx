@@ -17,6 +17,8 @@ interface Props {
 
 /**
  * Component for group routes
+ *
+ * @param props component properties
  */
 const GroupRoutes: React.FC<Props> = ({ groupId, groupMembers, pendingRequests, pendingInvites }) => {
   if (!groupId) {
