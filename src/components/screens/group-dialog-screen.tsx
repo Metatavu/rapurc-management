@@ -285,7 +285,7 @@ const GroupDialogScreen: FC = () => {
    * Render the join group dialog
    */
   const renderJoinDialog = () => {
-    const isChecked = joinGroupCheckedItems.some(checked => checked);
+    const isChecked = joinGroupCheckedItems.some(item => item.checked);
 
     return (
       <GenericDialog
