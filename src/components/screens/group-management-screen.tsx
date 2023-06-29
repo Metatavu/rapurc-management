@@ -183,11 +183,12 @@ const GroupManagementScreen: FC = () => {
         }
       });
 
-      setLoading(false);
       setInviteDialogOpen(false);
     } catch (error) {
       errorContext.setError(strings.errorHandling.groupManagementScreen.inviteMember);
     }
+
+    setLoading(false);
   };
 
   /**
