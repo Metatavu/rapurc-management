@@ -95,7 +95,6 @@ const GroupManagementScreen: FC = () => {
         status: JoinRequestStatus.Pending
       });
 
-      console.log("pending requests", foundPendingRequests);
       setPendingRequests(foundPendingRequests);
     } catch (error) {
       errorContext.setError(strings.errorHandling.groupManagementScreen.pendingRequests);
@@ -137,7 +136,7 @@ const GroupManagementScreen: FC = () => {
   };
 
   /**
-   * Effect that loads user keycloak groups
+   * Effect that loads page data
    */
   useEffect(() => {
     loadData();
@@ -165,7 +164,6 @@ const GroupManagementScreen: FC = () => {
     return ` - ${currentGroup.name}`;
   };
 
-  // TODO: This should be in it's own UE to re render when an invite is sent.
   /**
    * Creates a new group invite
    */
@@ -174,7 +172,7 @@ const GroupManagementScreen: FC = () => {
 
     setLoading(true);
     try {
-      await Api.getGroupJoinInvitesApi(keycloak.token).createGroupJoinInvite({
+      const newInvite = await Api.getGroupJoinInvitesApi(keycloak.token).createGroupJoinInvite({
         groupId: groupId,
         groupJoinInvite: {
           email: inviteMemberEmail,
@@ -183,6 +181,7 @@ const GroupManagementScreen: FC = () => {
         }
       });
 
+      setPendingInvites([...pendingInvites, newInvite]);
       setInviteDialogOpen(false);
     } catch (error) {
       errorContext.setError(strings.errorHandling.groupManagementScreen.inviteMember);
@@ -289,6 +288,8 @@ const GroupManagementScreen: FC = () => {
               groupMembers={ groupMembers }
               pendingRequests={ pendingRequests }
               pendingInvites={ pendingInvites }
+              setPendingRequests={ setPendingRequests }
+              setGroupMembers={ setGroupMembers }
             />
         }
       </SidePanelLayout>

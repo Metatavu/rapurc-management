@@ -332,7 +332,6 @@ const GroupDialogScreen: FC = () => {
     );
   };
 
-  // TODO: Should this redirect to surveys?
   /**
    * Render join request sent dialog
    */

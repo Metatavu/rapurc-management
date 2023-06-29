@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { Dispatch, FC, SetStateAction } from "react";
 import { Route, Routes } from "react-router-dom";
 import GroupMembers from "components/group/group-members";
 import PendingInvites from "components/group/pending-invites";
@@ -13,6 +13,8 @@ interface Props {
   groupMembers: User[];
   pendingRequests: GroupJoinRequest[];
   pendingInvites: GroupJoinInvite[];
+  setPendingRequests: Dispatch<SetStateAction<GroupJoinRequest[]>>;
+  setGroupMembers: Dispatch<SetStateAction<User[]>>;
 }
 
 /**
@@ -20,7 +22,14 @@ interface Props {
  *
  * @param props component properties
  */
-const GroupRoutes: React.FC<Props> = ({ groupId, groupMembers, pendingRequests, pendingInvites }) => {
+const GroupRoutes: FC<Props> = ({
+  groupId,
+  groupMembers,
+  pendingRequests,
+  pendingInvites,
+  setPendingRequests,
+  setGroupMembers
+}) => {
   if (!groupId) {
     return null;
   }
@@ -29,7 +38,7 @@ const GroupRoutes: React.FC<Props> = ({ groupId, groupMembers, pendingRequests, 
     <Routes>
       <Route
         path="members"
-        element={ <GroupMembers groupMembers={ groupMembers }/> }
+        element={ <GroupMembers setGroupMembers={ setGroupMembers } groupMembers={ groupMembers }/> }
       />
       <Route
         path="pendingInvites"
@@ -37,11 +46,11 @@ const GroupRoutes: React.FC<Props> = ({ groupId, groupMembers, pendingRequests, 
       />
       <Route
         path="pendingRequests"
-        element={ <PendingRequests pendingRequests={ pendingRequests }/> }
+        element={ <PendingRequests setPendingRequests={ setPendingRequests } pendingRequests={ pendingRequests }/> }
       />
       <Route
         path="/"
-        element={ <GroupMembers groupMembers={ groupMembers }/> }
+        element={ <GroupMembers setGroupMembers={ setGroupMembers } groupMembers={ groupMembers }/> }
       />
     </Routes>
   );

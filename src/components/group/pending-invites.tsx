@@ -1,11 +1,15 @@
-import { Box, Button, Paper } from "@mui/material";
+import { Box, Button, CircularProgress, Paper } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import SendIcon from "@mui/icons-material/Send";
 import { GroupJoinInvite } from "generated/client";
 import strings from "localization/strings";
-import React, { FC, useMemo } from "react";
+import React, { FC, useContext, useMemo, useState } from "react";
 import { useAppSelector } from "app/hooks";
 import { selectLanguage } from "features/locale-slice";
+import { selectKeycloak } from "features/auth-slice";
+import { ErrorContext } from "components/error-handler/error-handler";
+import { useParams } from "react-router-dom";
+import Api from "api";
 
 /**
  * Component properties
@@ -20,7 +24,29 @@ interface Props {
  * @param props component properties
  */
 const PendingInvites: FC<Props> = ({ pendingInvites }) => {
+  const keycloak = useAppSelector(selectKeycloak);
   const language = useAppSelector(selectLanguage);
+  const errorContext = useContext(ErrorContext);
+  const [loading, setLoading] = useState(false);
+  const { groupId } = useParams();
+
+  /**
+   * Resends a group invite
+   */
+  const resendGroupInvite = async (groupJoinInvite: GroupJoinInvite) => {
+    if (!keycloak?.token || !groupId || !groupJoinInvite.id) return;
+
+    setLoading(true);
+    try {
+      await Api.getGroupJoinInvitesApi(keycloak.token).sendGroupJoinInviteEmail({
+        groupId: groupJoinInvite.groupId,
+        inviteId: groupJoinInvite.id
+      });
+    } catch (error) {
+      errorContext.setError(strings.errorHandling.groupManagementScreen.inviteMember);
+    }
+    setLoading(false);
+  };
 
   const columns: GridColDef[] = useMemo(() => [
     {
@@ -35,8 +61,7 @@ const PendingInvites: FC<Props> = ({ pendingInvites }) => {
           <Button
             variant="text"
             endIcon={ <SendIcon/> }
-            // TODO: Resend invitation logic
-            onClick={ () => console.log(row)}
+            onClick={ () => resendGroupInvite(row)}
             sx={{ color: "#009E9E" }}
           >
             { strings.groupManagementScreen.pendingInvitesScreen.resend }
@@ -45,6 +70,19 @@ const PendingInvites: FC<Props> = ({ pendingInvites }) => {
       )
     }
   ], [language]);
+
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        flex={ 1 }
+        justifyContent="center"
+        alignItems="center"
+      >
+        <CircularProgress color="inherit" size={ 60 }/>
+      </Box>
+    );
+  }
 
   return (
     <Paper>
