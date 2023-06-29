@@ -10,7 +10,7 @@ import { UserGroup } from "generated/client";
 import { CheckboxData, GroupDialogStatus } from "types";
 import { ErrorContext } from "components/error-handler/error-handler";
 import { useNavigate } from "react-router-dom";
-import { selectSelectedGroup, setSelectedGroup, setUserGroups } from "features/group-slice";
+import { setSelectedGroup, setUserGroups } from "features/group-slice";
 
 /**
  * Group dialog screen component
@@ -18,7 +18,6 @@ import { selectSelectedGroup, setSelectedGroup, setUserGroups } from "features/g
 const GroupDialogScreen: FC = () => {
   const dispatch = useAppDispatch();
   const keycloak = useAppSelector(selectKeycloak);
-  const selectedUserGroup = useAppSelector(selectSelectedGroup);
   const navigate = useNavigate();
   const errorContext = useContext(ErrorContext);
   const [ usersGroups, setUsersGroups ] = useState<UserGroup[]>([]);
@@ -273,7 +272,7 @@ const GroupDialogScreen: FC = () => {
     <GenericDialog
       open
       onClose={ () => {} }
-      onConfirm={ () => navigate(`/groups/${selectedUserGroup!.id}`)}
+      onConfirm={ () => navigate("/surveys")}
       title={ strings.groupDialogsScreen.createDoneDialog.title }
       positiveButtonText={ strings.groupDialogsScreen.createDoneDialog.goToGroupManagement }
       hideClose
@@ -339,7 +338,7 @@ const GroupDialogScreen: FC = () => {
     <GenericDialog
       open
       onClose={ () => {} }
-      onCancel={ () => setDialogStatus(GroupDialogStatus.WELCOME) }
+      onCancel={ () => setDialogStatus(GroupDialogStatus.CREATE) }
       onConfirm={ () => {} }
       title={ strings.groupDialogsScreen.requestSentDialog.title }
       positiveButtonText={ strings.groupDialogsScreen.requestSentDialog.requestSent }
