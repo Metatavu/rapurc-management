@@ -20,10 +20,10 @@ const GroupDialogScreen: FC = () => {
   const keycloak = useAppSelector(selectKeycloak);
   const navigate = useNavigate();
   const errorContext = useContext(ErrorContext);
-  const [usersGroups, setUsersGroups] = useState<UserGroup[]>([]);
-  const [allGroups, setAllGroups] = useState<UserGroup[]>([]);
+  const [ usersGroups, setUsersGroups ] = useState<UserGroup[]>([]);
+  const [ allGroups, setAllGroups ] = useState<UserGroup[]>([]);
   const [ filteredGroups, setFilteredGroups ] = useState<UserGroup[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [ loading, setLoading ] = useState(false);
   const [ dialogStatus, setDialogStatus ] = useState<GroupDialogStatus>();
   const [ newGroupName, setNewGroupName ] = useState("");
   const [ groupSearch, setGroupSearch ] = useState("");
