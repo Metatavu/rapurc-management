@@ -334,16 +334,16 @@ const GroupDialogScreen: FC = () => {
    */
   const renderRequestSentDialog = () => (
     <GenericDialog
-      open={ true }
+      open
       onClose={ () => {} }
       onCancel={ () => setDialogStatus(GroupDialogStatus.WELCOME) }
       onConfirm={ () => {} }
       title={ strings.groupDialogsScreen.requestSentDialog.title }
       positiveButtonText={ strings.groupDialogsScreen.requestSentDialog.requestSent }
       cancelButtonText={ strings.groupDialogsScreen.createNewGroup }
-      disabled={ true }
-      hasIcon={ true }
-      hideClose={ true }
+      disabled
+      hasIcon
+      hideClose
     >
       <Typography>
         { strings.formatString(strings.groupDialogsScreen.requestSentDialog.content, joinedGroup) }
