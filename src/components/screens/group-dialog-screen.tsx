@@ -210,7 +210,7 @@ const GroupDialogScreen: FC = () => {
       setDialogStatus(GroupDialogStatus.REQUEST_SENT);
       setLoading(true);
     } catch (error) {
-       errorContext.setError(strings.errorHandling.groupDialogsScreen.createGroupRequest);
+      errorContext.setError(strings.errorHandling.groupDialogsScreen.createGroupRequest);
     }
   };
 
