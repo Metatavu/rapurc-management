@@ -275,7 +275,7 @@ const GroupManagementScreen: FC = () => {
     <>
       { renderInviteDialog() }
       <SidePanelLayout
-      // TODO: Missing subtitle
+        // TODO: Missing subtitle
         title={ strings.formatString(strings.groupManagementScreen.groupManagement, getGroupName()) as string }
         sidePanelContent={ renderSidePanelHeaders() }
         back
