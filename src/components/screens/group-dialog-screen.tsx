@@ -241,7 +241,7 @@ const GroupDialogScreen: FC = () => {
   const renderCreateDialog = () => (
     <GenericDialog
       error={ false }
-      open={ true }
+      open
       onClose={ () => {} }
       onCancel={ () => setDialogStatus(GroupDialogStatus.WELCOME) }
       onConfirm={ createGroup }
