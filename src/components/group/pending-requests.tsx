@@ -66,7 +66,6 @@ const PendingRequests: FC<Props> = ({ pendingRequests }) => {
           columns={ columns }
           pageSize={ 10 }
           disableSelectionOnClick
-          onRowClick={ () => {} }
         />
       </Paper>
     );
