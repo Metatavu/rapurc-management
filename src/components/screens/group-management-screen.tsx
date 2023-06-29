@@ -119,8 +119,7 @@ const GroupManagementScreen: FC = () => {
         groupId: groupId
       });
 
-      const foundPendingInvites = allInvites.filter(invite => invite.status === JoinRequestStatus.Pending);
-      setPendingInvites(foundPendingInvites);
+      setPendingInvites(allInvites.filter(invite => invite.status === JoinRequestStatus.Pending));
     } catch (error) {
       errorContext.setError(strings.errorHandling.groupManagementScreen.pendingInvites);
     }
