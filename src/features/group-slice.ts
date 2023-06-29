@@ -7,13 +7,15 @@ import { UserGroup } from "generated/client";
  */
 export interface GroupState {
   userGroups: UserGroup[];
+  selectedGroup?: UserGroup;
 }
 
 /**
  * Initial locale state
  */
 const initialState: GroupState = {
-  userGroups: []
+  userGroups: [],
+  selectedGroup: undefined
 };
 
 /**
@@ -26,6 +28,9 @@ export const groupSlice = createSlice({
   reducers: {
     setUserGroups: (state, { payload }: PayloadAction<UserGroup[]>) => {
       state.userGroups = payload;
+    },
+    setSelectedGroup: (state, { payload }: PayloadAction<UserGroup>) => {
+      state.selectedGroup = payload;
     }
   }
 });
@@ -33,15 +38,15 @@ export const groupSlice = createSlice({
 /**
  * Group actions from created group slice
  */
-export const { setUserGroups } = groupSlice.actions;
+export const { setUserGroups, setSelectedGroup } = groupSlice.actions;
 
 /**
- * Select group state selector
+ * Select selected group selector
  *
  * @param state Redux store root state
- * @returns group state from Redux store
+ * @returns selected group state from Redux store
  */
-export const selectGroupState = (state: RootState) => state.groups.userGroups;
+export const selectSelectedGroup = (state: RootState) => state.groups.selectedGroup;
 
 /**
  * Select group selector
@@ -49,7 +54,7 @@ export const selectGroupState = (state: RootState) => state.groups.userGroups;
  * @param state Redux store root state
  * @returns usergroup from Redux store
  */
-export const selectGroup = (state: RootState) => state.groups.userGroups;
+export const selectGroups = (state: RootState) => state.groups.userGroups;
 
 /**
  * Reducer for group slice

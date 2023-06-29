@@ -186,6 +186,7 @@ export interface Localized extends LocalizedStringsMethods {
    */
   navigation: {
     surveys: string;
+    groups: string;
     newSurvey: string;
     admin: string;
   };

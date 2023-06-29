@@ -10,7 +10,7 @@ import { UserGroup } from "generated/client";
 import { CheckboxData, GroupDialogStatus } from "types";
 import { ErrorContext } from "components/error-handler/error-handler";
 import { useNavigate } from "react-router-dom";
-import { setUserGroups } from "features/group-slice";
+import { selectSelectedGroup, setSelectedGroup, setUserGroups } from "features/group-slice";
 
 /**
  * Group dialog screen component
@@ -18,6 +18,7 @@ import { setUserGroups } from "features/group-slice";
 const GroupDialogScreen: FC = () => {
   const dispatch = useAppDispatch();
   const keycloak = useAppSelector(selectKeycloak);
+  const selectedUserGroup = useAppSelector(selectSelectedGroup);
   const navigate = useNavigate();
   const errorContext = useContext(ErrorContext);
   const [ usersGroups, setUsersGroups ] = useState<UserGroup[]>([]);
@@ -60,6 +61,7 @@ const GroupDialogScreen: FC = () => {
       });
       setUsersGroups(foundGroups);
       dispatch(setUserGroups(foundGroups));
+      dispatch(setSelectedGroup(foundGroups[0]));
     } catch (error) {
       errorContext.setError(strings.errorHandling.groupDialogsScreen.listGroups);
     }
@@ -74,14 +76,13 @@ const GroupDialogScreen: FC = () => {
   }, []);
 
   /**
-   * Set dialog status or navigate to group mmanagement
+   * Set dialog status or navigate to surveys
    */
   const updateDialogStatus = () => {
     if (!usersGroups.length) {
       setDialogStatus(GroupDialogStatus.WELCOME);
     } else {
-      // TODO: Surveys should be the route and group management is accesed from the nav button.
-      navigate(`/groups/${usersGroups[0].id}`);
+      navigate("/surveys");
     }
   };
 
@@ -166,6 +167,7 @@ const GroupDialogScreen: FC = () => {
         }
       });
       dispatch(setUserGroups([...usersGroups, createdGroup]));
+      dispatch(setSelectedGroup(createdGroup));
       setDialogStatus(GroupDialogStatus.CREATE_DONE);
     } catch (error) {
       errorContext.setError(strings.errorHandling.groupDialogsScreen.createGroup);
@@ -212,6 +214,7 @@ const GroupDialogScreen: FC = () => {
     } catch (error) {
       errorContext.setError(strings.errorHandling.groupDialogsScreen.createGroupRequest);
     }
+    setLoading(false);
   };
 
   /**
@@ -270,7 +273,7 @@ const GroupDialogScreen: FC = () => {
     <GenericDialog
       open
       onClose={ () => {} }
-      onConfirm={ () => navigate(`/groups/${usersGroups[0].id}`)}
+      onConfirm={ () => navigate(`/groups/${selectedUserGroup!.id}`)}
       title={ strings.groupDialogsScreen.createDoneDialog.title }
       positiveButtonText={ strings.groupDialogsScreen.createDoneDialog.goToGroupManagement }
       hideClose
@@ -329,6 +332,7 @@ const GroupDialogScreen: FC = () => {
     );
   };
 
+  // TODO: Should this redirect to surveys?
   /**
    * Render join request sent dialog
    */

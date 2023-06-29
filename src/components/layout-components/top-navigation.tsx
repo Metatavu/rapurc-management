@@ -1,27 +1,31 @@
 import { AdminPanelSettings } from "@mui/icons-material";
 import { Button, MenuItem, Stack, TextField } from "@mui/material";
-import { useAppSelector } from "app/hooks";
+import { useAppDispatch, useAppSelector } from "app/hooks";
 import VisibleWithRole from "components/containers/visible-with-role";
-import { selectGroup } from "features/group-slice";
-import { UserGroup } from "generated/client";
+import { selectGroups, selectSelectedGroup, setSelectedGroup } from "features/group-slice";
 import strings from "localization/strings";
-import React, { ChangeEventHandler, useEffect, useState } from "react";
+import React, { ChangeEventHandler } from "react";
 import { useNavigate } from "react-router-dom";
 
 /**
  * Navigation component
  */
 const TopNavigation: React.FC = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const userGroups = useAppSelector(selectGroup);
-  const [ selectedGroup, setSelectedGroups ] = useState<UserGroup>();
+  const userGroups = useAppSelector(selectGroups);
+  const selectedUserGroup = useAppSelector(selectSelectedGroup);
 
-  useEffect(() => {
-    if (userGroups.length) {
-      // TODO: This value should use redux, and be set from onchange
-      setSelectedGroups(userGroups[0]);
+  /**
+   * Navigate to group management screen with selected group if available
+   */
+  const navigateToGroupManagement = () => {
+    if (selectedUserGroup) {
+      navigate(`/groups/${selectedUserGroup.id}`);
+    } else {
+      navigate("/groups");
     }
-  }, []);
+  };
 
   /**
    * Handle user group change
@@ -30,25 +34,16 @@ const TopNavigation: React.FC = () => {
    */
   const onUserGroupChange: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
     const userGroup = userGroups.find(group => group.name === target.value)!;
-    setSelectedGroups(userGroup);
+    dispatch(setSelectedGroup(userGroup));
     navigate(`/groups/${userGroup.id}`);
   };
 
-  // TODO: this logic to change
   /**
-   * Render the user button/ select based on user groups
+   * Render the usder group select
    */
-  const renderUserGroupsButton = () => {
-    if (!userGroups || !selectedGroup) return null;
-    if (userGroups.length === 1) {
-      return (
-        <Button variant="text">
-          {/* TODO: group management button for navigation not conditional */}
-          { userGroups[0].name }
-        </Button>
-      );
-    }
-    // TODO: select appears between admin and icon, if multi groups, nav button for current group always there
+  const renderUserGroupsSelect = () => {
+    if (!userGroups || !selectedUserGroup) return null;
+
     if (userGroups.length > 1) {
       const options = userGroups.map(group =>
         <MenuItem key={ group.id } value={ group.name }>
@@ -61,7 +56,7 @@ const TopNavigation: React.FC = () => {
           color="secondary"
           variant="standard"
           select
-          value={ selectedGroup.name }
+          value={ selectedUserGroup.name }
           label="Groups"
           onChange={ onUserGroupChange }
         >
@@ -82,7 +77,12 @@ const TopNavigation: React.FC = () => {
       >
         { strings.navigation.surveys }
       </Button>
-      { renderUserGroupsButton() }
+      <Button
+        variant="text"
+        onClick={ () => navigateToGroupManagement() }
+      >
+        { strings.navigation.groups }
+      </Button>
       <VisibleWithRole userRole="admin">
         <Button
           variant="text"
@@ -92,6 +92,7 @@ const TopNavigation: React.FC = () => {
           { strings.navigation.admin }
         </Button>
       </VisibleWithRole>
+      { renderUserGroupsSelect() }
     </Stack>
   );
 };

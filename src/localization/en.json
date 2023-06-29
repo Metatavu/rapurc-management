@@ -160,6 +160,7 @@
 
   "navigation": {
     "surveys": "Surveys",
+    "groups": "Groups",
     "newSurvey": "New survey",
     "admin": "Admin"
   },

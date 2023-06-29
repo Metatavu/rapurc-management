@@ -161,6 +161,7 @@
 
   "navigation": {
     "surveys": "Kartoitukset",
+    "groups": "Ryhmiä",
     "newSurvey": "Uusi kartoitus",
     "admin": "Ylläpito"
   },

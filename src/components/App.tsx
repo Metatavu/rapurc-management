@@ -43,6 +43,10 @@ const App: React.FC = () => {
               element={ <SurveyScreen/> }
             />
             <Route
+              path="/groups"
+              element={ <GroupManagementScreen/> }
+            />
+            <Route
               path="/groups/:groupId/*"
               element={ <GroupManagementScreen/> }
             />
