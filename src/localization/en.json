@@ -144,6 +144,9 @@
     },
     "listingScreenLogin": {
       "loginFailed": "Invalid username or password"
+    },
+    "userGroups": {
+      "list": "Error listing users groups"
     }
   },
 
@@ -176,6 +179,9 @@
       "title": "Delete survey(s)",
       "text": "Are you sure you want to delete these surveys?",
       "deletingOthers": "You are about to delete another users survey. Do you want to proceed?"
+    },
+    "groupSelectDialog": {
+      "title": "Select group"
     }
   },
 

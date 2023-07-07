@@ -1,6 +1,7 @@
 import { Button, Stack } from "@mui/material";
 import GenericDialog from "components/generic/generic-dialog";
 import { UserGroup } from "generated/client";
+import strings from "localization/strings";
 import * as React from "react";
 
 /**
@@ -40,8 +41,8 @@ const GroupSelectDialog = ({
   
   return (
     <GenericDialog
-      title="Valitse ryhmä"
-      cancelButtonText="Peruuta"
+      title={ strings.surveysScreen.groupSelectDialog.title }
+      cancelButtonText={ strings.generic.cancel }
       open={ open }
       onClose={ onClose }
       onCancel={ onClose }

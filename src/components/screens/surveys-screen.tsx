@@ -174,7 +174,7 @@ const SurveysScreen: React.FC = () => {
       const groups = await Api.getUserGroupsApi(keycloak.token).listUserGroups({ member: true });
       setUsersGroups(groups);
     } catch (error) {
-      errorContext.setError("Virhe ladattaessa käyttäjän ryhmiä.", error);
+      errorContext.setError(strings.errorHandling.userGroups.list, error);
     }
     
     setLoading(false);

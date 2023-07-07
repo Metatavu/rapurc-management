@@ -167,7 +167,10 @@ export interface Localized extends LocalizedStringsMethods {
     };
     listingScreenLogin: {
       loginFailed: string;
-    }
+    };
+    userGroups: {
+      list: string;
+    };
   };
 
   /**
@@ -204,6 +207,9 @@ export interface Localized extends LocalizedStringsMethods {
       title: string;
       text: string;
       deletingOthers: string;
+    };
+    groupSelectDialog: {
+      title: string;
     };
   };
 
