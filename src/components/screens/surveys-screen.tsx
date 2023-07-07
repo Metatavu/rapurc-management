@@ -39,31 +39,6 @@ const SurveysScreen: React.FC = () => {
   const [ selectedSurveyIds, setSelectedSurveyIds ] = React.useState<string[]>([]);
   const [ groupSelectDialogOpen, setGroupSelectDialog ] = React.useState(false);
   const [ usersGroups, setUsersGroups ] = React.useState<UserGroup[]>([]);
-
-  /**
-   * Loads users groups from API
-   */
-  const loadUsersGroups = async () => {
-    setLoading(true);
-    
-    try {
-      if (!keycloak?.token) return;
-      
-      const groups = await Api.getUserGroupsApi(keycloak.token).listUserGroups({ member: true });
-      setUsersGroups(groups);
-    } catch (error) {
-      errorContext.setError("Virhe ladattaessa käyttäjän ryhmiä.", error);
-    }
-    
-    setLoading(false);
-  };
-  
-  /**
-   * Effect for loading users groups
-   */
-  React.useEffect(() => {
-    loadUsersGroups();
-  }, []);
   
   /**
    * Toggles group select dialog
@@ -188,12 +163,31 @@ const SurveysScreen: React.FC = () => {
   };
 
   /**
+   * Loads users groups from API
+   */
+  const loadUsersGroups = async () => {
+    setLoading(true);
+    
+    try {
+      if (!keycloak?.token) return;
+      
+      const groups = await Api.getUserGroupsApi(keycloak.token).listUserGroups({ member: true });
+      setUsersGroups(groups);
+    } catch (error) {
+      errorContext.setError("Virhe ladattaessa käyttäjän ryhmiä.", error);
+    }
+    
+    setLoading(false);
+  };
+
+  /**
    * Loads component data
    */
   const loadData = async () => {
     setLoading(true);
     const surveys = await listSurveys();
     const buildingTypes = await listBuildingTypes();
+    await loadUsersGroups();
 
     const surveyWithInfoArray: SurveyWithInfo[] = await Promise.all(
       surveys.map(async survey => {
@@ -294,6 +288,8 @@ const SurveysScreen: React.FC = () => {
    * Handles create survey manually button click
    */
   const handleCreateSurveyManuallyClick = () => {
+    if (!usersGroups.length) return;
+    
     if (usersGroups.length === 1) {
       const selectedGroup = usersGroups[0];
       
@@ -409,6 +405,7 @@ const SurveysScreen: React.FC = () => {
                 variant="contained"
                 color="secondary"
                 startIcon={ <Add/> }
+                disabled={ !usersGroups.length }
                 onClick={ handleCreateSurveyManuallyClick }
               >
                 { strings.surveysScreen.newSurvey }

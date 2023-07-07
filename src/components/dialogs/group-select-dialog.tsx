@@ -2,6 +2,7 @@ import { Button, Stack } from "@mui/material";
 import GenericDialog from "components/generic/generic-dialog";
 import { UserGroup } from "generated/client";
 import * as React from "react";
+
 /**
  * Components properties
  */
@@ -36,12 +37,14 @@ const GroupSelectDialog = ({
       </Button>
     );
   };
+  
   return (
     <GenericDialog
       title="Valitse ryhmä"
       cancelButtonText="Peruuta"
       open={ open }
       onClose={ onClose }
+      onCancel={ onClose }
       fullWidth
     >
       <Stack spacing={ 2 }>

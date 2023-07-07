@@ -1,12 +1,11 @@
 import { Button, CircularProgress, Hidden, Paper, Stack, TextField, Typography, useMediaQuery } from "@mui/material";
 import Api from "api";
 import { useAppDispatch, useAppSelector } from "app/hooks";
-import GroupSelectDialog from "components/dialogs/group-select-dialog";
 import { ErrorContext } from "components/error-handler/error-handler";
 import StackLayout from "components/layouts/stack-layout";
 import { selectKeycloak } from "features/auth-slice";
 import { createSurvey } from "features/surveys-slice";
-import { Building, OwnerInformation, UserGroup } from "generated/client";
+import { Building, OwnerInformation } from "generated/client";
 import strings from "localization/strings";
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -22,38 +21,6 @@ const NewSurveyScreen: React.FC = () => {
   const keycloak = useAppSelector(selectKeycloak);
   const errorContext = React.useContext(ErrorContext);
   const [ loading, setLoading ] = React.useState(false);
-  const [ groupSelectDialogOpen, setGroupSelectDialog ] = React.useState(false);
-  const [ usersGroups, setUsersGroups ] = React.useState<UserGroup[]>([]);
-
-  /**
-   * Loads users groups from API
-   */
-  const loadUsersGroups = async () => {
-    setLoading(true);
-    
-    try {
-      if (!keycloak?.token) return;
-      
-      const groups = await Api.getUserGroupsApi(keycloak.token).listUserGroups({ member: true });
-      setUsersGroups(groups);
-    } catch (error) {
-      errorContext.setError("Virhe ladattaessa käyttäjän ryhmiä.", error);
-    }
-    
-    setLoading(false);
-  };
-  
-  /**
-   * Effect for loading users groups
-   */
-  React.useEffect(() => {
-    loadUsersGroups();
-  }, []);
-  
-  /**
-   * Toggles group select dialog
-   */
-  const toggleGroupSelectDialog = () => setGroupSelectDialog(!groupSelectDialogOpen);
   
   /**
    * Check if viewport is mobile size
@@ -111,13 +78,13 @@ const NewSurveyScreen: React.FC = () => {
   /**
    * Create survey manually
    * 
-   * @param groupId group id
+   * TODO: Implement logic for selecting group
    */
-  const createSurveyManually = async (groupId: string) => {
+  const createSurveyManually = async () => {
     setLoading(true);
 
     try {
-      const { id } = await dispatch(createSurvey({ groupId: groupId })).unwrap();
+      const { id } = await dispatch(createSurvey({ groupId: "" })).unwrap();
       await createOwnerInformation(id);
       await createBuilding(id);
       navigate(`/surveys/${id}/owner`);
@@ -126,21 +93,6 @@ const NewSurveyScreen: React.FC = () => {
     }
   };
   
-  /**
-   * Handles create survey manually button click
-   */
-  const handleCreateSurveyManuallyClick = () => {
-    if (usersGroups.length === 1) {
-      const selectedGroup = usersGroups[0];
-      
-      if (!selectedGroup.id) return;
-      
-      createSurveyManually(usersGroups[0].id!);
-    } else {
-      toggleGroupSelectDialog();
-    }
-  };
-
   /**
    * Render list filter
    */
@@ -193,7 +145,7 @@ const NewSurveyScreen: React.FC = () => {
           <CreateManuallyButton
             size={ isMobile ? "medium" : "small" }
             variant="outlined"
-            onClick={ handleCreateSurveyManuallyClick }
+            onClick={ createSurveyManually }
           >
             { strings.newSurveyScreen.createManually }
           </CreateManuallyButton>
@@ -247,12 +199,6 @@ const NewSurveyScreen: React.FC = () => {
       back
     >
       { renderContent() }
-      <GroupSelectDialog
-        open={ groupSelectDialogOpen }
-        onClose={ toggleGroupSelectDialog }
-        onGroupSelect={ createSurveyManually }
-        groups={ usersGroups }
-      />
     </StackLayout>
   );
 };
