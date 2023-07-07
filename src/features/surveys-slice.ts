@@ -44,9 +44,9 @@ export const fetchSurveys = createAsyncThunk<Survey[], void, { state: RootState;
 /**
  * Create survey async reducer
  */
-export const createSurvey = createAsyncThunk<Survey, void, { state: RootState; }>(
+export const createSurvey = createAsyncThunk<Survey, { groupId: string }, { state: RootState; }>(
   "surveys/createSurvey",
-  async (_, { getState, rejectWithValue }) => {
+  async ({ groupId }, { getState, rejectWithValue }) => {
     try {
       const { keycloak } = getState().auth;
 
@@ -54,14 +54,11 @@ export const createSurvey = createAsyncThunk<Survey, void, { state: RootState; }
         throw new Error(strings.errorHandling.missingAccessToken);
       }
 
-      const groups = await Api.getUserGroupsApi(keycloak.token).listUserGroups({});
-      console.log(groups);
-
       const survey: Survey = {
         status: SurveyStatus.Draft,
         metadata: {},
         type: SurveyType.Demolition,
-        groupId: groups[0].id ?? ""
+        groupId: groupId
       };
 
       return await Api.getSurveysApi(keycloak.token).createSurvey({ survey: survey });
