@@ -145,6 +145,9 @@
     },
     "listingScreenLogin": {
       "loginFailed": "Väärä käyttäjätunnus tai salasana"
+    },
+    "userGroups": {
+      "list": "Virhe listattaessa käyttäjän ryhmiä"
     }
   },
 
@@ -176,6 +179,9 @@
       "title": "Poista kartoitus",
       "text": "Haluatko varmasti poistaa valitut kartoitukset?",
       "deletingOthers": "Varoitus! Olet poistamassa toisen käyttäjän luomaa kartoitusta. Haluatko varmasti jatkaa?"
+    },
+    "groupSelectDialog": {
+      "title": "Valitse ryhmä"
     }
   },
 
