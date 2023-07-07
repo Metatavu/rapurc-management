@@ -54,10 +54,14 @@ export const createSurvey = createAsyncThunk<Survey, void, { state: RootState; }
         throw new Error(strings.errorHandling.missingAccessToken);
       }
 
+      const groups = await Api.getUserGroupsApi(keycloak.token).listUserGroups({});
+      console.log(groups);
+
       const survey: Survey = {
         status: SurveyStatus.Draft,
         metadata: {},
-        type: SurveyType.Demolition
+        type: SurveyType.Demolition,
+        groupId: groups[0].id ?? ""
       };
 
       return await Api.getSurveysApi(keycloak.token).createSurvey({ survey: survey });
