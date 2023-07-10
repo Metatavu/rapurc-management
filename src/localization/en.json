@@ -167,6 +167,7 @@
     "filter": "Filter",
     "dataGridColumns": {
       "status": "Status",
+      "creator": "Creator",
       "buildingId": "Building ID",
       "classificationCode": "Classification code",
       "ownerName": "Owner name",
