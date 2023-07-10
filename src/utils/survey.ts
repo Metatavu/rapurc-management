@@ -26,7 +26,8 @@ export default class SurveyUtils {
     propertyName: building?.propertyName,
     city: building?.address?.city,
     streetAddress: building?.address?.streetAddress,
-    creatorId: survey.metadata.creatorId
+    creatorId: survey.metadata.creatorId,
+    creatorDisplayName: survey.creatorDisplayName
   });
 
 }
