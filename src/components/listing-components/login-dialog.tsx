@@ -3,14 +3,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Dialog, DialogTitle, DialogContent, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, TextField, Typography, Link, DialogActions, Button } from "@mui/material";
 import strings from "localization/strings";
 import { ErrorContext } from "components/error-handler/error-handler";
-import { fetchLogin, handleTokenRefresh } from "./handle-listing-login";
+import { authenticate, refreshAuthentication } from "./authentication-utils";
 
 /**
  * Dialog interface
  */
 interface LoginDialogProps {
   open: boolean;
-  onClose: (event: any, reason: any) => void;
+  onClose: (reason: string) => void;
   onLogin: () => void;
 }
   
@@ -29,7 +29,10 @@ interface Site {
  */
 const siteList: Site[] = [
   {
-    id: "site1", name: "Kiertoon.fi", url: "https://kiertoon.fi/items", token: "https://auth.kiertoon.fi/auth/realms/cityloops/protocol/openid-connect/token"
+    id: "site1",
+    name: "Kiertoon.fi",
+    url: "https://kiertoon.fi/items",
+    token: "https://auth.kiertoon.fi/auth/realms/cityloops/protocol/openid-connect/token"
   }
 // Add more sites as needed
 ];
@@ -47,7 +50,7 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
   const [ loginError, setLoginError ] = React.useState("");
   const [ accessToken, setAccessToken ] = React.useState("");
   const [ refreshToken, setRefreshToken ] = React.useState("");
-  const [tokenExpiring, setTokenExpiring] = React.useState(false);
+  const [ tokenTimestamp, setTokenTimestamp ] = React.useState(0);
 
   /**
    * Handle state change in choosing the site
@@ -96,7 +99,7 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
     event.preventDefault();
     const isValidLogin = validateLogin(username, password);
     if (isValidLogin) {
-      const { accessToken: newAccessToken, refreshToken: newRefreshToken, error } = await fetchLogin({
+      const { accessToken: newAccessToken, refreshToken: newRefreshToken, error } = await authenticate({
         selectedSite: siteList.find(siteItem => siteItem.id === site),
         username: username,
         password: password
@@ -107,8 +110,9 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
       } else {
         setAccessToken(newAccessToken);
         setRefreshToken(newRefreshToken);
+        setTokenTimestamp(Math.floor(Date.now() / 1000));
         onLogin();
-        onClose(loginError, undefined);
+        onClose(loginError);
       }
     } else {
       setLoginError(strings.errorHandling.listingScreenLogin.loginFailed);
@@ -119,7 +123,7 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
    * Token refresh logic
    */
   const tokenRefresh = async () => {
-    const { accessToken: newAccessToken, refreshToken: newRefreshToken, error } = await handleTokenRefresh({
+    const { accessToken: newAccessToken, refreshToken: newRefreshToken, error } = await refreshAuthentication({
       selectedSite: siteList.find(siteItem => siteItem.id === site),
       refreshToken: refreshToken
     });
@@ -128,101 +132,88 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
     } else {
       setAccessToken(newAccessToken);
       setRefreshToken(newRefreshToken);
+      setTokenTimestamp(Math.floor(Date.now() / 1000));
     }
   };
-  
-  // Var for token refresh timer
-  let expirationTime = 0;
+
   /**
-   * Check if token is expiring
-   * @param token 
-   * @returns 
+   * Check if the access token is expiring
+   * @param token The access token object
+   * @returns True if the access token is expiring, false otherwise
    */
   const isTokenExpiring = (token: any) => {
     if (!token || !token.expires_in) {
       return false;
     }
 
-    if (expirationTime === 0) {
-      expirationTime = Math.floor(Date.now() / 1000) + token.expires_in;
-    }
-
     const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
-    const countdown = expirationTime - currentTime;
+    const expirationTime = tokenTimestamp + token.expires_in;
     const refreshThreshold = 4 * 60; // 4 minutes
-
-    if (countdown <= 0) {
-      expirationTime = 0;
-      return true;
-    }
-    if (countdown <= refreshThreshold) {
-      expirationTime = currentTime + token.expires_in;
-      return true;
-    }
-
-    return countdown <= refreshThreshold;
+  
+    return expirationTime - currentTime <= refreshThreshold;
   };
-
-  React.useEffect(() => {
-    /**
-     * Initialize IsTokenExpiring
-     */
-    const initializeTokenExpiration = () => {
-      if (isTokenExpiring(accessToken)) {
-        setTokenExpiring(true);
-        expirationTime = 0;
-      }
-    };
-    initializeTokenExpiration();
-  });
   
   /**
-   * Reset the timer on token expiration time
+   * Custom hook for running given callback function in intervals
+   *
+   * @param callback callback function
+   * @param interval interval as milliseconds
    */
-  React.useEffect(() => {
-    const refreshTimeout = setTimeout(() => {
-      if (isTokenExpiring(accessToken)) {
-        setTokenExpiring(true);
-        expirationTime = 0;
-      }
-    }, 3 * 60 * 1000);
+  const useInterval = (callback: () => any, interval: number) => {
+    const savedCallback = React.useRef<typeof callback>();
 
-    return () => {
-      clearTimeout(refreshTimeout);
-    };
-  }, [accessToken]);
+    React.useEffect(() => {
+      savedCallback.current = callback;
+    });
+
+    React.useEffect(() => {
+      /**
+       * Excecute callback function, if it exists.
+       */
+      const tick = () => {
+        savedCallback.current?.();
+      };
+
+      const timeout = setInterval(tick, interval);
+      return () => clearInterval(timeout);
+    }, [interval]);
+  };
 
   /**
-   * Check if token is expiring --> refresh token || false
+   * Check token expiration and refresh if needed
    */
-  React.useEffect(() => {
-    if (tokenExpiring) {
+  const checkTokenExpiration = () => {
+    if (isTokenExpiring(accessToken)) {
       tokenRefresh();
-      setTokenExpiring(false);
     }
-  }, [tokenExpiring]);
+  };
+
+  // Run the token expiration check every 4 minutes
+  useInterval(checkTokenExpiration, 4 * 60 * 1000);
+
+  /**
+   * Handle cancel btn
+   */
+  const handleCancel = () => {
+    navigate(`/surveys/${surveyId}/reusables`);
+  };
 
   /**
    * TEMPORARY SKIP LOGIN, DELETE WHEN FORM UI is 100% done
    */
   const skipLoginTemp = () => {
     onLogin();
-    onClose(loginError, undefined);
+    onClose(loginError);
   };
 
-  /*
+  /**
    * Login Dialog render
    */
   return (
     <Dialog
       open={ open }
-      disableEscapeKeyDown={true}
-      onClose={(event, reason) => {
-        if (reason !== "backdropClick") {
-          onClose(event, reason);
-        }
-      }
-      }
+      disableEscapeKeyDown
+      onClose={ (_, reason) => reason !== "backdropClick" && onClose(reason) }
     >
       <DialogTitle>{ strings.listingScreenLogin.title }</DialogTitle>
       <DialogContent>
@@ -232,7 +223,7 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
             <RadioGroup
               value={ site }
               onChange={ handleSiteChange }
-              row={ true }
+              row
             >
               {siteList.map(siteItem => (
                 <FormControlLabel
@@ -268,9 +259,7 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
           </Typography>
           <Typography variant="subtitle1">
             <Link href={getRegistrationLink()} target="_blank" rel="noopener">
-              { strings.listingScreenLogin.registerLink }
-              {" "}
-              { siteList.find(siteItem => siteItem.id === site)?.name }
+              {`${strings.listingScreenLogin.registerLink} ${siteList.find(siteItem => siteItem.id === site)?.name ?? ""}`}
             </Link>
           </Typography>
           {loginError && (
@@ -278,15 +267,18 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
               { loginError }
             </Typography>
           )}
-          <DialogActions sx={{
-            justifyContent: "space-between", padding: 0, marginTop: 1
-          }}
+          <DialogActions
+            sx={{
+              justifyContent: "space-between",
+              padding: 0,
+              marginTop: 1
+            }}
           >
-            <Button onClick={() => navigate(`/surveys/${surveyId}/reusables`)} color="primary">
+            <Button onClick={ handleCancel } color="primary">
               { strings.generic.cancel }
             </Button>
             {/* SKIP BUTTON FOR LOGIN TEMPORARY, DELETE WHEN FORM UI 100% DONE */}
-            <Button onClick={skipLoginTemp}> SKIP LOGIN TEMP </Button>
+            <Button onClick={ skipLoginTemp }> SKIP LOGIN TEMP </Button>
             <Button type="submit" color="primary">
               { strings.generic.login }
             </Button>
