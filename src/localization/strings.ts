@@ -164,6 +164,7 @@ export interface Localized extends LocalizedStringsMethods {
       name: string;
       phone: string;
       email: string;
+      category: string;
     };
     listingScreenLogin: {
       loginFailed: string;
@@ -611,6 +612,7 @@ export interface Localized extends LocalizedStringsMethods {
     send: string;
     ownUse: string;
     deleteOwnUse: string;
+    category: string;
   };
   listingScreenLogin: {
     helperText: string;

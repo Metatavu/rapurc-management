@@ -140,7 +140,8 @@
       "postalcode": "Postal code is required",
       "name": "Name is required",
       "phone": "Phone number must be a number",
-      "email": "Invalid email"
+      "email": "Invalid email",
+      "category": "Error occurred while fetching categories"
     },
     "listingScreenLogin": {
       "loginFailed": "Invalid username or password",
@@ -563,7 +564,8 @@
     "email": "Email",
     "send": "send",
     "ownUse": "For own use",
-    "deleteOwnUse": "Delete own use"
+    "deleteOwnUse": "Delete own use",
+    "category": "Select the corresponding category"
   },
   "listingScreenLogin": {
     "helperText": "Select the site where you want to post the listing",

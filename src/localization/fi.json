@@ -141,7 +141,8 @@
       "postalcode": "Postinumero vaaditaan",
       "name": "Nimi vaaditaan",
       "phone": "Puhelinnumero täytyy olla numero",
-      "email": "Virheellinen sähköposti"
+      "email": "Virheellinen sähköposti",
+      "category": "Virhe tapahtui materiaalikategorioiden noutamisessa"
     },
     "listingScreenLogin": {
       "loginFailed": "Väärä käyttäjätunnus tai salasana",
@@ -562,7 +563,8 @@
     "email": "Sähköpostiosoite",
     "send": "lähetä",
     "ownUse": "Omaan käyttöön",
-    "deleteOwnUse": "poista oma käyttö"
+    "deleteOwnUse": "poista oma käyttö",
+    "category": "Valitse vastaava kategoria"
   },
   "listingScreenLogin": {
     "helperText": "Valitse sivu, minne haluat luoda ilmoituksen",
