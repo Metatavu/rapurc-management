@@ -12,6 +12,8 @@ interface LoginDialogProps {
   open: boolean;
   onClose: (reason: string) => void;
   onLogin: () => void;
+  onAccessTokenUpdate: (accessToken: string) => void;
+  loggedSite: (loggedSite: any) => void;
 }
   
 /**
@@ -40,7 +42,7 @@ const siteList: Site[] = [
 /**
  * Login Dialog component
  */
-const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => {
+const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin, onAccessTokenUpdate, loggedSite }) => {
   const navigate = useNavigate();
   const errorContext = React.useContext(ErrorContext);
   const { surveyId } = useParams<{ surveyId: string }>();
@@ -109,8 +111,10 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
         setLoginError(error);
       } else {
         setAccessToken(newAccessToken);
+        onAccessTokenUpdate(newAccessToken);
         setRefreshToken(newRefreshToken);
         setTokenTimestamp(Math.floor(Date.now() / 1000));
+        loggedSite(siteList.find(siteItem => siteItem.id === site));
         onLogin();
         onClose(loginError);
       }
@@ -130,9 +134,9 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
     if (error) {
       errorContext.setError(error);
     } else {
-      setAccessToken(newAccessToken);
       setRefreshToken(newRefreshToken);
       setTokenTimestamp(Math.floor(Date.now() / 1000));
+      setAccessToken(newAccessToken);
     }
   };
 

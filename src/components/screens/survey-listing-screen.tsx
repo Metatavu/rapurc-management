@@ -11,6 +11,7 @@ import { selectKeycloak } from "features/auth-slice";
 import LocalizationUtils from "utils/localization-utils";
 import { selectLanguage } from "features/locale-slice";
 import LoginDialog from "components/listing-components/login-dialog";
+import CategorySelect from "components/listing-components/categories";
 
 /**
  * Form errors interface
@@ -90,10 +91,12 @@ const SurveyListingScreen: React.FC = () => {
   const [ phone, setPhone ] = React.useState("");
   const [ email, setEmail ] = React.useState("");
   const [ formErrors, setFormErrors ] = React.useState<FormErrors>({});
+  const [ accessToken, setAccessToken ] = React.useState("");
+  const [ site, setSite ] = React.useState("");
 
   /**
    * form validation
-  */
+   */
   const validateForm = () => {
     const errors: FormErrors = {};
 
@@ -256,6 +259,22 @@ const SurveyListingScreen: React.FC = () => {
   }
 
   /**
+   * 
+   * @param newAccessToken for fetching categories
+   */
+  const handleAccessTokenUpdate = (newAccessToken: string) => {
+    setAccessToken(newAccessToken);
+  };
+  
+  /**
+   * Get selected site
+   * @param selectedSite 
+   */
+  const handleSelectedSite = (selectedSite: string) => {
+    setSite(selectedSite);
+  };
+
+  /**
    * Submit handle. Sending data added later
    */
   const handleSubmit = (e:any) => {
@@ -277,7 +296,7 @@ const SurveyListingScreen: React.FC = () => {
       // If validation true --> send info
     }
   };
-  
+
   /**
    * Render listing component
    */
@@ -316,6 +335,7 @@ const SurveyListingScreen: React.FC = () => {
                 marginTop={ 2 }
                 marginBottom={ 2 }
               >
+                <CategorySelect accessToken={accessToken} selectedSite={site}/>
                 <TextField
                   variant="outlined"
                   fullWidth
@@ -609,6 +629,8 @@ const SurveyListingScreen: React.FC = () => {
         open={ open }
         onClose={ handleCloseDialog }
         onLogin={ handleLogin }
+        onAccessTokenUpdate={ handleAccessTokenUpdate }
+        loggedSite={ handleSelectedSite }
       />
     </Container>
   );
