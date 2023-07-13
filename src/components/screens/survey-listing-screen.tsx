@@ -18,6 +18,7 @@ import CategorySelect from "components/listing-components/categories";
  */
 interface FormErrors {
   listingTitle?: string;
+  category?: string;
   materialInfo?: string;
   materialAmount?: string;
   materialAmountInfo?: string;
@@ -96,6 +97,7 @@ const SurveyListingScreen: React.FC = () => {
   const [ formErrors, setFormErrors ] = React.useState<FormErrors>({});
   const [ accessToken, setAccessToken ] = React.useState("");
   const [ site, setSite ] = React.useState("");
+  const [ category, setCategory] = React.useState("");
 
   React.useEffect(() => {
     if (material?.description) {
@@ -107,7 +109,9 @@ const SurveyListingScreen: React.FC = () => {
    */
   const validateForm = () => {
     const errors: FormErrors = {};
-
+    if (!category || category.length === 0) {
+      errors.category = strings.listingScreen.categorySelect;
+    }
     if (listingTitle.trim() === "") {
       errors.listingTitle = strings.errorHandling.listingScreen.listingTitle;
     }
@@ -269,6 +273,14 @@ const SurveyListingScreen: React.FC = () => {
   }
 
   /**
+   * Handle selected category from categories.tsx
+   * @param selectedValue category of 3rd party
+   */
+  const handleCategorySelect = (selectedValue: string) => {
+    setCategory(selectedValue);
+  };
+
+  /**
    * 
    * @param newAccessToken for fetching categories
    */
@@ -342,7 +354,12 @@ const SurveyListingScreen: React.FC = () => {
                 marginTop={ 2 }
                 marginBottom={ 2 }
               >
-                <CategorySelect accessToken={accessToken} selectedSite={site}/>
+                <CategorySelect
+                  accessToken={ accessToken }
+                  selectedSite={ site }
+                  onCategorySelect={ handleCategorySelect }
+                  categoryError={ formErrors.category }
+                />
                 <TextField
                   variant="outlined"
                   fullWidth

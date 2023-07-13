@@ -613,7 +613,7 @@ export interface Localized extends LocalizedStringsMethods {
     send: string;
     ownUse: string;
     deleteOwnUse: string;
-    category: string;
+    categorySelect: string;
   };
   listingScreenLogin: {
     helperText: string;

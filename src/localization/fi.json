@@ -565,7 +565,7 @@
     "send": "lähetä",
     "ownUse": "Omaan käyttöön",
     "deleteOwnUse": "poista oma käyttö",
-    "category": "Valitse vastaava kategoria"
+    "categorySelect": "Valitse vastaava kategoria"
   },
   "listingScreenLogin": {
     "helperText": "Valitse sivu, minne haluat luoda ilmoituksen",

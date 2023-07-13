@@ -566,7 +566,7 @@
     "send": "send",
     "ownUse": "For own use",
     "deleteOwnUse": "Delete own use",
-    "category": "Select the corresponding category"
+    "categorySelect": "Select a category for the material"
   },
   "listingScreenLogin": {
     "helperText": "Select the site where you want to post the listing",

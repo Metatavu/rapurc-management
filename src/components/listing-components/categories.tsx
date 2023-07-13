@@ -7,10 +7,11 @@ import { ErrorContext } from "components/error-handler/error-handler";
  * 
  * @returns material categories from 3rd pary site
  */
-const CategorySelect = ({ accessToken, selectedSite }: any) => {
-  const [categories, setCategories] = useState<Array<any>>([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
+const CategorySelect = ({ accessToken, selectedSite, categoryError, onCategorySelect }: any) => {
+  const [ categories, setCategories ] = useState<Array<any>>([]);
+  const [ selectedCategory, setSelectedCategory ] = useState("");
   const errorContext = React.useContext(ErrorContext);
+
   /**
    * Fetch categories from 3rd party site
    */
@@ -50,7 +51,9 @@ const CategorySelect = ({ accessToken, selectedSite }: any) => {
    * @param event Handle select
    */
   const handleSelectChange = (event: any) => {
-    setSelectedCategory(event.target.value);
+    const selectedValue = event.target.value;
+    setSelectedCategory(selectedValue);
+    onCategorySelect(selectedValue);
   };
 
   return (
@@ -58,20 +61,19 @@ const CategorySelect = ({ accessToken, selectedSite }: any) => {
     <FormControl
       fullWidth
     >
-      <InputLabel id="demo-simple-select-helper-label">{strings.listingScreen.category}</InputLabel>
+      <InputLabel id="demo-simple-select-helper-label" error={ !!categoryError }>{ strings.listingScreen.categorySelect }</InputLabel>
       <Select
-        value={selectedCategory}
-        onChange={handleSelectChange}
+        value={ selectedCategory }
+        onChange={ handleSelectChange }
         label="Age"
         labelId="demo-simple-select-helper-label"
+        error={ !!categoryError }
         fullWidth
       >
-        <MenuItem value="">
-          <em>None</em>
-        </MenuItem>
+        <MenuItem value=""/>
         {categories.map(category => (
-          <MenuItem key={category.id} value={category.name}>
-            {category.name}
+          <MenuItem key={ category.id } value={ category.id }>
+            { category.name }
           </MenuItem>
         ))}
       </Select>
