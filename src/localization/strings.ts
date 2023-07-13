@@ -153,6 +153,7 @@ export interface Localized extends LocalizedStringsMethods {
       update: string;
     };
     listingScreen: {
+      listingTitle: string;
       materialInfo: string;
       materialAmount: string;
       materialAmountInfo: string;

@@ -131,6 +131,7 @@
       "update": "Virhe päivitettäessä liitettä"
     },
     "listingScreen": {
+      "listingTitle": "Materiaalin otsikko vaaditaan",
       "materialInfo": "Materiaalin tieto vaaditaan",  
       "materialAmount": "Materiaalin määrä täytyy olla numerona", 
       "materialAmountInfo": "Materiaalimäärän tieto vaaditaan", 

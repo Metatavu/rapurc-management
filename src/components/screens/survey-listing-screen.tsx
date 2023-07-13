@@ -17,6 +17,7 @@ import CategorySelect from "components/listing-components/categories";
  * Form errors interface
  */
 interface FormErrors {
+  listingTitle?: string;
   materialInfo?: string;
   materialAmount?: string;
   materialAmountInfo?: string;
@@ -81,7 +82,9 @@ const SurveyListingScreen: React.FC = () => {
    * form values
    */
   const selectedLanguage = useAppSelector(selectLanguage);
+  const [ listingTitle, setListingTitle ] = React.useState("");
   const [ materialInfo, setMaterialInfo ] = React.useState("");
+  const [ material, setMaterial] = React.useState<Reusable | undefined>();
   const [ materialAmount, setMaterialAmount ] = React.useState("");
   const [ propertyName, setpropertyName ] = React.useState("");
   const [ priceAmount, setpriceAmount ] = React.useState("");
@@ -94,12 +97,20 @@ const SurveyListingScreen: React.FC = () => {
   const [ accessToken, setAccessToken ] = React.useState("");
   const [ site, setSite ] = React.useState("");
 
+  React.useEffect(() => {
+    if (material?.description) {
+      setMaterialInfo(material.description);
+    }
+  }, [material]);
   /**
    * form validation
    */
   const validateForm = () => {
     const errors: FormErrors = {};
 
+    if (listingTitle.trim() === "") {
+      errors.listingTitle = strings.errorHandling.listingScreen.listingTitle;
+    }
     if (materialInfo.trim() === "") {
       errors.materialInfo = strings.errorHandling.listingScreen.materialInfo;
     }
@@ -177,7 +188,6 @@ const SurveyListingScreen: React.FC = () => {
    * Get needed fetch for the form, material row data, Building property name
    */
   const { materialId } = useParams<"materialId">();
-  const [ material, setMaterial ] = React.useState<Reusable | undefined>();
   const [ reusableMaterials, setReusableMaterials ] = React.useState<ReusableMaterial[]>([]);
   const [ building, setBuilding ] = React.useState<Building>();
 
@@ -322,12 +332,9 @@ const SurveyListingScreen: React.FC = () => {
                 color="primary"
                 name="componentName"
                 label="Ilmoituksen otsikko"
-                value={ material.componentName }
+                defaultValue={ material.componentName }
+                onChange={ e => setListingTitle(e.target.value) }
                 sx={{ input: { color: "black" }, label: { color: "black" } }}
-                InputLabelProps={{
-                  shrink: true
-                }}
-                inputProps={{ readOnly: true, disableunderline: true.toString() }}
               />
               <Stack
                 direction="row"
@@ -359,17 +366,19 @@ const SurveyListingScreen: React.FC = () => {
                 rows={ 2 }
                 name="description"
                 label={ strings.survey.reusables.dataGridColumns.description }
-                value={ material.description }
+                value={ materialInfo || ""}
                 helperText={ strings.listingScreen.materialInfoHelperText }
                 onChange={ e => setMaterialInfo(e.target.value) }
                 error={ !!formErrors.materialInfo }
                 sx={{
-                  input: { color: "black" }, label: { color: "black" }
+                  input: { color: "black" },
+                  label: { color: "black" },
+                  "& .MuiOutlinedInput-input": { color: "black" },
+                  "& .MuiInputLabel-root": { color: "black" }
                 }}
                 InputLabelProps={{
                   shrink: true
                 }}
-                inputProps={{ style: { color: "black" } }}
               />
               <Stack
                 direction="row"
@@ -382,14 +391,17 @@ const SurveyListingScreen: React.FC = () => {
                   fullWidth
                   color="primary"
                   name=""
-                  value={ materialAmount }
+                  defaultValue={ newMaterial.amount }
                   label={ strings.survey.reusables.dataGridColumns.amount }
-                  type="number"
+                  type="tel"
                   onChange={ e => setMaterialAmount(e.target.value) }
                   error={ !!formErrors.materialAmount }
                   sx={{ label: { color: "black" } }}
+                  InputLabelProps={{
+                    shrink: false
+                  }}
                   inputProps={{
-                    style: { color: "black" }
+                    style: { color: "black" }, readOnly: true, disableUnderline: true
                   }}
                 />
                 <TextField
@@ -398,15 +410,20 @@ const SurveyListingScreen: React.FC = () => {
                   select={ false }
                   color="primary"
                   name="amount"
-                  label={ material.amount }
-                  value={ newMaterial.amount }
-                  type="tel"
-                  onChange={ onNewMaterialChange }
-                  sx={{ label: { color: "black" } }}
+                  label=""
+                  defaultValue={ material.amount }
+                  type="number"
+                  onChange={ e => setMaterialAmount(e.target.value) }
+                  error={ !!formErrors.materialAmount }
+                  sx={{
+                    input: { color: "black" },
+                    "& .MuiOutlinedInput-input": { color: "black" },
+                    "& .MuiInputLabel-root": { color: "black" }
+                  }}
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
+                  inputProps={{ disableUnderline: true }}
                 />
               </Stack>
               <Stack
@@ -422,12 +439,12 @@ const SurveyListingScreen: React.FC = () => {
                   name=""
                   label="Kokonaishinta (alv.24%)"
                   value=""
-                  type="text"
+                  type="number"
                   sx={{ label: { color: "black" }, input: { color: "black" } }}
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
+                  inputProps={{ readOnly: true, disableUnderline: true }}
                 />
                 <TextField
                   fullWidth
@@ -459,7 +476,7 @@ const SurveyListingScreen: React.FC = () => {
                   InputLabelProps={{
                     shrink: true
                   }}
-                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
+                  inputProps={{ readOnly: true, disableUnderline: true }}
                 />
               </Stack>
               { /* Location of the material */ }
@@ -492,9 +509,7 @@ const SurveyListingScreen: React.FC = () => {
                   color="primary"
                   name=""
                   label={ strings.listingScreen.address }
-                  value={ address }
-                  onChange={ e => setAddress(e.target.value) }
-                  error={ !!formErrors.address }
+                  value=""
                   sx={{ label: { color: "black" } }}
                   InputLabelProps={{
                     shrink: false
@@ -506,15 +521,19 @@ const SurveyListingScreen: React.FC = () => {
                   fullWidth
                   color="primary"
                   name="address"
-                  label={ `${building?.address?.streetAddress} ${building?.address?.city}`}
+                  label=""
                   type="text"
-                  value={ newMaterial.componentName }
-                  onChange={ onNewMaterialChange }
-                  sx={{ label: { color: "black" } }}
+                  defaultValue={ `${building?.address?.streetAddress} ${building?.address?.city}` }
+                  onChange={ e => setAddress(e.target.value) }
+                  sx={{
+                    input: { color: "black" },
+                    "& .MuiOutlinedInput-input": { color: "black" },
+                    "& .MuiInputLabel-root": { color: "black" }
+                  }}
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
+                  inputProps={{ disableunderline: true.toString() }}
                 />
               </Stack>
               <Stack
@@ -528,9 +547,7 @@ const SurveyListingScreen: React.FC = () => {
                   color="primary"
                   name=""
                   label={ strings.listingScreen.postalCode }
-                  value={ postalcode }
-                  onChange={ e => setPostalcode(e.target.value) }
-                  error={ !!formErrors.postalcode }
+                  value=""
                   sx={{ label: { color: "black" } }}
                   InputLabelProps={{
                     shrink: false
@@ -542,15 +559,20 @@ const SurveyListingScreen: React.FC = () => {
                   fullWidth
                   color="primary"
                   name="postalCode"
-                  label={ building?.address?.postCode }
+                  label=""
                   type="text"
-                  value={ newMaterial.componentName }
-                  onChange={ onNewMaterialChange }
-                  sx={{ label: { color: "black" } }}
+                  defaultValue={ building?.address?.postCode }
+                  error={ !!formErrors.postalcode }
+                  onChange={ e => setPostalcode(e.target.value) }
+                  sx={{
+                    input: { color: "black" },
+                    "& .MuiOutlinedInput-input": { color: "black" },
+                    "& .MuiInputLabel-root": { color: "black" }
+                  }}
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
+                  inputProps={{ disableunderline: true.toString() }}
                 />
               </Stack>
               {/* Contact info */}

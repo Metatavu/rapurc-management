@@ -130,6 +130,7 @@
       "update": "Error while updating attachment"
     },
     "listingScreen": {
+      "listingTitle": "Material title is required",
       "materialInfo": "Material information is required",
       "materialAmount": "Material amount must be a number",
       "materialAmountInfo": "Material amount info is required",
