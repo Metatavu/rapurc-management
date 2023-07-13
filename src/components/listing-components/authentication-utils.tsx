@@ -58,7 +58,6 @@ const authenticate = async (params: LoginParams): Promise<AuthenticationResponse
     const response = await fetch(selectedSite.token, {
       method: "POST",
       headers: {
-        "Access-Control-Allow-Origin": "",
         "Content-Type": "application/x-www-form-urlencoded"
       },
       body: urlSearchParams.toString()
@@ -110,7 +109,6 @@ const refreshAuthentication = async (params: TokenParams): Promise<Authenticatio
     const response = await fetch(selectedSite.token, {
       method: "POST",
       headers: {
-        "Access-Control-Allow-Origin": "",
         "Content-Type": "application/x-www-form-urlencoded"
       },
       body: urlSearchParams.toString()
