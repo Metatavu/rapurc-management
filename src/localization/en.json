@@ -142,7 +142,8 @@
       "name": "Name is required",
       "phone": "Phone number must be a number",
       "email": "Invalid email",
-      "category": "Error occurred while fetching categories"
+      "category": "Error occurred while fetching categories",
+      "image": "Error occurred while fetching images"
     },
     "listingScreenLogin": {
       "loginFailed": "Invalid username or password",

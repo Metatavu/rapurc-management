@@ -143,7 +143,8 @@
       "name": "Nimi vaaditaan",
       "phone": "Puhelinnumero täytyy olla numero",
       "email": "Virheellinen sähköposti",
-      "category": "Virhe tapahtui materiaalikategorioiden noutamisessa"
+      "category": "Virhe tapahtui materiaalikategorioiden noutamisessa",
+      "image": "Virhe hakiessa kuvia"
     },
     "listingScreenLogin": {
       "loginFailed": "Väärä käyttäjätunnus tai salasana",
