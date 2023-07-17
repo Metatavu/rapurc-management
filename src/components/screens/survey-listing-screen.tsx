@@ -99,7 +99,7 @@ const SurveyListingScreen: React.FC = () => {
   const [ site, setSite ] = React.useState("");
   const [ category, setCategory] = React.useState("");
   const [ images, setImages ] = React.useState<string[]>([]);
-  const [blobs, setBlobs] = React.useState<(Blob | null)[]>([]);
+  //  const [blobs, setBlobs] = React.useState<(Blob | null)[]>([]);
 
   React.useEffect(() => {
     if (material?.description) {
@@ -266,6 +266,7 @@ const SurveyListingScreen: React.FC = () => {
       const data = fetchImages.flatMap(item => item.images || []);
       setImages(data);
       // Convert each image URL to a Blob
+      /*
       const fetchedBlobs = await Promise.all(data.map(async imageUrl => {
         try {
           const response = await fetch(imageUrl);
@@ -275,10 +276,8 @@ const SurveyListingScreen: React.FC = () => {
           return null;
         }
       }));
-
-      // Set the blobs state with the fetchedBlobs
-      setBlobs(fetchedBlobs);
-      console.log(blobs);
+      setBlobs(fetchedBlobs);;
+      */
     } catch (error) {
       errorContext.setError(strings.errorHandling.title, error);
     }
