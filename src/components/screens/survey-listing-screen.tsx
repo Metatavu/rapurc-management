@@ -98,6 +98,8 @@ const SurveyListingScreen: React.FC = () => {
   const [ accessToken, setAccessToken ] = React.useState("");
   const [ site, setSite ] = React.useState("");
   const [ category, setCategory] = React.useState("");
+  const [ images, setImages ] = React.useState<string[]>([]);
+  const [blobs, setBlobs] = React.useState<(Blob | null)[]>([]);
 
   React.useEffect(() => {
     if (material?.description) {
@@ -250,6 +252,43 @@ const SurveyListingScreen: React.FC = () => {
   };
 
   /**
+   * Fetch possible images
+   */
+  const fetchImage = async () => {
+    if (!keycloak?.token || !surveyId) {
+      return;
+    }
+    try {
+      const reusablesApi = Api.getSurveyReusablesApi(keycloak.token);
+      const fetchImages = await reusablesApi.listSurveyReusables({
+        surveyId: surveyId
+      });
+      const data = fetchImages.flatMap(item => item.images || []);
+      setImages(data);
+      // Convert each image URL to a Blob
+      const fetchedBlobs = await Promise.all(data.map(async imageUrl => {
+        try {
+          const response = await fetch(imageUrl);
+          return await response.blob();
+        } catch (error) {
+          errorContext.setError(strings.errorHandling.listingScreen.image, error);
+          return null;
+        }
+      }));
+
+      // Set the blobs state with the fetchedBlobs
+      setBlobs(fetchedBlobs);
+      console.log(blobs);
+    } catch (error) {
+      errorContext.setError(strings.errorHandling.title, error);
+    }
+  };
+  /**
+   * Number of images
+   */
+  const numberOfImages = images.length;
+
+  /**
    * Effect for fetching survey / materials of selected row
    */
   React.useEffect(() => {
@@ -263,6 +302,7 @@ const SurveyListingScreen: React.FC = () => {
   React.useEffect(() => {
     fetchReusableMaterials();
     fetchBuilding();
+    fetchImage();
   }, []);
   
   if (!survey) {
@@ -311,7 +351,8 @@ const SurveyListingScreen: React.FC = () => {
       postalcode: building?.address?.postCode || "",
       name: name || "",
       phone: phone || "",
-      email: email || ""
+      email: email || "",
+      image: blobs || ""
     };
     */
     if (validateForm()) {
@@ -627,6 +668,16 @@ const SurveyListingScreen: React.FC = () => {
                 onChange={ e => setEmail(e.target.value) }
                 error={ !!formErrors.email }
                 sx={{ label: { color: "black" }, marginLeft: "2px" }}
+              />
+              <TextField
+                fullWidth
+                color="primary"
+                name="image"
+                label={`${strings.survey.summary.images} ${strings.survey.reusables.units.pcs ?? ""}`}
+                type="text"
+                value={ numberOfImages }
+                sx={{ label: { color: "black" }, marginLeft: "2px" }}
+                inputProps={{ readOnly: true, disableunderline: true.toString() }}
               />
               <Stack
                 direction="row"
