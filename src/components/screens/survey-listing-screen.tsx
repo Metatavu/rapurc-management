@@ -101,9 +101,25 @@ const SurveyListingScreen: React.FC = () => {
   const [ images, setImages ] = React.useState<string[]>([]);
   //  const [blobs, setBlobs] = React.useState<(Blob | null)[]>([]);
 
+  /**
+   * checking if the form displays fetched information or edited information
+   */
+  
   React.useEffect(() => {
     if (material?.description) {
       setMaterialInfo(material.description);
+    }
+  }, [material]);
+
+  React.useEffect(() => {
+    if (material?.componentName) {
+      setListingTitle(material.componentName);
+    }
+  }, [material]);
+
+  React.useEffect(() => {
+    if (material?.amount) {
+      setMaterialAmount(material.amount.toString());
     }
   }, [material]);
   /**
@@ -362,6 +378,7 @@ const SurveyListingScreen: React.FC = () => {
   /**
    * Render listing component
    */
+  
   return (
     <Container maxWidth="md">
       {loggedIn ? (
@@ -384,7 +401,8 @@ const SurveyListingScreen: React.FC = () => {
                 color="primary"
                 name="componentName"
                 label="Ilmoituksen otsikko"
-                defaultValue={ material.componentName }
+                defaultValue={ listingTitle || "" }
+                error={ !!formErrors.listingTitle }
                 onChange={ e => setListingTitle(e.target.value) }
                 sx={{ input: { color: "black" }, label: { color: "black" } }}
               />
@@ -451,8 +469,6 @@ const SurveyListingScreen: React.FC = () => {
                   defaultValue={ newMaterial.amount }
                   label={ strings.survey.reusables.dataGridColumns.amount }
                   type="tel"
-                  onChange={ e => setMaterialAmount(e.target.value) }
-                  error={ !!formErrors.materialAmount }
                   sx={{ label: { color: "black" } }}
                   InputLabelProps={{
                     shrink: false
@@ -468,7 +484,7 @@ const SurveyListingScreen: React.FC = () => {
                   color="primary"
                   name="amount"
                   label=""
-                  defaultValue={ material.amount }
+                  defaultValue={ materialAmount || "" }
                   type="number"
                   onChange={ e => setMaterialAmount(e.target.value) }
                   error={ !!formErrors.materialAmount }
