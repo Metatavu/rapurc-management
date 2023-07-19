@@ -86,6 +86,7 @@ const SurveyListingScreen: React.FC = () => {
   const [ listingTitle, setListingTitle ] = React.useState("");
   const [ materialInfo, setMaterialInfo ] = React.useState("");
   const [ material, setMaterial] = React.useState<Reusable | undefined>();
+  const [ building, setBuilding ] = React.useState<Building>();
   const [ materialAmount, setMaterialAmount ] = React.useState("");
   const [ propertyName, setpropertyName ] = React.useState("");
   const [ priceAmount, setpriceAmount ] = React.useState("");
@@ -104,24 +105,72 @@ const SurveyListingScreen: React.FC = () => {
   /**
    * checking if the form displays fetched information or edited information
    */
-  
-  React.useEffect(() => {
-    if (material?.description) {
-      setMaterialInfo(material.description);
+  const updateStateValues = () => {
+    if (material) {
+      setMaterialInfo(material.description || "");
+      setMaterialAmount(material.amount?.toString() || "");
+      setListingTitle(material.componentName || "");
     }
-  }, [material]);
+    if (building && building.address) {
+      setAddress(`${building?.address?.streetAddress || ""} ${building?.address?.city || ""}`);
+      setPostalcode(building.address.postCode?.toString() || "");
+    }
+  };
 
   React.useEffect(() => {
-    if (material?.componentName) {
-      setListingTitle(material.componentName);
-    }
-  }, [material]);
+    updateStateValues();
+  }, [material, building]);
 
-  React.useEffect(() => {
-    if (material?.amount) {
-      setMaterialAmount(material.amount.toString());
-    }
-  }, [material]);
+  /**
+   * Event handler for material info change
+   *
+   * @param event React change event
+   */
+  const onMaterialInfoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setMaterialInfo(value);
+  };
+
+  /**
+   * Event handler for material amount change
+   *
+   * @param event React change event
+   */
+  const onMaterialAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setMaterialAmount(value);
+  };
+
+  /**
+   * Event handler for listing title change
+   *
+   * @param event React change event
+   */
+  const onListingTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setListingTitle(value);
+  };
+
+  /**
+   * Event handler for property name change
+   *
+   * @param event React change event
+   */
+  const onAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setAddress(value);
+  };
+
+  /**
+   * Event handler for postal code change
+   *
+   * @param event React change event
+   */
+  const onPostalCodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setPostalcode(value);
+  };
+
   /**
    * form validation
    */
@@ -211,7 +260,6 @@ const SurveyListingScreen: React.FC = () => {
    */
   const { materialId } = useParams<"materialId">();
   const [ reusableMaterials, setReusableMaterials ] = React.useState<ReusableMaterial[]>([]);
-  const [ building, setBuilding ] = React.useState<Building>();
 
   /**
    * Fetches reusable materials by materialID
@@ -357,13 +405,14 @@ const SurveyListingScreen: React.FC = () => {
   const handleSubmit = (e:any) => {
     e.preventDefault();
     /* const data = {
-      description: material?.description || "",
-      amount: newMaterial?.amount || "",
+      title: listingTitle || "",
+      description: materialInfo || "",
+      amount: materialAmount || "",
       price: priceAmount,
       unit: material?.unit || "",
       propertyName: building?.propertyName || "",
-      address: `${building?.address?.streetAddress}, ${building?.address?.city}` || "",
-      postalcode: building?.address?.postCode || "",
+      address: address || "",
+      postalcode: postalcode || "",
       name: name || "",
       phone: phone || "",
       email: email || "",
@@ -378,7 +427,6 @@ const SurveyListingScreen: React.FC = () => {
   /**
    * Render listing component
    */
-  
   return (
     <Container maxWidth="md">
       {loggedIn ? (
@@ -401,9 +449,9 @@ const SurveyListingScreen: React.FC = () => {
                 color="primary"
                 name="componentName"
                 label="Ilmoituksen otsikko"
-                defaultValue={ listingTitle || "" }
+                value={ listingTitle }
                 error={ !!formErrors.listingTitle }
-                onChange={ e => setListingTitle(e.target.value) }
+                onChange={ onListingTitleChange }
                 sx={{ input: { color: "black" }, label: { color: "black" } }}
               />
               <Stack
@@ -441,9 +489,9 @@ const SurveyListingScreen: React.FC = () => {
                 rows={ 2 }
                 name="description"
                 label={ strings.survey.reusables.dataGridColumns.description }
-                value={ materialInfo || ""}
+                value={ materialInfo }
                 helperText={ strings.listingScreen.materialInfoHelperText }
-                onChange={ e => setMaterialInfo(e.target.value) }
+                onChange={ onMaterialInfoChange }
                 error={ !!formErrors.materialInfo }
                 sx={{
                   input: { color: "black" },
@@ -466,7 +514,7 @@ const SurveyListingScreen: React.FC = () => {
                   fullWidth
                   color="primary"
                   name=""
-                  defaultValue={ newMaterial.amount }
+                  value=""
                   label={ strings.survey.reusables.dataGridColumns.amount }
                   type="tel"
                   sx={{ label: { color: "black" } }}
@@ -484,9 +532,9 @@ const SurveyListingScreen: React.FC = () => {
                   color="primary"
                   name="amount"
                   label=""
-                  defaultValue={ materialAmount || "" }
+                  value={ materialAmount }
                   type="number"
-                  onChange={ e => setMaterialAmount(e.target.value) }
+                  onChange={ onMaterialAmountChange }
                   error={ !!formErrors.materialAmount }
                   sx={{
                     input: { color: "black" },
@@ -496,7 +544,6 @@ const SurveyListingScreen: React.FC = () => {
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ disableUnderline: true }}
                 />
               </Stack>
               <Stack
@@ -517,7 +564,7 @@ const SurveyListingScreen: React.FC = () => {
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ readOnly: true, disableUnderline: true }}
+                  inputProps={{ readOnly: true, disableunderline: true }}
                 />
                 <TextField
                   fullWidth
@@ -527,6 +574,7 @@ const SurveyListingScreen: React.FC = () => {
                   label="€"
                   type="number"
                   onChange={ e => setpriceAmount(e.target.value) }
+                  error={ !!formErrors.priceAmount }
                   sx={{ label: { color: "black" }, input: { color: "black" } }}
                   inputProps={{ style: { color: "black" } }}
                 />
@@ -549,7 +597,7 @@ const SurveyListingScreen: React.FC = () => {
                   InputLabelProps={{
                     shrink: true
                   }}
-                  inputProps={{ readOnly: true, disableUnderline: true }}
+                  inputProps={{ readOnly: true, disableunderline: true }}
                 />
               </Stack>
               { /* Location of the material */ }
@@ -560,10 +608,9 @@ const SurveyListingScreen: React.FC = () => {
                   color="primary"
                   name="propertyName"
                   label={ building?.propertyName || "" }
-                  value={ propertyName }
+                  value=""
                   helperText={ strings.listingScreen.propertyName }
                   onChange={ e => setpropertyName(e.target.value) }
-                  error={ !!formErrors.propertyName }
                   sx={{ label: { color: "black" } }}
                   InputLabelProps={{
                     shrink: false
@@ -596,8 +643,9 @@ const SurveyListingScreen: React.FC = () => {
                   name="address"
                   label=""
                   type="text"
-                  defaultValue={ `${building?.address?.streetAddress} ${building?.address?.city}` }
-                  onChange={ e => setAddress(e.target.value) }
+                  value={ address }
+                  onChange={ onAddressChange }
+                  error={ !!formErrors.address }
                   sx={{
                     input: { color: "black" },
                     "& .MuiOutlinedInput-input": { color: "black" },
@@ -606,7 +654,6 @@ const SurveyListingScreen: React.FC = () => {
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ disableunderline: true.toString() }}
                 />
               </Stack>
               <Stack
@@ -636,7 +683,7 @@ const SurveyListingScreen: React.FC = () => {
                   type="text"
                   defaultValue={ building?.address?.postCode }
                   error={ !!formErrors.postalcode }
-                  onChange={ e => setPostalcode(e.target.value) }
+                  onChange={ onPostalCodeChange }
                   sx={{
                     input: { color: "black" },
                     "& .MuiOutlinedInput-input": { color: "black" },
@@ -645,7 +692,6 @@ const SurveyListingScreen: React.FC = () => {
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ disableunderline: true.toString() }}
                 />
               </Stack>
               {/* Contact info */}
