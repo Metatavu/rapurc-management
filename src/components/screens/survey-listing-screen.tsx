@@ -94,7 +94,6 @@ const SurveyListingScreen: React.FC = () => {
   const [ postalcode, setPostalcode ] = React.useState("");
   const [ name, setName ] = React.useState("");
   const [ phone, setPhone ] = React.useState("");
-  const [ email, setEmail ] = React.useState("");
   const [ formErrors, setFormErrors ] = React.useState<FormErrors>({});
   const [ accessToken, setAccessToken ] = React.useState("");
   const [ site, setSite ] = React.useState("");
@@ -218,12 +217,6 @@ const SurveyListingScreen: React.FC = () => {
       errors.phone = strings.errorHandling.listingScreen.phone;
     } else if (Number.isNaN(Number(phone))) {
       errors.phone = strings.errorHandling.listingScreen.phone;
-    }
-
-    if (email.trim() === "") {
-      errors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      errors.email = strings.errorHandling.listingScreen.email;
     }
 
     setFormErrors(errors);
@@ -506,7 +499,7 @@ const SurveyListingScreen: React.FC = () => {
               <Stack
                 direction="row"
                 spacing={ 2 }
-                marginTop={ 2 }
+                marginTop={ 1 }
               >
                 { /* amounts */ }
                 <TextField
@@ -515,7 +508,7 @@ const SurveyListingScreen: React.FC = () => {
                   color="primary"
                   name=""
                   value=""
-                  label={ strings.survey.reusables.dataGridColumns.amount }
+                  label={ `${strings.survey.reusables.dataGridColumns.amount}:` }
                   type="tel"
                   sx={{ label: { color: "black" } }}
                   InputLabelProps={{
@@ -549,7 +542,7 @@ const SurveyListingScreen: React.FC = () => {
               <Stack
                 direction="row"
                 spacing={ 2 }
-                marginTop={ 2 }
+                marginTop={ 1 }
               >
                 <TextField
                   variant="outlined"
@@ -557,7 +550,7 @@ const SurveyListingScreen: React.FC = () => {
                   select={ false }
                   color="primary"
                   name=""
-                  label="Kokonaishinta (alv.24%)"
+                  label="Kokonaishinta (alv.24%):"
                   value=""
                   type="number"
                   sx={{ label: { color: "black" }, input: { color: "black" } }}
@@ -580,17 +573,32 @@ const SurveyListingScreen: React.FC = () => {
                 />
               </Stack>
               <Stack
-                direction="column"
+                direction="row"
                 spacing={ 2 }
-                marginTop={ 2 }
+                marginTop={ 1 }
               >
                 <TextField
                   variant="outlined"
                   fullWidth
                   select={ false }
                   color="primary"
+                  name=""
+                  label={`${strings.listingScreen.unit}:`}
+                  value=""
+                  type="number"
+                  sx={{ label: { color: "black" }, input: { color: "black" } }}
+                  InputLabelProps={{
+                    shrink: false
+                  }}
+                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
+                />
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  select={ false }
+                  color="primary"
                   name="unit"
-                  label={ strings.listingScreen.unit }
+                  label=""
                   value={ material.unit }
                   onChange={ onNewMaterialChange }
                   sx={{ input: { color: "black" }, label: { color: "black" } }}
@@ -601,13 +609,13 @@ const SurveyListingScreen: React.FC = () => {
                 />
               </Stack>
               { /* Location of the material */ }
-              <Stack spacing={ 2 } marginTop={ 2 }>
+              <Stack spacing={ 2 } marginTop={ 5 }>
                 <TextField
                   variant="outlined"
                   fullWidth
                   color="primary"
                   name="propertyName"
-                  label={ building?.propertyName || "" }
+                  label={ building?.propertyName }
                   value=""
                   helperText={ strings.listingScreen.propertyName }
                   onChange={ e => setpropertyName(e.target.value) }
@@ -628,7 +636,7 @@ const SurveyListingScreen: React.FC = () => {
                   fullWidth
                   color="primary"
                   name=""
-                  label={ strings.listingScreen.address }
+                  label={ `${strings.listingScreen.address}:` }
                   value=""
                   sx={{ label: { color: "black" } }}
                   InputLabelProps={{
@@ -666,7 +674,7 @@ const SurveyListingScreen: React.FC = () => {
                   fullWidth
                   color="primary"
                   name=""
-                  label={ strings.listingScreen.postalCode }
+                  label={ `${strings.listingScreen.postalCode}:` }
                   value=""
                   sx={{ label: { color: "black" } }}
                   InputLabelProps={{
@@ -681,7 +689,7 @@ const SurveyListingScreen: React.FC = () => {
                   name="postalCode"
                   label=""
                   type="text"
-                  defaultValue={ building?.address?.postCode }
+                  value={ building?.address?.postCode }
                   error={ !!formErrors.postalcode }
                   onChange={ onPostalCodeChange }
                   sx={{
@@ -715,19 +723,6 @@ const SurveyListingScreen: React.FC = () => {
                 value={ phone }
                 onChange={ e => setPhone(e.target.value) }
                 error={ !!formErrors.phone }
-                sx={{ label: { color: "black" }, marginLeft: "2px" }}
-              />
-              { /* e-mail */ }
-              <TextField
-                fullWidth
-                required
-                color="primary"
-                name="email"
-                label={ strings.listingScreen.email }
-                type="email"
-                value={ email }
-                onChange={ e => setEmail(e.target.value) }
-                error={ !!formErrors.email }
                 sx={{ label: { color: "black" }, marginLeft: "2px" }}
               />
               <TextField
