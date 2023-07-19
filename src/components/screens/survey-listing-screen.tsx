@@ -522,7 +522,7 @@ const SurveyListingScreen: React.FC = () => {
                     shrink: false
                   }}
                   inputProps={{
-                    style: { color: "black" }, readOnly: true, disableUnderline: true
+                    style: { color: "black" }, readOnly: true, disableunderline: true.toString()
                   }}
                 />
                 <TextField
@@ -564,7 +564,7 @@ const SurveyListingScreen: React.FC = () => {
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ readOnly: true, disableunderline: true }}
+                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
                 />
                 <TextField
                   fullWidth
@@ -597,7 +597,7 @@ const SurveyListingScreen: React.FC = () => {
                   InputLabelProps={{
                     shrink: true
                   }}
-                  inputProps={{ readOnly: true, disableunderline: true }}
+                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
                 />
               </Stack>
               { /* Location of the material */ }
