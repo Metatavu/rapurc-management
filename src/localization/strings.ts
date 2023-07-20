@@ -178,7 +178,10 @@ export interface Localized extends LocalizedStringsMethods {
       inviteMember: string;
       pendingRequests: string;
       pendingInvites: string;
-    }
+    },
+    userGroups: {
+      list: string;
+    };
   };
 
   /**
@@ -205,6 +208,7 @@ export interface Localized extends LocalizedStringsMethods {
     filter: string;
     dataGridColumns: {
       status: string;
+      creator: string;
       buildingId: string;
       classificationCode: string;
       ownerName: string;
@@ -216,6 +220,9 @@ export interface Localized extends LocalizedStringsMethods {
       title: string;
       text: string;
       deletingOthers: string;
+    };
+    groupSelectDialog: {
+      title: string;
     };
   };
 

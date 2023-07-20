@@ -156,6 +156,9 @@
       "inviteMember": "Virhe lähetettäessä jäsenkutsua",
       "pendingRequests": "Virhe listattaessa odottavia pyyntöjä",
       "pendingInvites": "Virhe listattaessa odottavia kutsuja"
+    },
+    "userGroups": {
+      "list": "Virhe listattaessa käyttäjän ryhmiä"
     }
   },
 
@@ -177,6 +180,7 @@
     "filter": "Suodata",
     "dataGridColumns": {
       "status": "Tila",
+      "creator":"Tekijä",
       "buildingId": "Rakennustunnus",
       "classificationCode": "Rakennusluokka",
       "ownerName": "Omistaja",
@@ -188,6 +192,9 @@
       "title": "Poista kartoitus",
       "text": "Haluatko varmasti poistaa valitut kartoitukset?",
       "deletingOthers": "Varoitus! Olet poistamassa toisen käyttäjän luomaa kartoitusta. Haluatko varmasti jatkaa?"
+    },
+    "groupSelectDialog": {
+      "title": "Valitse ryhmä"
     }
   },
 

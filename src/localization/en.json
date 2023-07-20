@@ -155,6 +155,9 @@
       "inviteMember": "Error while sending member invite",
       "pendingRequests": "Error while listing pending requests",
       "pendingInvites": "Error while listing pending invites"
+    },
+    "userGroups": {
+      "list": "Error listing users groups"
     }
   },
 
@@ -176,6 +179,7 @@
     "filter": "Filter",
     "dataGridColumns": {
       "status": "Status",
+      "creator": "Creator",
       "buildingId": "Building ID",
       "classificationCode": "Classification code",
       "ownerName": "Owner name",
@@ -188,6 +192,9 @@
       "title": "Delete survey(s)",
       "text": "Are you sure you want to delete these surveys?",
       "deletingOthers": "You are about to delete another users survey. Do you want to proceed?"
+    },
+    "groupSelectDialog": {
+      "title": "Select group"
     }
   },
 
