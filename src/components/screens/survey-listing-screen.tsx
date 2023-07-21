@@ -12,6 +12,7 @@ import LocalizationUtils from "utils/localization-utils";
 import { selectLanguage } from "features/locale-slice";
 import LoginDialog from "components/listing-components/login-dialog";
 import CategorySelect from "components/listing-components/categories";
+import createItem from "components/listing-components/listing-screen-post";
 
 /**
  * Form errors interface
@@ -99,7 +100,7 @@ const SurveyListingScreen: React.FC = () => {
   const [ site, setSite ] = React.useState("");
   const [ category, setCategory] = React.useState("");
   const [ images, setImages ] = React.useState<string[]>([]);
-  //  const [blobs, setBlobs] = React.useState<(Blob | null)[]>([]);
+  const [ blobs, setBlobs ] = React.useState<(Blob | null)[]>([]);
 
   /**
    * checking if the form displays fetched information or edited information
@@ -151,7 +152,7 @@ const SurveyListingScreen: React.FC = () => {
   };
 
   /**
-   * Event handler for property name change
+   * Event handler for adress name change
    *
    * @param event React change event
    */
@@ -220,7 +221,7 @@ const SurveyListingScreen: React.FC = () => {
     }
 
     setFormErrors(errors);
-
+    console.log(errors);
     return Object.keys(errors).length === 0;
   };
 
@@ -323,7 +324,7 @@ const SurveyListingScreen: React.FC = () => {
       const data = fetchImages.flatMap(item => item.images || []);
       setImages(data);
       // Convert each image URL to a Blob
-      /*
+      
       const fetchedBlobs = await Promise.all(data.map(async imageUrl => {
         try {
           const response = await fetch(imageUrl);
@@ -333,8 +334,8 @@ const SurveyListingScreen: React.FC = () => {
           return null;
         }
       }));
-      setBlobs(fetchedBlobs);;
-      */
+      setBlobs(fetchedBlobs);
+      console.log(blobs);
     } catch (error) {
       errorContext.setError(strings.errorHandling.title, error);
     }
@@ -345,16 +346,22 @@ const SurveyListingScreen: React.FC = () => {
   const numberOfImages = images.length;
 
   /**
-   * Effect for fetching survey / materials of selected row
+   * Effect for fetching survey
    */
   React.useEffect(() => {
     fetchSurvey();
   }, [ surveyId ]);
   
+  /**
+   * Effect for fetching material of selected row
+   */
   React.useEffect(() => {
     fetchReusableMaterial();
   }, [ materialId ]);
   
+  /**
+   * Effect for fetching materials and buidings of selected row / images 
+   */
   React.useEffect(() => {
     fetchReusableMaterials();
     fetchBuilding();
@@ -370,6 +377,7 @@ const SurveyListingScreen: React.FC = () => {
 
   /**
    * Handle selected category from categories.tsx
+   * 
    * @param selectedValue category of 3rd party
    */
   const handleCategorySelect = (selectedValue: string) => {
@@ -397,23 +405,25 @@ const SurveyListingScreen: React.FC = () => {
    */
   const handleSubmit = (e:any) => {
     e.preventDefault();
-    /* const data = {
+    console.log("SUBMITTING");
+    const data = {
       title: listingTitle || "",
+      category: category,
       description: materialInfo || "",
       amount: materialAmount || "",
-      price: priceAmount,
+      price: Number(priceAmount) || 0,
       unit: material?.unit || "",
       propertyName: building?.propertyName || "",
       address: address || "",
       postalcode: postalcode || "",
       name: name || "",
       phone: phone || "",
-      email: email || "",
       image: blobs || ""
     };
-    */
+    
     if (validateForm()) {
       // If validation true --> send info
+      createItem(data, accessToken);
     }
   };
 
@@ -616,14 +626,14 @@ const SurveyListingScreen: React.FC = () => {
                   color="primary"
                   name="propertyName"
                   label={ building?.propertyName }
-                  value=""
+                  value={ building?.propertyName }
                   helperText={ strings.listingScreen.propertyName }
                   onChange={ e => setpropertyName(e.target.value) }
                   sx={{ label: { color: "black" } }}
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
+                  inputProps={{ disableunderline: true.toString() }}
                 />
               </Stack>
               <Stack
