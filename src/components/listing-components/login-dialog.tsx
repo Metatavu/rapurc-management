@@ -23,6 +23,7 @@ interface Site {
   id: string;
   name: string;
   url: string;
+  post: string;
   token: string;
 }
 
@@ -34,6 +35,7 @@ const siteList: Site[] = [
     id: "site1",
     name: "Kiertoon.fi",
     url: "https://kiertoon.fi/items",
+    post: "https://kiertoon.fi/item",
     token: "https://auth.kiertoon.fi/auth/realms/cityloops/protocol/openid-connect/token"
   }
 // Add more sites as needed
