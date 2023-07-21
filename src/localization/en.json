@@ -143,7 +143,8 @@
       "phone": "Phone number must be a number",
       "email": "Invalid email",
       "category": "Error occurred while fetching categories",
-      "image": "Error occurred while fetching images"
+      "image": "Error occurred while fetching images",
+      "submit": "Error occured while submitting the survey"
     },
     "listingScreenLogin": {
       "loginFailed": "Invalid username or password",
@@ -567,7 +568,8 @@
     "send": "send",
     "ownUse": "For own use",
     "deleteOwnUse": "Delete own use",
-    "categorySelect": "Select a category for the material"
+    "categorySelect": "Select a category for the material",
+    "submit": "Survey sent succesfully"
   },
   "listingScreenLogin": {
     "helperText": "Select the site where you want to post the listing",

@@ -144,7 +144,8 @@
       "phone": "Puhelinnumero täytyy olla numero",
       "email": "Virheellinen sähköposti",
       "category": "Virhe tapahtui materiaalikategorioiden noutamisessa",
-      "image": "Virhe hakiessa kuvia"
+      "image": "Virhe hakiessa kuvia",
+      "submit": "Karkoituksen lähettämisessä tapahtui virhe"
     },
     "listingScreenLogin": {
       "loginFailed": "Väärä käyttäjätunnus tai salasana",
@@ -566,7 +567,8 @@
     "send": "lähetä",
     "ownUse": "Omaan käyttöön",
     "deleteOwnUse": "poista oma käyttö",
-    "categorySelect": "Valitse vastaava kategoria"
+    "categorySelect": "Valitse vastaava kategoria",
+    "submit": "Karkoituksen lähettäminen onnistui"
   },
   "listingScreenLogin": {
     "helperText": "Valitse sivu, minne haluat luoda ilmoituksen",
