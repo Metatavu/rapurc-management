@@ -115,6 +115,7 @@ const SurveyListingScreen: React.FC = () => {
     if (building && building.address) {
       setAddress(`${building?.address?.streetAddress ?? ""} ${building?.address?.city || ""}`);
       setPostalcode(building.address.postCode?.toString() ?? "");
+      setpropertyName(building?.propertyName ?? "");
     }
   };
 
@@ -369,7 +370,7 @@ const SurveyListingScreen: React.FC = () => {
   React.useEffect(() => {
     fetchReusableMaterial();
   }, [ materialId ]);
-  
+
   /**
    * Effect for fetching materials and buidings of selected row / images 
    */
@@ -431,6 +432,7 @@ const SurveyListingScreen: React.FC = () => {
       postalcode: postalcode || "",
       name: name || "",
       phone: phone || "",
+      email: email || "",
       image: blobs || ""
     };
     
@@ -632,21 +634,41 @@ const SurveyListingScreen: React.FC = () => {
                 />
               </Stack>
               { /* Location of the material */ }
-              <Stack spacing={ 2 } marginTop={ 5 }>
+              <Stack
+                direction="row"
+                spacing={ 2 }
+                marginTop={ 2 }
+              >
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  color="primary"
+                  name=""
+                  label={ `${strings.listingScreen.propertyName}:` }
+                  value=""
+                  sx={{ label: { color: "black" } }}
+                  InputLabelProps={{
+                    shrink: false
+                  }}
+                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
+                />
                 <TextField
                   variant="outlined"
                   fullWidth
                   color="primary"
                   name="propertyName"
-                  label={ building?.propertyName }
-                  value={ building?.propertyName }
-                  helperText={ strings.listingScreen.propertyName }
+                  label=""
+                  type="text"
+                  value={ propertyName }
                   onChange={ e => setpropertyName(e.target.value) }
-                  sx={{ label: { color: "black" } }}
+                  sx={{
+                    input: { color: "black" },
+                    "& .MuiOutlinedInput-input": { color: "black" },
+                    "& .MuiInputLabel-root": { color: "black" }
+                  }}
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ disableunderline: true.toString() }}
                 />
               </Stack>
               <Stack
