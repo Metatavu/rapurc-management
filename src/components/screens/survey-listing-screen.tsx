@@ -13,6 +13,7 @@ import { selectLanguage } from "features/locale-slice";
 import LoginDialog from "components/listing-components/login-dialog";
 import CategorySelect from "components/listing-components/categories";
 import createItem from "components/listing-components/listing-screen-post";
+import GenericDialog from "components/generic/generic-dialog";
 
 /**
  * Form errors interface
@@ -30,6 +31,17 @@ interface FormErrors {
   name?: string;
   phone?: string;
   email?: string;
+}
+
+/**
+ * Selected site data
+ */
+interface SiteData {
+  id: string;
+  name: string;
+  url: string;
+  post: string;
+  token: string;
 }
 
 /**
@@ -98,10 +110,34 @@ const SurveyListingScreen: React.FC = () => {
   const [ email, setEmail ] = React.useState("");
   const [ formErrors, setFormErrors ] = React.useState<FormErrors>({});
   const [ accessToken, setAccessToken ] = React.useState("");
-  const [ site, setSite ] = React.useState("");
+  const [ site, setSite ] = React.useState<SiteData | null>(null);
   const [ category, setCategory] = React.useState("");
   const [ images, setImages ] = React.useState<string[]>([]);
   const [ blobs, setBlobs ] = React.useState<(Blob | null)[]>([]);
+
+  /**
+   * Sucesful POST dialog
+   */
+  const [ showSuccessDialog, setShowSuccessDialog ] = React.useState(false);
+  const [itemId, setItemId] = React.useState<string | null>(null);
+  const link = itemId && site ? `${site.post}/${itemId}` : null;
+  const linkText = site ? ` ${site.name}` : null;
+
+  /**
+   * Callback function to handle successful item creation and show the success dialog
+   */
+  const handleItemCreationSuccess = (itemIdRes: string) => {
+    setItemId(itemIdRes);
+    setShowSuccessDialog(true);
+  };
+    
+  /**
+   * Event handler for closing the success dialog
+   */
+  const handleCloseSuccessDialog = () => {
+    setItemId(null);
+    setShowSuccessDialog(false);
+  };
 
   /**
    * checking if the form displays fetched information or edited information
@@ -233,7 +269,6 @@ const SurveyListingScreen: React.FC = () => {
     }
 
     setFormErrors(errors);
-    console.log(errors);
     return Object.keys(errors).length === 0;
   };
 
@@ -347,7 +382,6 @@ const SurveyListingScreen: React.FC = () => {
         }
       }));
       setBlobs(fetchedBlobs);
-      console.log(blobs);
     } catch (error) {
       errorContext.setError(strings.errorHandling.title, error);
     }
@@ -410,7 +444,7 @@ const SurveyListingScreen: React.FC = () => {
    *
    * @param selectedSite 
    */
-  const handleSelectedSite = (selectedSite: string) => {
+  const handleSelectedSite = (selectedSite: SiteData) => {
     setSite(selectedSite);
   };
 
@@ -419,7 +453,6 @@ const SurveyListingScreen: React.FC = () => {
    */
   const handleSubmit = (e:any) => {
     e.preventDefault();
-    console.log("SUBMITTING");
     const data = {
       title: listingTitle || "",
       category: category,
@@ -437,8 +470,8 @@ const SurveyListingScreen: React.FC = () => {
     };
     
     if (validateForm()) {
-      // If validation true --> send info
-      createItem(data, accessToken);
+      // If validation true --> send info 
+      createItem(data, accessToken, handleItemCreationSuccess, errorContext.setError);
     }
   };
 
@@ -831,6 +864,19 @@ const SurveyListingScreen: React.FC = () => {
       ) : (
         <></>
       )}
+      <GenericDialog
+        open={showSuccessDialog}
+        title={ strings.listingScreen.submit }
+        onClose={handleCloseSuccessDialog}
+        positiveButtonText="OK"
+        onConfirm={handleCloseSuccessDialog}
+      >
+        {linkText && link && (
+          <a href={link} target="_blank" rel="noopener noreferrer">
+            {linkText}
+          </a>
+        )}
+      </GenericDialog>
       <LoginDialog
         open={ open }
         onClose={ handleCloseDialog }
