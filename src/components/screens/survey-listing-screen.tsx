@@ -106,15 +106,19 @@ const SurveyListingScreen: React.FC = () => {
    */
   const updateStateValues = () => {
     if (material) {
-      setMaterialInfo(material.description || "");
-      setMaterialAmount(material.amount?.toString() || "");
-      setListingTitle(material.componentName || "");
+      setMaterialInfo(material.description ?? "");
+      setMaterialAmount(material.amount?.toString() ?? "");
+      setListingTitle(material.componentName ?? "");
     }
     if (building && building.address) {
-      setAddress(`${building?.address?.streetAddress || ""} ${building?.address?.city || ""}`);
-      setPostalcode(building.address.postCode?.toString() || "");
+      setAddress(`${building?.address?.streetAddress ?? ""} ${building?.address?.city || ""}`);
+      setPostalcode(building.address.postCode?.toString() ?? "");
     }
   };
+
+  /**
+   * useEffect for initializing values to the form
+   */
 
   React.useEffect(() => {
     updateStateValues();
@@ -370,6 +374,7 @@ const SurveyListingScreen: React.FC = () => {
 
   /**
    * Handle selected category from categories.tsx
+   * 
    * @param selectedValue category of 3rd party
    */
   const handleCategorySelect = (selectedValue: string) => {
@@ -377,6 +382,7 @@ const SurveyListingScreen: React.FC = () => {
   };
 
   /**
+   * Handle access token state update
    * 
    * @param newAccessToken for fetching categories
    */
@@ -386,6 +392,7 @@ const SurveyListingScreen: React.FC = () => {
   
   /**
    * Get selected site
+   *
    * @param selectedSite 
    */
   const handleSelectedSite = (selectedSite: string) => {
@@ -750,11 +757,13 @@ const SurveyListingScreen: React.FC = () => {
                 </Button>
                 <Button
                   variant="contained"
+                  disabled
                 >
                   { strings.listingScreen.deleteOwnUse }
                 </Button>
                 <Button
                   variant="contained"
+                  disabled
                 >
                   { strings.listingScreen.ownUse }
                 </Button>

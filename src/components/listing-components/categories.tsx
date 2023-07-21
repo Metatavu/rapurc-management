@@ -4,8 +4,9 @@ import strings from "localization/strings";
 import { ErrorContext } from "components/error-handler/error-handler";
 
 /**
+ * Handles material categories from the 3rd party site
  * 
- * @returns material categories from 3rd pary site
+ * @returns material categories from 3rd party site
  */
 const CategorySelect = ({ accessToken, selectedSite, categoryError, onCategorySelect }: any) => {
   const [ categories, setCategories ] = useState<Array<any>>([]);
@@ -47,7 +48,8 @@ const CategorySelect = ({ accessToken, selectedSite, categoryError, onCategorySe
   }, []);
 
   /**
-   * 
+   * Handle category  
+   *
    * @param event Handle select
    */
   const handleSelectChange = (event: any) => {
@@ -61,12 +63,12 @@ const CategorySelect = ({ accessToken, selectedSite, categoryError, onCategorySe
     <FormControl
       fullWidth
     >
-      <InputLabel id="demo-simple-select-helper-label" error={ !!categoryError }>{ strings.listingScreen.categorySelect }</InputLabel>
+      <InputLabel id="category-helper-text" error={ !!categoryError }>{ strings.listingScreen.categorySelect }</InputLabel>
       <Select
         value={ selectedCategory }
         onChange={ handleSelectChange }
         label="Age"
-        labelId="demo-simple-select-helper-label"
+        labelId="category-select-label"
         error={ !!categoryError }
         fullWidth
       >

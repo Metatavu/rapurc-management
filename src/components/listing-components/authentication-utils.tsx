@@ -37,7 +37,8 @@ interface AuthenticationResponse {
 }
 
 /**
- * Main component to handle 3rd party login
+ * Main component to handle 3rd party login. This authentication currently only supports kiertoon.fi-site login.
+ *
  * @param params 
  * @returns 
  */
