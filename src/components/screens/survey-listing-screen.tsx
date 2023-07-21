@@ -11,11 +11,14 @@ import { selectKeycloak } from "features/auth-slice";
 import LocalizationUtils from "utils/localization-utils";
 import { selectLanguage } from "features/locale-slice";
 import LoginDialog from "components/listing-components/login-dialog";
+import CategorySelect from "components/listing-components/categories";
 
 /**
  * Form errors interface
  */
 interface FormErrors {
+  listingTitle?: string;
+  category?: string;
   materialInfo?: string;
   materialAmount?: string;
   materialAmountInfo?: string;
@@ -80,7 +83,10 @@ const SurveyListingScreen: React.FC = () => {
    * form values
    */
   const selectedLanguage = useAppSelector(selectLanguage);
+  const [ listingTitle, setListingTitle ] = React.useState("");
   const [ materialInfo, setMaterialInfo ] = React.useState("");
+  const [ material, setMaterial] = React.useState<Reusable | undefined>();
+  const [ building, setBuilding ] = React.useState<Building>();
   const [ materialAmount, setMaterialAmount ] = React.useState("");
   const [ propertyName, setpropertyName ] = React.useState("");
   const [ priceAmount, setpriceAmount ] = React.useState("");
@@ -90,13 +96,96 @@ const SurveyListingScreen: React.FC = () => {
   const [ phone, setPhone ] = React.useState("");
   const [ email, setEmail ] = React.useState("");
   const [ formErrors, setFormErrors ] = React.useState<FormErrors>({});
+  const [ accessToken, setAccessToken ] = React.useState("");
+  const [ site, setSite ] = React.useState("");
+  const [ category, setCategory] = React.useState("");
+  const [ images, setImages ] = React.useState<string[]>([]);
+  //  const [blobs, setBlobs] = React.useState<(Blob | null)[]>([]);
+
+  /**
+   * checking if the form displays fetched information or edited information
+   */
+  const updateStateValues = () => {
+    if (material) {
+      setMaterialInfo(material.description ?? "");
+      setMaterialAmount(material.amount?.toString() ?? "");
+      setListingTitle(material.componentName ?? "");
+    }
+    if (building && building.address) {
+      setAddress(`${building?.address?.streetAddress ?? ""} ${building?.address?.city || ""}`);
+      setPostalcode(building.address.postCode?.toString() ?? "");
+    }
+  };
+
+  /**
+   * useEffect for initializing values to the form
+   */
+
+  React.useEffect(() => {
+    updateStateValues();
+  }, [material, building]);
+
+  /**
+   * Event handler for material info change
+   *
+   * @param event React change event
+   */
+  const onMaterialInfoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setMaterialInfo(value);
+  };
+
+  /**
+   * Event handler for material amount change
+   *
+   * @param event React change event
+   */
+  const onMaterialAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setMaterialAmount(value);
+  };
+
+  /**
+   * Event handler for listing title change
+   *
+   * @param event React change event
+   */
+  const onListingTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setListingTitle(value);
+  };
+
+  /**
+   * Event handler for property name change
+   *
+   * @param event React change event
+   */
+  const onAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setAddress(value);
+  };
+
+  /**
+   * Event handler for postal code change
+   *
+   * @param event React change event
+   */
+  const onPostalCodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setPostalcode(value);
+  };
 
   /**
    * form validation
-  */
+   */
   const validateForm = () => {
     const errors: FormErrors = {};
-
+    if (!category || category.length === 0) {
+      errors.category = strings.listingScreen.categorySelect;
+    }
+    if (listingTitle.trim() === "") {
+      errors.listingTitle = strings.errorHandling.listingScreen.listingTitle;
+    }
     if (materialInfo.trim() === "") {
       errors.materialInfo = strings.errorHandling.listingScreen.materialInfo;
     }
@@ -174,9 +263,7 @@ const SurveyListingScreen: React.FC = () => {
    * Get needed fetch for the form, material row data, Building property name
    */
   const { materialId } = useParams<"materialId">();
-  const [ material, setMaterial ] = React.useState<Reusable | undefined>();
   const [ reusableMaterials, setReusableMaterials ] = React.useState<ReusableMaterial[]>([]);
-  const [ building, setBuilding ] = React.useState<Building>();
 
   /**
    * Fetches reusable materials by materialID
@@ -233,6 +320,42 @@ const SurveyListingScreen: React.FC = () => {
   };
 
   /**
+   * Fetch possible images
+   */
+  const fetchImage = async () => {
+    if (!keycloak?.token || !surveyId) {
+      return;
+    }
+    try {
+      const reusablesApi = Api.getSurveyReusablesApi(keycloak.token);
+      const fetchImages = await reusablesApi.listSurveyReusables({
+        surveyId: surveyId
+      });
+      const data = fetchImages.flatMap(item => item.images || []);
+      setImages(data);
+      // Convert each image URL to a Blob
+      /*
+      const fetchedBlobs = await Promise.all(data.map(async imageUrl => {
+        try {
+          const response = await fetch(imageUrl);
+          return await response.blob();
+        } catch (error) {
+          errorContext.setError(strings.errorHandling.listingScreen.image, error);
+          return null;
+        }
+      }));
+      setBlobs(fetchedBlobs);;
+      */
+    } catch (error) {
+      errorContext.setError(strings.errorHandling.title, error);
+    }
+  };
+  /**
+   * Number of images
+   */
+  const numberOfImages = images.length;
+
+  /**
    * Effect for fetching survey / materials of selected row
    */
   React.useEffect(() => {
@@ -246,6 +369,7 @@ const SurveyListingScreen: React.FC = () => {
   React.useEffect(() => {
     fetchReusableMaterials();
     fetchBuilding();
+    fetchImage();
   }, []);
   
   if (!survey) {
@@ -256,28 +380,57 @@ const SurveyListingScreen: React.FC = () => {
   }
 
   /**
+   * Handle selected category from categories.tsx
+   * 
+   * @param selectedValue category of 3rd party
+   */
+  const handleCategorySelect = (selectedValue: string) => {
+    setCategory(selectedValue);
+  };
+
+  /**
+   * Handle access token state update
+   * 
+   * @param newAccessToken for fetching categories
+   */
+  const handleAccessTokenUpdate = (newAccessToken: string) => {
+    setAccessToken(newAccessToken);
+  };
+  
+  /**
+   * Get selected site
+   *
+   * @param selectedSite 
+   */
+  const handleSelectedSite = (selectedSite: string) => {
+    setSite(selectedSite);
+  };
+
+  /**
    * Submit handle. Sending data added later
    */
   const handleSubmit = (e:any) => {
     e.preventDefault();
     /* const data = {
-      description: material?.description || "",
-      amount: newMaterial?.amount || "",
+      title: listingTitle || "",
+      description: materialInfo || "",
+      amount: materialAmount || "",
       price: priceAmount,
       unit: material?.unit || "",
       propertyName: building?.propertyName || "",
-      address: `${building?.address?.streetAddress}, ${building?.address?.city}` || "",
-      postalcode: building?.address?.postCode || "",
+      address: address || "",
+      postalcode: postalcode || "",
       name: name || "",
       phone: phone || "",
-      email: email || ""
+      email: email || "",
+      image: blobs || ""
     };
     */
     if (validateForm()) {
       // If validation true --> send info
     }
   };
-  
+
   /**
    * Render listing component
    */
@@ -303,12 +456,10 @@ const SurveyListingScreen: React.FC = () => {
                 color="primary"
                 name="componentName"
                 label="Ilmoituksen otsikko"
-                value={ material.componentName }
+                value={ listingTitle }
+                error={ !!formErrors.listingTitle }
+                onChange={ onListingTitleChange }
                 sx={{ input: { color: "black" }, label: { color: "black" } }}
-                InputLabelProps={{
-                  shrink: true
-                }}
-                inputProps={{ readOnly: true, disableUnderline: true }}
               />
               <Stack
                 direction="row"
@@ -316,6 +467,12 @@ const SurveyListingScreen: React.FC = () => {
                 marginTop={ 2 }
                 marginBottom={ 2 }
               >
+                <CategorySelect
+                  accessToken={ accessToken }
+                  selectedSite={ site }
+                  onCategorySelect={ handleCategorySelect }
+                  categoryError={ formErrors.category }
+                />
                 <TextField
                   variant="outlined"
                   fullWidth
@@ -329,7 +486,7 @@ const SurveyListingScreen: React.FC = () => {
                   InputLabelProps={{
                     shrink: true
                   }}
-                  inputProps={{ readOnly: true, disableUnderline: true }}
+                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
                 />
               </Stack>
               <TextField
@@ -339,22 +496,24 @@ const SurveyListingScreen: React.FC = () => {
                 rows={ 2 }
                 name="description"
                 label={ strings.survey.reusables.dataGridColumns.description }
-                value={ material.description }
+                value={ materialInfo }
                 helperText={ strings.listingScreen.materialInfoHelperText }
-                onChange={ e => setMaterialInfo(e.target.value) }
+                onChange={ onMaterialInfoChange }
                 error={ !!formErrors.materialInfo }
                 sx={{
-                  input: { color: "black" }, label: { color: "black" }
+                  input: { color: "black" },
+                  label: { color: "black" },
+                  "& .MuiOutlinedInput-input": { color: "black" },
+                  "& .MuiInputLabel-root": { color: "black" }
                 }}
                 InputLabelProps={{
                   shrink: true
                 }}
-                inputProps={{ style: { color: "black" } }}
               />
               <Stack
                 direction="row"
                 spacing={ 2 }
-                marginTop={ 2 }
+                marginTop={ 1 }
               >
                 { /* amounts */ }
                 <TextField
@@ -362,17 +521,15 @@ const SurveyListingScreen: React.FC = () => {
                   fullWidth
                   color="primary"
                   name=""
-                  value={ materialAmount }
-                  label={ strings.survey.reusables.dataGridColumns.amount }
-                  type="number"
-                  onChange={ e => setMaterialAmount(e.target.value) }
-                  error={ !!formErrors.materialAmount }
+                  value=""
+                  label={ `${strings.survey.reusables.dataGridColumns.amount}:` }
+                  type="tel"
                   sx={{ label: { color: "black" } }}
                   InputLabelProps={{
                     shrink: false
                   }}
                   inputProps={{
-                    style: { color: "black" }, readOnly: true, disableUnderline: true
+                    style: { color: "black" }, readOnly: true, disableunderline: true.toString()
                   }}
                 />
                 <TextField
@@ -381,21 +538,25 @@ const SurveyListingScreen: React.FC = () => {
                   select={ false }
                   color="primary"
                   name="amount"
-                  label={ material.amount }
-                  value={ newMaterial.amount }
-                  type="tel"
-                  onChange={ onNewMaterialChange }
-                  sx={{ label: { color: "black" } }}
+                  label=""
+                  value={ materialAmount }
+                  type="number"
+                  onChange={ onMaterialAmountChange }
+                  error={ !!formErrors.materialAmount }
+                  sx={{
+                    input: { color: "black" },
+                    "& .MuiOutlinedInput-input": { color: "black" },
+                    "& .MuiInputLabel-root": { color: "black" }
+                  }}
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ readOnly: true, disableUnderline: true }}
                 />
               </Stack>
               <Stack
                 direction="row"
                 spacing={ 2 }
-                marginTop={ 2 }
+                marginTop={ 1 }
               >
                 <TextField
                   variant="outlined"
@@ -403,14 +564,14 @@ const SurveyListingScreen: React.FC = () => {
                   select={ false }
                   color="primary"
                   name=""
-                  label="Kokonaishinta (alv.24%)"
+                  label="Kokonaishinta (alv.24%):"
                   value=""
                   type="number"
                   sx={{ label: { color: "black" }, input: { color: "black" } }}
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ readOnly: true, disableUnderline: true }}
+                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
                 />
                 <TextField
                   fullWidth
@@ -420,48 +581,63 @@ const SurveyListingScreen: React.FC = () => {
                   label="€"
                   type="number"
                   onChange={ e => setpriceAmount(e.target.value) }
+                  error={ !!formErrors.priceAmount }
                   sx={{ label: { color: "black" }, input: { color: "black" } }}
                   inputProps={{ style: { color: "black" } }}
                 />
               </Stack>
               <Stack
-                direction="column"
+                direction="row"
                 spacing={ 2 }
-                marginTop={ 2 }
+                marginTop={ 1 }
               >
                 <TextField
                   variant="outlined"
                   fullWidth
                   select={ false }
                   color="primary"
+                  name=""
+                  label={`${strings.listingScreen.unit}:`}
+                  value=""
+                  type="number"
+                  sx={{ label: { color: "black" }, input: { color: "black" } }}
+                  InputLabelProps={{
+                    shrink: false
+                  }}
+                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
+                />
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  select={ false }
+                  color="primary"
                   name="unit"
-                  label={ strings.listingScreen.unit }
+                  label=""
                   value={ material.unit }
                   onChange={ onNewMaterialChange }
                   sx={{ input: { color: "black" }, label: { color: "black" } }}
                   InputLabelProps={{
                     shrink: true
                   }}
-                  inputProps={{ readOnly: true, disableUnderline: true }}
+                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
                 />
               </Stack>
               { /* Location of the material */ }
-              <Stack spacing={ 2 } marginTop={ 2 }>
+              <Stack spacing={ 2 } marginTop={ 5 }>
                 <TextField
                   variant="outlined"
                   fullWidth
                   color="primary"
                   name="propertyName"
-                  label={ building?.propertyName || "" }
-                  value={ propertyName }
+                  label={ building?.propertyName }
+                  value=""
                   helperText={ strings.listingScreen.propertyName }
                   onChange={ e => setpropertyName(e.target.value) }
-                  error={ !!formErrors.propertyName }
                   sx={{ label: { color: "black" } }}
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ readOnly: true, disableUnderline: true }}
+                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
                 />
               </Stack>
               <Stack
@@ -474,30 +650,32 @@ const SurveyListingScreen: React.FC = () => {
                   fullWidth
                   color="primary"
                   name=""
-                  label={ strings.listingScreen.address }
-                  value={ address }
-                  onChange={ e => setAddress(e.target.value) }
-                  error={ !!formErrors.address }
+                  label={ `${strings.listingScreen.address}:` }
+                  value=""
                   sx={{ label: { color: "black" } }}
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ readOnly: true, disableUnderline: true }}
+                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
                 />
                 <TextField
                   variant="outlined"
                   fullWidth
                   color="primary"
                   name="address"
-                  label={ `${building?.address?.streetAddress} ${building?.address?.city}`}
+                  label=""
                   type="text"
-                  value={ newMaterial.componentName }
-                  onChange={ onNewMaterialChange }
-                  sx={{ label: { color: "black" } }}
+                  value={ address }
+                  onChange={ onAddressChange }
+                  error={ !!formErrors.address }
+                  sx={{
+                    input: { color: "black" },
+                    "& .MuiOutlinedInput-input": { color: "black" },
+                    "& .MuiInputLabel-root": { color: "black" }
+                  }}
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ readOnly: true, disableUnderline: true }}
                 />
               </Stack>
               <Stack
@@ -510,30 +688,32 @@ const SurveyListingScreen: React.FC = () => {
                   fullWidth
                   color="primary"
                   name=""
-                  label={ strings.listingScreen.postalCode }
-                  value={ postalcode }
-                  onChange={ e => setPostalcode(e.target.value) }
-                  error={ !!formErrors.postalcode }
+                  label={ `${strings.listingScreen.postalCode}:` }
+                  value=""
                   sx={{ label: { color: "black" } }}
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ readOnly: true, disableUnderline: true }}
+                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
                 />
                 <TextField
                   variant="outlined"
                   fullWidth
                   color="primary"
                   name="postalCode"
-                  label={ building?.address?.postCode }
+                  label=""
                   type="text"
-                  value={ newMaterial.componentName }
-                  onChange={ onNewMaterialChange }
-                  sx={{ label: { color: "black" } }}
+                  value={ building?.address?.postCode }
+                  error={ !!formErrors.postalcode }
+                  onChange={ onPostalCodeChange }
+                  sx={{
+                    input: { color: "black" },
+                    "& .MuiOutlinedInput-input": { color: "black" },
+                    "& .MuiInputLabel-root": { color: "black" }
+                  }}
                   InputLabelProps={{
                     shrink: false
                   }}
-                  inputProps={{ readOnly: true, disableUnderline: true }}
                 />
               </Stack>
               {/* Contact info */}
@@ -572,6 +752,16 @@ const SurveyListingScreen: React.FC = () => {
                 error={ !!formErrors.email }
                 sx={{ label: { color: "black" }, marginLeft: "2px" }}
               />
+              <TextField
+                fullWidth
+                color="primary"
+                name="image"
+                label={`${strings.survey.summary.images} ${strings.survey.reusables.units.pcs ?? ""}`}
+                type="text"
+                value={ numberOfImages }
+                sx={{ label: { color: "black" }, marginLeft: "2px" }}
+                inputProps={{ readOnly: true, disableunderline: true.toString() }}
+              />
               <Stack
                 direction="row"
                 spacing={ 2 }
@@ -587,11 +777,13 @@ const SurveyListingScreen: React.FC = () => {
                 </Button>
                 <Button
                   variant="contained"
+                  disabled
                 >
                   { strings.listingScreen.deleteOwnUse }
                 </Button>
                 <Button
                   variant="contained"
+                  disabled
                 >
                   { strings.listingScreen.ownUse }
                 </Button>
@@ -612,6 +804,8 @@ const SurveyListingScreen: React.FC = () => {
         open={ open }
         onClose={ handleCloseDialog }
         onLogin={ handleLogin }
+        onAccessTokenUpdate={ handleAccessTokenUpdate }
+        loggedSite={ handleSelectedSite }
       />
     </Container>
   );

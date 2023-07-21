@@ -153,6 +153,7 @@ export interface Localized extends LocalizedStringsMethods {
       update: string;
     };
     listingScreen: {
+      listingTitle: string;
       materialInfo: string;
       materialAmount: string;
       materialAmountInfo: string;
@@ -164,9 +165,12 @@ export interface Localized extends LocalizedStringsMethods {
       name: string;
       phone: string;
       email: string;
+      category: string;
+      image: string;
     };
     listingScreenLogin: {
       loginFailed: string;
+      serverError: string;
     };
     userGroups: {
       list: string;
@@ -610,6 +614,7 @@ export interface Localized extends LocalizedStringsMethods {
     send: string;
     ownUse: string;
     deleteOwnUse: string;
+    categorySelect: string;
   };
   listingScreenLogin: {
     helperText: string;
