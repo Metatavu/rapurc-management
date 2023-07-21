@@ -1,4 +1,5 @@
 import jwt_decode from "jwt-decode";
+import strings from "localization/strings";
 
 /**
  * Interface for POST item
@@ -8,7 +9,7 @@ interface Item {
   expired: boolean;
   category: string;
   onlyForCompanies: boolean,
-  metadata: { locationInfo: { phone: string; address: string } };
+  metadata: { locationInfo: { phone: string; address: string; email: string; } };
   images?: string[];
   properties?: { key: string; value: string }[];
   userId: string,
@@ -33,7 +34,10 @@ interface DecodedAccessToken {
  * 
  * @param itemData 
  */
-const createItem = async (data: any, refreshToken: any) => {
+const createItem = async (
+  data: any, refreshToken: any,
+  handleItemCreationSuccess: (itemId: string) => void,
+  setErrorHandler: (title: string, errorMessage: string) => void) => {
   /**
    * Builds access token object from login data
    *
@@ -61,8 +65,9 @@ const createItem = async (data: any, refreshToken: any) => {
     onlyForCompanies: false,
     metadata: {
       locationInfo: {
-        phone: data.phone || "",
-        address: data.address || ""
+        address: data.address || "",
+        email: data.email || "",
+        phone: data.phone || ""
       }
     },
     images: data.blob ? [data.blob] : [],
@@ -91,9 +96,9 @@ const createItem = async (data: any, refreshToken: any) => {
     });
 
     const responseData = await response.json();
-    console.log("Item created:", responseData);
+    handleItemCreationSuccess(responseData.id);
   } catch (error) {
-    console.error("Error creating item:", error);
+    setErrorHandler(strings.errorHandling.listingScreen.submit, (error as Error).message);
   }
 };
   
