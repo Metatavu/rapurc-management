@@ -142,6 +142,7 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin, onAcc
 
   /**
    * Check if the access token is expiring
+   *
    * @param token The access token object
    * @returns True if the access token is expiring, false otherwise
    */
