@@ -43,9 +43,7 @@ const GroupDialogScreen: FC = () => {
 
     setLoading(true);
     try {
-      const foundAllGroups = await Api.getUserGroupsApi(keycloak.token).listUserGroups({
-        adminEmail: undefined
-      });
+      const foundAllGroups = await Api.getUserGroupsApi(keycloak.token).listUserGroups({});
 
       setAllGroups(foundAllGroups);
       setFilteredGroups(foundAllGroups);
@@ -55,9 +53,7 @@ const GroupDialogScreen: FC = () => {
       }));
       setJoinGroupCheckedItems(initialCheckedItems);
 
-      const foundGroups = await Api.getUserGroupsApi(keycloak.token).listUserGroups({
-        adminEmail: keycloak.tokenParsed.email
-      });
+      const foundGroups = await Api.getUserGroupsApi(keycloak.token).listUserGroups({});
       setUsersGroups(foundGroups);
       dispatch(setUserGroups(foundGroups));
       dispatch(setSelectedGroup(foundGroups[0]));

@@ -44,9 +44,9 @@ export const fetchSurveys = createAsyncThunk<Survey[], void, { state: RootState;
 /**
  * Create survey async reducer
  */
-export const createSurvey = createAsyncThunk<Survey, void, { state: RootState; }>(
+export const createSurvey = createAsyncThunk<Survey, { groupId: string }, { state: RootState; }>(
   "surveys/createSurvey",
-  async (_, { getState, rejectWithValue }) => {
+  async ({ groupId }, { getState, rejectWithValue }) => {
     try {
       const { keycloak } = getState().auth;
 
@@ -57,7 +57,8 @@ export const createSurvey = createAsyncThunk<Survey, void, { state: RootState; }
       const survey: Survey = {
         status: SurveyStatus.Draft,
         metadata: {},
-        type: SurveyType.Demolition
+        type: SurveyType.Demolition,
+        groupId: groupId
       };
 
       return await Api.getSurveysApi(keycloak.token).createSurvey({ survey: survey });

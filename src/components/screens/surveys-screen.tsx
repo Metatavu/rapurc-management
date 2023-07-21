@@ -19,7 +19,8 @@ import LocalizationUtils from "utils/localization-utils";
 import SurveyUtils from "utils/survey";
 import WhiteOutlinedInput from "../../styled/generic/inputs";
 import { SurveyStatus } from "../../generated/client/models/SurveyStatus";
-import { Building, OwnerInformation } from "generated/client";
+import { Building, OwnerInformation, UserGroup } from "generated/client";
+import GroupSelectDialog from "components/dialogs/group-select-dialog";
 
 /**
  * Surveys screen component
@@ -36,6 +37,13 @@ const SurveysScreen: React.FC = () => {
   const [ loading, setLoading ] = React.useState(false);
   const [ deletingSurvey, setDeletingSurvey ] = React.useState(false);
   const [ selectedSurveyIds, setSelectedSurveyIds ] = React.useState<string[]>([]);
+  const [ groupSelectDialogOpen, setGroupSelectDialog ] = React.useState(false);
+  const [ usersGroups, setUsersGroups ] = React.useState<UserGroup[]>([]);
+  
+  /**
+   * Toggles group select dialog
+   */
+  const toggleGroupSelectDialog = () => setGroupSelectDialog(!groupSelectDialogOpen);
 
   /**
    * Create new owner information
@@ -155,12 +163,31 @@ const SurveysScreen: React.FC = () => {
   };
 
   /**
+   * Loads users groups from API
+   */
+  const loadUsersGroups = async () => {
+    setLoading(true);
+    
+    try {
+      if (!keycloak?.token) return;
+      
+      const groups = await Api.getUserGroupsApi(keycloak.token).listUserGroups({ member: true });
+      setUsersGroups(groups);
+    } catch (error) {
+      errorContext.setError(strings.errorHandling.userGroups.list, error);
+    }
+    
+    setLoading(false);
+  };
+
+  /**
    * Loads component data
    */
   const loadData = async () => {
     setLoading(true);
     const surveys = await listSurveys();
     const buildingTypes = await listBuildingTypes();
+    await loadUsersGroups();
 
     const surveyWithInfoArray: SurveyWithInfo[] = await Promise.all(
       surveys.map(async survey => {
@@ -241,17 +268,36 @@ const SurveysScreen: React.FC = () => {
 
   /**
    * Create survey manually
+   * 
+   * @param groupId group id
    */
-  const createSurveyManually = async () => {
+  const createSurveyManually = async (groupId: string) => {
     setLoading(true);
 
     try {
-      const { id } = await dispatch(createSurvey()).unwrap();
+      const { id } = await dispatch(createSurvey({ groupId: groupId })).unwrap();
       await createOwnerInformation(id);
       await createBuilding(id);
       navigate(`/surveys/${id}/owner`);
     } catch (error) {
       errorContext.setError(strings.errorHandling.surveys.create, error);
+    }
+  };
+  
+  /**
+   * Handles create survey manually button click
+   */
+  const handleCreateSurveyManuallyClick = () => {
+    if (!usersGroups.length) return;
+    
+    if (usersGroups.length === 1) {
+      const selectedGroup = usersGroups[0];
+      
+      if (!selectedGroup.id) return;
+      
+      createSurveyManually(usersGroups[0].id!);
+    } else {
+      toggleGroupSelectDialog();
     }
   };
 
@@ -359,7 +405,8 @@ const SurveysScreen: React.FC = () => {
                 variant="contained"
                 color="secondary"
                 startIcon={ <Add/> }
-                onClick={ () => createSurveyManually() }
+                disabled={ !usersGroups.length }
+                onClick={ handleCreateSurveyManuallyClick }
               >
                 { strings.surveysScreen.newSurvey }
               </SurveyButton>
@@ -423,6 +470,11 @@ const SurveysScreen: React.FC = () => {
         valueFormatter: ({ value }) => LocalizationUtils.getLocalizedSurveyStatus(value as SurveyStatus)
       },
       {
+        field: "creatorDisplayName",
+        headerName: strings.surveysScreen.dataGridColumns.creator,
+        width: 150
+      },
+      {
         field: "buildingId",
         headerName: strings.surveysScreen.dataGridColumns.buildingId,
         width: 200
@@ -430,16 +482,17 @@ const SurveysScreen: React.FC = () => {
       {
         field: "classificationCode",
         headerName: strings.surveysScreen.dataGridColumns.classificationCode,
-        flex: 1
+        width: 300
       },
       {
         field: "ownerName",
         headerName: strings.surveysScreen.dataGridColumns.ownerName,
-        flex: 1
+        width: 180
       },
       {
         field: "propertyName",
         headerName: strings.surveysScreen.dataGridColumns.propertyName,
+        width: 100,
         flex: 1
       },
       {
@@ -450,6 +503,7 @@ const SurveysScreen: React.FC = () => {
       {
         field: "streetAddress",
         headerName: strings.surveysScreen.dataGridColumns.streetAddress,
+        width: 150,
         flex: 1
       }
     ];
@@ -513,6 +567,12 @@ const SurveysScreen: React.FC = () => {
         </Hidden>
       </StackLayout>
       { renderDeleteSurveyDialog() }
+      <GroupSelectDialog
+        open={ groupSelectDialogOpen }
+        onClose={ toggleGroupSelectDialog }
+        onGroupSelect={ createSurveyManually }
+        groups={ usersGroups }
+      />
     </>
   );
 };

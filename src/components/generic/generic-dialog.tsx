@@ -12,7 +12,7 @@ interface Props {
   cancelButtonText?: string;
   onClose: () => void;
   onCancel?: () => void;
-  onConfirm: () => void | Promise<void>;
+  onConfirm?: () => void | Promise<void>;
   open: boolean;
   error?: boolean;
   fullScreen?: boolean;

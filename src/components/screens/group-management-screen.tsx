@@ -44,9 +44,7 @@ const GroupManagementScreen: FC = () => {
 
     setLoading(true);
     try {
-      const foundGroups = await Api.getUserGroupsApi(keycloak.token).listUserGroups({
-        adminEmail: keycloak.tokenParsed.email
-      });
+      const foundGroups = await Api.getUserGroupsApi(keycloak.token).listUserGroups({});
       dispatch(setUserGroups(foundGroups));
       setUsersGroups(foundGroups);
     } catch (error) {
