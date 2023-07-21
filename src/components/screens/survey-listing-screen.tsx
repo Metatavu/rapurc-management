@@ -94,6 +94,7 @@ const SurveyListingScreen: React.FC = () => {
   const [ postalcode, setPostalcode ] = React.useState("");
   const [ name, setName ] = React.useState("");
   const [ phone, setPhone ] = React.useState("");
+  const [ email, setEmail ] = React.useState("");
   const [ formErrors, setFormErrors ] = React.useState<FormErrors>({});
   const [ accessToken, setAccessToken ] = React.useState("");
   const [ site, setSite ] = React.useState("");
@@ -221,6 +222,12 @@ const SurveyListingScreen: React.FC = () => {
       errors.phone = strings.errorHandling.listingScreen.phone;
     } else if (Number.isNaN(Number(phone))) {
       errors.phone = strings.errorHandling.listingScreen.phone;
+    }
+
+    if (email.trim() === "") {
+      errors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      errors.email = strings.errorHandling.listingScreen.email;
     }
 
     setFormErrors(errors);
@@ -730,6 +737,19 @@ const SurveyListingScreen: React.FC = () => {
                 value={ phone }
                 onChange={ e => setPhone(e.target.value) }
                 error={ !!formErrors.phone }
+                sx={{ label: { color: "black" }, marginLeft: "2px" }}
+              />
+              { /* e-mail */ }
+              <TextField
+                fullWidth
+                required
+                color="primary"
+                name="email"
+                label={ strings.listingScreen.email }
+                type="email"
+                value={ email }
+                onChange={ e => setEmail(e.target.value) }
+                error={ !!formErrors.email }
                 sx={{ label: { color: "black" }, marginLeft: "2px" }}
               />
               <TextField
