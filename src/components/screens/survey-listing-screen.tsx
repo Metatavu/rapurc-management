@@ -1,5 +1,5 @@
-import { Button, Paper, Stack, TextField, Typography, Container } from "@mui/material";
-import { Reusable, Usability, Survey, ReusableMaterial, Building } from "generated/client";
+import { Button, Paper, Stack, TextField, Typography, Container, MenuItem } from "@mui/material";
+import { Reusable, Usability, Survey, ReusableMaterial, Building, Unit } from "generated/client";
 import { useParams, useNavigate } from "react-router-dom";
 import { ErrorContext } from "components/error-handler/error-handler";
 import { useAppDispatch, useAppSelector } from "app/hooks";
@@ -78,8 +78,20 @@ const SurveyListingScreen: React.FC = () => {
     componentName: "",
     usability: Usability.NotValidated,
     reusableMaterialId: "",
-    metadata: {}
+    metadata: {},
+    unit: undefined
   });
+
+  /**
+   * Materi unit select
+   */
+  const unitOptions = Object.values(Unit)
+    .sort((a, b) => LocalizationUtils.getLocalizedUnits(a).localeCompare(LocalizationUtils.getLocalizedUnits(b)))
+    .map(unit =>
+      <MenuItem key={ unit } value={ unit }>
+        { LocalizationUtils.getLocalizedUnits(unit) }
+      </MenuItem>
+    );
 
   /**
    * Event handler for new material string change
@@ -89,7 +101,10 @@ const SurveyListingScreen: React.FC = () => {
   const onNewMaterialChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
   
-    setNewMaterial({ ...newMaterial, [name]: value });
+    setNewMaterial(prevMaterial => ({
+      ...prevMaterial,
+      [name]: value
+    }));
   };
 
   /**
@@ -140,7 +155,7 @@ const SurveyListingScreen: React.FC = () => {
   };
 
   /**
-   * checking if the form displays fetched information or edited information
+   * Checking if the form displays fetched information or edited information
    */
   const updateStateValues = () => {
     if (material) {
@@ -214,7 +229,7 @@ const SurveyListingScreen: React.FC = () => {
   };
 
   /**
-   * form validation
+   * Form validation
    */
   const validateForm = () => {
     const errors: FormErrors = {};
@@ -334,8 +349,8 @@ const SurveyListingScreen: React.FC = () => {
   };
 
   /**
-  * Fetch Building property name
-  */
+   * Fetch Building property name
+   */
   const fetchBuilding = async () => {
     if (!keycloak?.token || !surveyId) {
       return;
@@ -386,6 +401,7 @@ const SurveyListingScreen: React.FC = () => {
       errorContext.setError(strings.errorHandling.title, error);
     }
   };
+  
   /**
    * Number of images
    */
@@ -449,7 +465,7 @@ const SurveyListingScreen: React.FC = () => {
   };
 
   /**
-   * Submit handle. Sending data added later
+   * Handle submitting data
    */
   const handleSubmit = (e:any) => {
     e.preventDefault();
@@ -459,7 +475,7 @@ const SurveyListingScreen: React.FC = () => {
       description: materialInfo || "",
       amount: materialAmount || "",
       price: Number(priceAmount) || 0,
-      unit: material?.unit || "",
+      unit: newMaterial.unit || "",
       propertyName: building?.propertyName || "",
       address: address || "",
       postalcode: postalcode || "",
@@ -610,7 +626,7 @@ const SurveyListingScreen: React.FC = () => {
                   name=""
                   label="Kokonaishinta (alv.24%):"
                   value=""
-                  type="number"
+                  type="text"
                   sx={{ label: { color: "black" }, input: { color: "black" } }}
                   InputLabelProps={{
                     shrink: false
@@ -643,7 +659,7 @@ const SurveyListingScreen: React.FC = () => {
                   name=""
                   label={`${strings.listingScreen.unit}:`}
                   value=""
-                  type="number"
+                  type="text"
                   sx={{ label: { color: "black" }, input: { color: "black" } }}
                   InputLabelProps={{
                     shrink: false
@@ -651,20 +667,15 @@ const SurveyListingScreen: React.FC = () => {
                   inputProps={{ readOnly: true, disableunderline: true.toString() }}
                 />
                 <TextField
-                  variant="outlined"
                   fullWidth
-                  select={ false }
-                  color="primary"
+                  select
                   name="unit"
-                  label=""
-                  value={ material.unit }
+                  color="primary"
+                  value={ newMaterial.unit || "" }
                   onChange={ onNewMaterialChange }
-                  sx={{ input: { color: "black" }, label: { color: "black" } }}
-                  InputLabelProps={{
-                    shrink: true
-                  }}
-                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
-                />
+                >
+                  { unitOptions }
+                </TextField>
               </Stack>
               { /* Location of the material */ }
               <Stack
