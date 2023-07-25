@@ -81,7 +81,21 @@ const createItem = async (
     delivery: false,
     itemType: "SELL" // Assuming the itemType is always 'SELL'
   };
-  
+  /**
+   * Check material unit type and change according to Kiertoo settings
+   */
+  if (data.unit === "KG") {
+    itemData.properties?.push({ key: "Paino", value: `${data.amount} ${data.unit}` });
+  } else if (data.unit === "TN") {
+    itemData.properties?.push({ key: "Paino", value: `${data.amount} ${data.unit}` });
+  } else if (data.unit === "M2") {
+    itemData.properties?.push({ key: "Tilavuus", value: `${data.amount} ${data.unit}` });
+  } else if (data.unit === "M3") {
+    itemData.properties?.push({ key: "Tilavuus", value: `${data.amount} ${data.unit}` });
+  } else if (data.unit === "PCS") {
+    itemData.properties?.push({ key: "Määrä", value: `${data.amount} KPL` });
+  }
+
   /**
    * Post data to kiertoon.fi
    */
