@@ -40,7 +40,7 @@ interface SiteData {
   id: string;
   name: string;
   url: string;
-  post: string;
+  item: string;
   token: string;
 }
 
@@ -131,12 +131,12 @@ const SurveyListingScreen: React.FC = () => {
   const [ blobs, setBlobs ] = React.useState<(Blob | null)[]>([]);
 
   /**
-   * Sucesful POST dialog
+   * Sucesful POST dialog / text
    */
   const [ showSuccessDialog, setShowSuccessDialog ] = React.useState(false);
-  const [itemId, setItemId] = React.useState<string | null>(null);
-  const link = itemId && site ? `${site.post}/${itemId}` : null;
-  const linkText = site ? ` ${site.name}` : null;
+  const [ itemId, setItemId ] = React.useState<string | null>(null);
+  const link = itemId && site ? `${site.item}/${itemId}` : null;
+  const linkText = site ? `${site.name}` : null;
 
   /**
    * Callback function to handle successful item creation and show the success dialog
@@ -878,14 +878,17 @@ const SurveyListingScreen: React.FC = () => {
       <GenericDialog
         open={showSuccessDialog}
         title={ strings.listingScreen.submit }
-        onClose={handleCloseSuccessDialog}
+        onClose={ handleCloseSuccessDialog }
         positiveButtonText="OK"
-        onConfirm={handleCloseSuccessDialog}
+        onConfirm={ handleCloseSuccessDialog }
       >
         {linkText && link && (
-          <a href={link} target="_blank" rel="noopener noreferrer">
-            {linkText}
-          </a>
+          <Typography>
+            { strings.listingScreen.submitLinkText }
+            <a href={ link } target="_blank" rel="noopener noreferrer">
+              { linkText }
+            </a>
+          </Typography>
         )}
       </GenericDialog>
       <LoginDialog
