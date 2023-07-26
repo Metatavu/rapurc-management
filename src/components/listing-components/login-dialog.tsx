@@ -23,7 +23,7 @@ interface Site {
   id: string;
   name: string;
   url: string;
-  post: string;
+  item: string;
   token: string;
 }
 
@@ -35,7 +35,7 @@ const siteList: Site[] = [
     id: "site1",
     name: "Kiertoon.fi",
     url: "https://kiertoon.fi/items",
-    post: "https://kiertoon.fi/item",
+    item: "https://kiertoon.fi/item",
     token: "https://auth.kiertoon.fi/auth/realms/cityloops/protocol/openid-connect/token"
   }
 // Add more sites as needed
@@ -206,12 +206,14 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin, onAcc
   };
 
   /**
-   * TEMPORARY SKIP LOGIN, DELETE WHEN FORM UI is 100% done
+   * Skip login
    */
+  /* 
   const skipLoginTemp = () => {
     onLogin();
     onClose(loginError);
   };
+  */
 
   /**
    * Login Dialog render
@@ -284,8 +286,9 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin, onAcc
             <Button onClick={ handleCancel } color="primary">
               { strings.generic.cancel }
             </Button>
-            {/* SKIP BUTTON FOR LOGIN TEMPORARY, DELETE WHEN FORM UI 100% DONE */}
-            <Button onClick={ skipLoginTemp }> SKIP LOGIN TEMP </Button>
+            {/* SKIP BUTTON FOR LOGIN  
+            <Button onClick={ skipLoginTemp }> SKIP LOGIN TEMP </Button> 
+            */}
             <Button type="submit" color="primary">
               { strings.generic.login }
             </Button>
