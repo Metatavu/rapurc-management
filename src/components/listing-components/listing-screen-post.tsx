@@ -81,6 +81,7 @@ const createItem = async (
     delivery: false,
     itemType: "SELL" // Assuming the itemType is always 'SELL'
   };
+  
   /**
    * Check material unit type and change according to Kiertoo settings
    */
@@ -115,5 +116,5 @@ const createItem = async (
     setErrorHandler(strings.errorHandling.listingScreen.submit, (error as Error).message);
   }
 };
-  
+
 export default createItem;
