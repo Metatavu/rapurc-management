@@ -568,7 +568,8 @@
     "ownUse": "Omaan käyttöön",
     "deleteOwnUse": "poista oma käyttö",
     "categorySelect": "Valitse vastaava kategoria",
-    "submit": "Karkoituksen lähettäminen onnistui"
+    "submit": "Ilmoituksen lähettäminen onnistui",
+    "submitLinkText": "Klikkaa linkkiä nähdäksesi ilmoituksen "
   },
   "listingScreenLogin": {
     "helperText": "Valitse sivu, minne haluat luoda ilmoituksen",

@@ -569,7 +569,8 @@
     "ownUse": "For own use",
     "deleteOwnUse": "Delete own use",
     "categorySelect": "Select a category for the material",
-    "submit": "Survey sent succesfully"
+    "submit": "Listing sent succesfully",
+    "submitLinkText": "Click here to view the listing on "
   },
   "listingScreenLogin": {
     "helperText": "Select the site where you want to post the listing",
