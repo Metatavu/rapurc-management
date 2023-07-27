@@ -144,7 +144,7 @@
       "email": "Invalid email",
       "category": "Error occurred while fetching categories",
       "image": "Error occurred while fetching images",
-      "submit": "Error occured while submitting the survey"
+      "submit": "Error occured while submitting the listing"
     },
     "listingScreenLogin": {
       "loginFailed": "Invalid username or password",
@@ -570,6 +570,7 @@
     "deleteOwnUse": "Delete own use",
     "categorySelect": "Select a category for the material",
     "submit": "Listing sent succesfully",
+    "submitConfirm": "Are you sure you want to submit the listing?",
     "submitLinkText": "Click here to view the listing on "
   },
   "listingScreenLogin": {

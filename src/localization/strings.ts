@@ -617,6 +617,7 @@ export interface Localized extends LocalizedStringsMethods {
     deleteOwnUse: string;
     categorySelect: string;
     submit: string;
+    submitConfirm: string;
     submitLinkText: string;
   };
   listingScreenLogin: {
