@@ -206,16 +206,6 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin, onAcc
   };
 
   /**
-   * Skip login
-   */
-  /* 
-  const skipLoginTemp = () => {
-    onLogin();
-    onClose(loginError);
-  };
-  */
-
-  /**
    * Login Dialog render
    */
   return (
@@ -286,9 +276,6 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin, onAcc
             <Button onClick={ handleCancel } color="primary">
               { strings.generic.cancel }
             </Button>
-            {/* SKIP BUTTON FOR LOGIN  
-            <Button onClick={ skipLoginTemp }> SKIP LOGIN TEMP </Button> 
-            */}
             <Button type="submit" color="primary">
               { strings.generic.login }
             </Button>

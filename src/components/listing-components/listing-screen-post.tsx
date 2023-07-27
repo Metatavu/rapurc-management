@@ -27,37 +27,84 @@ interface DecodedAccessToken {
   sub?: string;
   given_name?: string;
   family_name?: string;
+  created?: Date;
+  userId?: string;
+  access_token?: string;
+  refresh_token?: string;
+  refresh_expires_in?: number;
 }
 
 /**
- * POST listing screen form data
+ * interface for params itemdata
+ */
+interface ItemData {
+  title: string;
+  category: string;
+  address: string;
+  email: string;
+  phone: string;
+  description: string;
+  unit: "KG" | "TN" | "M2" | "M3" | "PCS";
+  amount: number;
+  price: number;
+}
+
+/**
+ * Builds access token object from login data
+ *
+ * @param tokenData token data
+ * @returns access token
+ */
+const buildToken = (tokenData: any) => {
+  const decodedToken: DecodedAccessToken = jwt_decode(tokenData.access_token);
+  const created = new Date();
+
+  return {
+    created: created,
+    access_token: tokenData.access_token,
+    expires_in: tokenData.expires_in,
+    refresh_token: tokenData.refresh_token,
+    refresh_expires_in: tokenData.refresh_expires_in,
+    userId: decodedToken.sub
+  };
+};
+
+/**
+ * Handle material unit type and update itemData properties accordingly
+ * Change material unit type to match Kiertoon.fi specification
  * 
+ * @param data 
  * @param itemData 
  */
-const createItem = async (
-  data: any, refreshToken: any,
-  handleItemCreationSuccess: (itemId: string) => void,
-  setErrorHandler: (title: string, errorMessage: string) => void) => {
-  /**
-   * Builds access token object from login data
-   *
-   * @param tokenData token data
-   * @returns access token
-   */
-  const buildToken = (tokenData: any) => {
-    const decodedToken: DecodedAccessToken = jwt_decode(tokenData.access_token);
-    const created = new Date();
+const handleMaterialUnit = (data: any, itemData: Item) => {
+  if (data.unit === "KG") {
+    itemData.properties?.push({ key: "Paino", value: `${data.amount} ${data.unit}` });
+  } else if (data.unit === "TN") {
+    itemData.properties?.push({ key: "Paino", value: `${data.amount} ${data.unit}` });
+  } else if (data.unit === "M2") {
+    itemData.properties?.push({ key: "Tilavuus", value: `${data.amount} ${data.unit}` });
+  } else if (data.unit === "M3") {
+    itemData.properties?.push({ key: "Tilavuus", value: `${data.amount} ${data.unit}` });
+  } else if (data.unit === "PCS") {
+    itemData.properties?.push({ key: "Määrä", value: `${data.amount} KPL` });
+  }
+};
 
-    return {
-      created: created,
-      access_token: tokenData.access_token,
-      expires_in: tokenData.expires_in,
-      refresh_token: tokenData.refresh_token,
-      refresh_expires_in: tokenData.refresh_expires_in,
-      userId: decodedToken.sub
-    };
-  };
-  const user = buildToken(refreshToken);
+/**
+ * Create new listing item to kiertoon.fi
+ * 
+ * @param data 
+ * @param token 
+ * @param handleItemCreationSuccess 
+ * @param setErrorHandler 
+ */
+const createItem = async (
+  data: ItemData,
+  token: string,
+  handleItemCreationSuccess: (itemId: string) => void,
+  setErrorHandler: (title: string, errorMessage: string) => void
+) => {
+  const decodedToken = buildToken(token);
   const itemData: Item = {
     title: data.title || "",
     expired: false,
@@ -70,32 +117,20 @@ const createItem = async (
         phone: data.phone || ""
       }
     },
-    images: data.blob ? [data.blob] : [],
-    properties: [
-      { key: "Lisätiedot", value: data.description || "" }
-    ],
-    userId: user.userId || "",
+    images: [],
+    properties: [{ key: "Lisätiedot", value: data.description || "" }],
+    userId: decodedToken.userId || "",
     price: data.price || 0,
     priceUnit: "EURO" || "", // Assuming the price unit is always EURO
     paymentMethod: "",
     delivery: false,
     itemType: "SELL" // Assuming the itemType is always 'SELL'
   };
-  
+
   /**
-   * Check material unit type and change according to Kiertoo settings
+   * Change material unit type to match Kiertoon.fi specification
    */
-  if (data.unit === "KG") {
-    itemData.properties?.push({ key: "Paino", value: `${data.amount} ${data.unit}` });
-  } else if (data.unit === "TN") {
-    itemData.properties?.push({ key: "Paino", value: `${data.amount} ${data.unit}` });
-  } else if (data.unit === "M2") {
-    itemData.properties?.push({ key: "Tilavuus", value: `${data.amount} ${data.unit}` });
-  } else if (data.unit === "M3") {
-    itemData.properties?.push({ key: "Tilavuus", value: `${data.amount} ${data.unit}` });
-  } else if (data.unit === "PCS") {
-    itemData.properties?.push({ key: "Määrä", value: `${data.amount} KPL` });
-  }
+  handleMaterialUnit(data, itemData);
 
   /**
    * Post data to kiertoon.fi
@@ -105,7 +140,7 @@ const createItem = async (
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${refreshToken.access_token}`
+        Authorization: `Bearer ${decodedToken.access_token}`
       },
       body: JSON.stringify(itemData)
     });
