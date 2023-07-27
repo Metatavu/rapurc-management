@@ -25,6 +25,7 @@ interface FormErrors {
   materialAmount?: string;
   materialAmountInfo?: string;
   priceAmount?: string;
+  unit?: string;
   propertyName?: string;
   address?: string;
   postalcode?: string;
@@ -83,9 +84,9 @@ const SurveyListingScreen: React.FC = () => {
   });
 
   /**
-   * Materi unit select
+   * Render material unit select
    */
-  const unitOptions = Object.values(Unit)
+  const renderUnitOptions = Object.values(Unit)
     .sort((a, b) => LocalizationUtils.getLocalizedUnits(a).localeCompare(LocalizationUtils.getLocalizedUnits(b)))
     .map(unit =>
       <MenuItem key={ unit } value={ unit }>
@@ -128,21 +129,37 @@ const SurveyListingScreen: React.FC = () => {
   const [ site, setSite ] = React.useState<SiteData | null>(null);
   const [ category, setCategory] = React.useState("");
   const [ images, setImages ] = React.useState<string[]>([]);
-  const [ blobs, setBlobs ] = React.useState<(Blob | null)[]>([]);
 
   /**
-   * Sucesful POST dialog / text
+   * Succesful POST dialog / text
    */
   const [ showSuccessDialog, setShowSuccessDialog ] = React.useState(false);
   const [ itemId, setItemId ] = React.useState<string | null>(null);
   const link = itemId && site ? `${site.item}/${itemId}` : null;
   const linkText = site ? `${site.name}` : null;
+  /**
+   * Confirmation dialog
+   */
+  
+  /**
+   * Confirmation dialog 
+   */
+  const [ confirmationDialogOpen, setConfirmationDialogOpen ] = React.useState(false);
+  
+  /**
+   * Handle confirmation dialog open
+   */
+  const handleOpenConfirmationDialog = () => {
+    setConfirmationDialogOpen(true);
+  };
 
   /**
    * Callback function to handle successful item creation and show the success dialog
+   * 
+   * @param itemIdResponse 
    */
-  const handleItemCreationSuccess = (itemIdRes: string) => {
-    setItemId(itemIdRes);
+  const handleItemCreationSuccess = (itemIdResponse: string) => {
+    setItemId(itemIdResponse);
     setShowSuccessDialog(true);
   };
     
@@ -258,6 +275,10 @@ const SurveyListingScreen: React.FC = () => {
     } else if (Number.isNaN(Number(priceAmount))) {
       errors.priceAmount = strings.errorHandling.listingScreen.priceAmount;
     }
+    
+    if (!newMaterial.unit || newMaterial.unit.trim() === "") {
+      errors.unit = strings.errorHandling.listingScreen.unit;
+    }
 
     if (address.trim() === "") {
       errors.address = strings.errorHandling.listingScreen.address;
@@ -278,7 +299,7 @@ const SurveyListingScreen: React.FC = () => {
     }
 
     if (email.trim() === "") {
-      errors.email = "Email is required";
+      errors.email = strings.errorHandling.listingScreen.email;
     } else if (!/\S+@\S+\.\S+/.test(email)) {
       errors.email = strings.errorHandling.listingScreen.email;
     }
@@ -385,18 +406,6 @@ const SurveyListingScreen: React.FC = () => {
       });
       const data = fetchImages.flatMap(item => item.images || []);
       setImages(data);
-      // Convert each image URL to a Blob
-      
-      const fetchedBlobs = await Promise.all(data.map(async imageUrl => {
-        try {
-          const response = await fetch(imageUrl);
-          return await response.blob();
-        } catch (error) {
-          errorContext.setError(strings.errorHandling.listingScreen.image, error);
-          return null;
-        }
-      }));
-      setBlobs(fetchedBlobs);
     } catch (error) {
       errorContext.setError(strings.errorHandling.title, error);
     }
@@ -467,28 +476,41 @@ const SurveyListingScreen: React.FC = () => {
   /**
    * Handle submitting data
    */
-  const handleSubmit = (e:any) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    if (validateForm()) {
+      handleOpenConfirmationDialog();
+    }
+  };
+
+  /**
+   * handle calling confirm dialog
+   */
+  const handleConfirmSubmit = () => {
+    setConfirmationDialogOpen(false);
     const data = {
       title: listingTitle || "",
       category: category,
       description: materialInfo || "",
-      amount: materialAmount || "",
+      amount: Number(materialAmount) || 0,
       price: Number(priceAmount) || 0,
-      unit: newMaterial.unit || "",
+      unit: (newMaterial.unit as "KG" | "TN" | "M2" | "M3" | "PCS") || "",
       propertyName: building?.propertyName || "",
       address: address || "",
       postalcode: postalcode || "",
       name: name || "",
       phone: phone || "",
-      email: email || "",
-      image: blobs || ""
+      email: email || ""
     };
-    
-    if (validateForm()) {
-      // If validation true --> send info 
-      createItem(data, accessToken, handleItemCreationSuccess, errorContext.setError);
-    }
+    createItem(data, accessToken, handleItemCreationSuccess, errorContext.setError);
+  };
+
+  /**
+   * Handle confirmation dialog close
+   */
+  const handleCancelConfirmationDialog = () => {
+    setConfirmationDialogOpen(false);
   };
 
   /**
@@ -673,8 +695,9 @@ const SurveyListingScreen: React.FC = () => {
                   color="primary"
                   value={ newMaterial.unit || "" }
                   onChange={ onNewMaterialChange }
+                  error={!!formErrors.unit}
                 >
-                  { unitOptions }
+                  { renderUnitOptions }
                 </TextField>
               </Stack>
               { /* Location of the material */ }
@@ -705,6 +728,7 @@ const SurveyListingScreen: React.FC = () => {
                   type="text"
                   value={ propertyName }
                   onChange={ e => setpropertyName(e.target.value) }
+                  error={!!formErrors.propertyName}
                   sx={{
                     input: { color: "black" },
                     "& .MuiOutlinedInput-input": { color: "black" },
@@ -871,12 +895,23 @@ const SurveyListingScreen: React.FC = () => {
               </Stack>
             </form>
           </Paper>
+          <GenericDialog
+            open={ confirmationDialogOpen }
+            title={ strings.listingScreen.title }
+            positiveButtonText={ strings.listingScreen.send }
+            cancelButtonText={ strings.generic.cancel }
+            onClose={ handleCancelConfirmationDialog }
+            onCancel={ handleCancelConfirmationDialog }
+            onConfirm={ handleConfirmSubmit }
+          >
+            {strings.listingScreen.submitConfirm}
+          </GenericDialog>
         </Stack>
       ) : (
         <></>
       )}
       <GenericDialog
-        open={showSuccessDialog}
+        open={ showSuccessDialog }
         title={ strings.listingScreen.submit }
         onClose={ handleCloseSuccessDialog }
         positiveButtonText="OK"
