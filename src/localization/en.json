@@ -130,6 +130,7 @@
       "update": "Error while updating attachment"
     },
     "listingScreen": {
+      "listingTitle": "Material title is required",
       "materialInfo": "Material information is required",
       "materialAmount": "Material amount must be a number",
       "materialAmountInfo": "Material amount info is required",
@@ -140,10 +141,13 @@
       "postalcode": "Postal code is required",
       "name": "Name is required",
       "phone": "Phone number must be a number",
-      "email": "Invalid email"
+      "email": "Invalid email",
+      "category": "Error occurred while fetching categories",
+      "image": "Error occurred while fetching images"
     },
     "listingScreenLogin": {
-      "loginFailed": "Invalid username or password"
+      "loginFailed": "Invalid username or password",
+      "serverError": "There is a connection problem with the selected site. Please try again later."
     },
     "groupDialogsScreen": {
       "listGroups": "Error while fetching groups",
@@ -574,7 +578,8 @@
     "email": "Email",
     "send": "send",
     "ownUse": "For own use",
-    "deleteOwnUse": "Delete own use"
+    "deleteOwnUse": "Delete own use",
+    "categorySelect": "Select a category for the material"
   },
   "listingScreenLogin": {
     "helperText": "Select the site where you want to post the listing",

@@ -131,9 +131,10 @@
       "update": "Virhe päivitettäessä liitettä"
     },
     "listingScreen": {
-      "materialInfo": "Materiaalin tieto vaaditaan",
-      "materialAmount": "Materiaalin määrä täytyy olla numerona",
-      "materialAmountInfo": "Materiaalimäärän tieto vaaditaan",
+      "listingTitle": "Materiaalin otsikko vaaditaan",
+      "materialInfo": "Materiaalin tieto vaaditaan",  
+      "materialAmount": "Materiaalin määrä täytyy olla numerona", 
+      "materialAmountInfo": "Materiaalimäärän tieto vaaditaan", 
       "priceAmount": "Hinta vaaditaan",
       "unit": "Materiaaliyksikkö vaaditaan",
       "propertyName": "Kiinteistön nimi vaaditaan",
@@ -141,10 +142,13 @@
       "postalcode": "Postinumero vaaditaan",
       "name": "Nimi vaaditaan",
       "phone": "Puhelinnumero täytyy olla numero",
-      "email": "Virheellinen sähköposti"
+      "email": "Virheellinen sähköposti",
+      "category": "Virhe tapahtui materiaalikategorioiden noutamisessa",
+      "image": "Virhe hakiessa kuvia"
     },
     "listingScreenLogin": {
-      "loginFailed": "Väärä käyttäjätunnus tai salasana"
+      "loginFailed": "Väärä käyttäjätunnus tai salasana",
+      "serverError": "Valitun sivun kanssa on yhteysongelmia. Yritä myöhemmin uudelleen."
     },
     "groupDialogsScreen": {
       "listGroups": "Virhe haettaessa ryhmiä",
@@ -573,7 +577,8 @@
     "email": "Sähköpostiosoite",
     "send": "lähetä",
     "ownUse": "Omaan käyttöön",
-    "deleteOwnUse": "poista oma käyttö"
+    "deleteOwnUse": "poista oma käyttö",
+    "categorySelect": "Valitse vastaava kategoria"
   },
   "listingScreenLogin": {
     "helperText": "Valitse sivu, minne haluat luoda ilmoituksen",
