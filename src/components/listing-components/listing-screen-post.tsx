@@ -44,7 +44,7 @@ interface ItemData {
   email: string;
   phone: string;
   description: string;
-  unit: "KG" | "TN" | "M2" | "M3" | "PCS";
+  unit: "RM" | "KG" | "TN" | "M2" | "M3" | "PCS";
   amount: number;
   price: number;
 }
@@ -70,24 +70,42 @@ const buildToken = (tokenData: any) => {
 };
 
 /**
- * Handle material unit type and update itemData properties accordingly
- * Change material unit type to match Kiertoon.fi specification
+ * Get item properties
  * 
- * @param data 
- * @param itemData 
+ * @param data item data
+ * @returns properties 
  */
-const handleMaterialUnit = (data: any, itemData: Item) => {
-  if (data.unit === "KG") {
-    itemData.properties?.push({ key: "Paino", value: `${data.amount} ${data.unit}` });
-  } else if (data.unit === "TN") {
-    itemData.properties?.push({ key: "Paino", value: `${data.amount} ${data.unit}` });
-  } else if (data.unit === "M2") {
-    itemData.properties?.push({ key: "Tilavuus", value: `${data.amount} ${data.unit}` });
-  } else if (data.unit === "M3") {
-    itemData.properties?.push({ key: "Tilavuus", value: `${data.amount} ${data.unit}` });
-  } else if (data.unit === "PCS") {
-    itemData.properties?.push({ key: "Määrä", value: `${data.amount} KPL` });
+const getItemProperties = (data: ItemData) => {
+  const { unit, amount, description } = data;
+  const properties: { key: string; value: string }[] = [];
+  const unitAmountString = `${amount} ${unit}`;
+
+  switch (unit) {
+    case "RM":
+      properties.push({ key: "Pituus", value: unitAmountString });
+      break;
+    case "KG":
+      properties.push({ key: "Paino", value: unitAmountString });
+      break;
+    case "TN":
+      properties.push({ key: "Paino", value: unitAmountString });
+      break;
+    case "M2":
+      properties.push({ key: "Tilavuus", value: unitAmountString });
+      break;
+    case "M3":
+      properties.push({ key: "Tilavuus", value: unitAmountString });
+      break;
+    case "PCS":
+      properties.push({ key: "Määrä", value: `${amount} KPL` });
+      break;
+    default:
+      break;
   }
+
+  properties.push({ key: "Lisätiedot", value: description || "" });
+
+  return properties;
 };
 
 /**
@@ -105,32 +123,28 @@ const createItem = async (
   setErrorHandler: (title: string, errorMessage: string) => void
 ) => {
   const decodedToken = buildToken(token);
+  const { title = "", category = "", address = "", email = "", phone = "", price = 0 } = data;
   const itemData: Item = {
-    title: data.title || "",
+    title: title ?? "",
     expired: false,
-    category: data.category || "",
+    category: category ?? "",
     onlyForCompanies: false,
     metadata: {
       locationInfo: {
-        address: data.address || "",
-        email: data.email || "",
-        phone: data.phone || ""
+        address: address ?? "",
+        email: email ?? "",
+        phone: phone ?? ""
       }
     },
     images: [],
-    properties: [{ key: "Lisätiedot", value: data.description || "" }],
-    userId: decodedToken.userId || "",
-    price: data.price || 0,
-    priceUnit: "EURO" || "", // Assuming the price unit is always EURO
+    properties: getItemProperties(data),
+    userId: decodedToken.userId ?? "",
+    price: price ?? 0,
+    priceUnit: "EURO", // Assuming the price unit is always EURO
     paymentMethod: "",
     delivery: false,
     itemType: "SELL" // Assuming the itemType is always 'SELL'
   };
-
-  /**
-   * Change material unit type to match Kiertoon.fi specification
-   */
-  handleMaterialUnit(data, itemData);
 
   /**
    * Post data to kiertoon.fi
