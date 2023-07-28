@@ -23,6 +23,7 @@ interface Site {
   id: string;
   name: string;
   url: string;
+  item: string;
   token: string;
 }
 
@@ -34,6 +35,7 @@ const siteList: Site[] = [
     id: "site1",
     name: "Kiertoon.fi",
     url: "https://kiertoon.fi/items",
+    item: "https://kiertoon.fi/item",
     token: "https://auth.kiertoon.fi/auth/realms/cityloops/protocol/openid-connect/token"
   }
 // Add more sites as needed
@@ -136,7 +138,7 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin, onAcc
     } else {
       setRefreshToken(newRefreshToken);
       setTokenTimestamp(Math.floor(Date.now() / 1000));
-      setAccessToken(newAccessToken);
+      onAccessTokenUpdate(newAccessToken);
     }
   };
 
@@ -201,14 +203,6 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin, onAcc
    */
   const handleCancel = () => {
     navigate(`/surveys/${surveyId}/reusables`);
-  };
-
-  /**
-   * TEMPORARY SKIP LOGIN, DELETE WHEN FORM UI is 100% done
-   */
-  const skipLoginTemp = () => {
-    onLogin();
-    onClose(loginError);
   };
 
   /**
@@ -282,8 +276,6 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin, onAcc
             <Button onClick={ handleCancel } color="primary">
               { strings.generic.cancel }
             </Button>
-            {/* SKIP BUTTON FOR LOGIN TEMPORARY, DELETE WHEN FORM UI 100% DONE */}
-            <Button onClick={ skipLoginTemp }> SKIP LOGIN TEMP </Button>
             <Button type="submit" color="primary">
               { strings.generic.login }
             </Button>

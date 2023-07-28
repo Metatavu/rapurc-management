@@ -23,6 +23,7 @@
     "gif-frames": "^1.0.1",
     "immer": "^9.0.7",
     "jimp": "^0.22.7",
+    "jwt-decode": "^3.1.2",
     "keycloak-js": "^15.0.2",
     "localized-strings": "^0.2.4",
     "moment": "^2.29.1",
