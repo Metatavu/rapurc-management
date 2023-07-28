@@ -138,7 +138,7 @@ const loginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin, onAcc
     } else {
       setRefreshToken(newRefreshToken);
       setTokenTimestamp(Math.floor(Date.now() / 1000));
-      setAccessToken(newAccessToken);
+      onAccessTokenUpdate(newAccessToken);
     }
   };
 

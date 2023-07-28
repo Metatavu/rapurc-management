@@ -137,9 +137,6 @@ const SurveyListingScreen: React.FC = () => {
   const [ itemId, setItemId ] = React.useState<string | null>(null);
   const link = itemId && site ? `${site.item}/${itemId}` : null;
   const linkText = site ? `${site.name}` : null;
-  /**
-   * Confirmation dialog
-   */
   
   /**
    * Confirmation dialog 
@@ -458,7 +455,7 @@ const SurveyListingScreen: React.FC = () => {
   /**
    * Handle access token state update
    * 
-   * @param newAccessToken for fetching categories
+   * @param newAccessToken
    */
   const handleAccessTokenUpdate = (newAccessToken: string) => {
     setAccessToken(newAccessToken);
