@@ -4,7 +4,7 @@ import { useAppSelector } from "app/hooks";
 import { ErrorContext } from "components/error-handler/error-handler";
 import WithDebounce from "components/generic/with-debounce";
 import { selectKeycloak } from "features/auth-slice";
-import { OwnerInformation } from "generated/client";
+import { EmailType, OwnerInformation } from "generated/client";
 import strings from "localization/strings";
 import * as React from "react";
 import theme from "theme";
@@ -71,6 +71,27 @@ const Owner: React.FC<Props> = ({ surveyId }) => {
   };
 
   /**
+   * Sends email to contact person
+   */
+  const handleSendLinkToEmail = () => {
+    if (!keycloak?.token || !surveyId) {
+      return;
+    }
+
+    try {
+      Api.getEmailsApi(keycloak.token).sendSurveyEmail({
+        surveyId: surveyId,
+        emailTemplate: {
+          emailAddress: "eetu.lepisto@metatavu.fi",
+          emailType: EmailType.BuildingDemolitionContactUpdate
+        }
+      });
+    } catch (error) {
+      errorContext.setError(strings.errorHandling.owners.update, error);
+    }
+  };
+
+  /**
    * Event Handler set survey prop
    */
   const onOwnerInfoPropChange: React.ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement> = ({ target }) => {
@@ -108,7 +129,7 @@ const Owner: React.FC<Props> = ({ surveyId }) => {
 
   /**
    * Renders textfield with debounce
-   * 
+   *
    * @param name name
    * @param label label
    * @param value value
@@ -217,6 +238,7 @@ const Owner: React.FC<Props> = ({ surveyId }) => {
             variant="contained"
             color="primary"
             sx={{ width: "200px", height: "50px" }}
+            onClick={ handleSendLinkToEmail }
           >
             {strings.survey.owner.sendLink}
           </Button>
