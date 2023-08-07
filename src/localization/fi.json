@@ -51,7 +51,8 @@
       "list": "Virhe listattaessa omistajia",
       "create": "Virhe luotaessa omistajatietoja",
       "update": "Virhe päivitettäessä omistajan tietoja",
-      "delete": "Virhe poistettaessa omistajan tietoja"
+      "delete": "Virhe poistettaessa omistajan tietoja",
+      "sendEmail": "Virhe sähköpostin lähetyksessä"
     },
     "reusables": {
       "list": "Virhe listattaessa uudelleenkäytettäviä rakennusosia",

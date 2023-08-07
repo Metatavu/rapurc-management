@@ -75,6 +75,7 @@ export interface Localized extends LocalizedStringsMethods {
       create: string;
       update: string;
       delete: string;
+      sendEmail: string;
     };
     reusables: {
       list: string;

@@ -51,7 +51,8 @@
       "list": "Error while listing owners",
       "create": "Error while creating owner information",
       "update": "Error while updating owner information",
-      "delete": "Error while deleting owner information"
+      "delete": "Error while deleting owner information",
+      "sendEmail": "Error while sending email"
     },
     "reusables": {
       "list": "Error while listing reusable building parts",
