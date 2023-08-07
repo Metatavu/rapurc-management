@@ -4,7 +4,7 @@ import { useAppSelector } from "app/hooks";
 import { ErrorContext } from "components/error-handler/error-handler";
 import WithDebounce from "components/generic/with-debounce";
 import { selectKeycloak } from "features/auth-slice";
-import { EmailType, OwnerInformation } from "generated/client";
+import { Building, BuildingDemolitionContactUpdateTemplate, EmailType, OwnerInformation } from "generated/client";
 import strings from "localization/strings";
 import * as React from "react";
 import theme from "theme";
@@ -22,7 +22,31 @@ interface Props {
 const Owner: React.FC<Props> = ({ surveyId }) => {
   const keycloak = useAppSelector(selectKeycloak);
   const errorContext = React.useContext(ErrorContext);
+  const [ building, setBuilding ] = React.useState<Building>();
   const [ ownerInformation, setOwnerInformation ] = React.useState<OwnerInformation>();
+
+  /**
+   * Fetch building array
+   */
+  const fetchBuilding = async () => {
+    if (!keycloak?.token || !surveyId) {
+      return;
+    }
+
+    try {
+      const fetchedBuildings = await Api.getBuildingsApi(keycloak.token).listBuildings({
+        surveyId: surveyId
+      });
+
+      if (fetchedBuildings.length !== 1) {
+        return;
+      }
+
+      setBuilding(fetchedBuildings[0]);
+    } catch (error) {
+      errorContext.setError(strings.errorHandling.buildings.list, error);
+    }
+  };
 
   /**
    * Fetch owner information array
@@ -49,7 +73,8 @@ const Owner: React.FC<Props> = ({ surveyId }) => {
 
   React.useEffect(() => {
     fetchOwnerInformation();
-  }, []);
+    fetchBuilding();
+  }, [surveyId]);
 
   /**
    * Updates owner information
@@ -74,20 +99,28 @@ const Owner: React.FC<Props> = ({ surveyId }) => {
    * Sends email to contact person
    */
   const handleSendLinkToEmail = () => {
-    if (!keycloak?.token || !surveyId) {
+    if (!keycloak?.token || !surveyId || !ownerInformation) {
       return;
     }
 
+    const { contactPerson } = ownerInformation;
+    if (!contactPerson?.email) {
+      return;
+    }
     try {
+      const data: BuildingDemolitionContactUpdateTemplate = {
+        buildingId: building?.id
+      };
       Api.getEmailsApi(keycloak.token).sendSurveyEmail({
         surveyId: surveyId,
         emailTemplate: {
-          emailAddress: "eetu.lepisto@metatavu.fi",
-          emailType: EmailType.BuildingDemolitionContactUpdate
+          emailAddress: contactPerson.email,
+          emailType: EmailType.BuildingDemolitionContactUpdate,
+          emailData: data
         }
       });
     } catch (error) {
-      errorContext.setError(strings.errorHandling.owners.update, error);
+      errorContext.setError(strings.errorHandling.owners.sendEmail, error);
     }
   };
 
