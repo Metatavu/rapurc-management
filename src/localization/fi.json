@@ -8,7 +8,10 @@
     "confirm": "Vahvista",
     "cancel": "Peruuta",
     "delete": "Poista",
+    "login": "Kirjaudu sisään",
     "logout": "Kirjaudu ulos",
+    "username": "Käyttätunnus",
+    "password": "Salasana",
     "open": "Avaa",
     "close": "Sulje",
     "save": "Tallenna",
@@ -48,7 +51,8 @@
       "list": "Virhe listattaessa omistajia",
       "create": "Virhe luotaessa omistajatietoja",
       "update": "Virhe päivitettäessä omistajan tietoja",
-      "delete": "Virhe poistettaessa omistajan tietoja"
+      "delete": "Virhe poistettaessa omistajan tietoja",
+      "sendEmail": "Virhe sähköpostin lähetyksessä"
     },
     "reusables": {
       "list": "Virhe listattaessa uudelleenkäytettäviä rakennusosia",
@@ -128,15 +132,28 @@
       "update": "Virhe päivitettäessä liitettä"
     },
     "listingScreen": {
+      "listingTitle": "Materiaalin otsikko vaaditaan",
       "materialInfo": "Materiaalin tieto vaaditaan",  
       "materialAmount": "Materiaalin määrä täytyy olla numerona", 
       "materialAmountInfo": "Materiaalimäärän tieto vaaditaan", 
+      "priceAmount": "Hinta vaaditaan",
+      "unit": "Materiaaliyksikkö vaaditaan",
       "propertyName": "Kiinteistön nimi vaaditaan", 
       "address": "Osoite vaaditaan",
       "postalcode": "Postinumero vaaditaan",
       "name": "Nimi vaaditaan",
       "phone": "Puhelinnumero täytyy olla numero",
-      "email": "Virheellinen sähköposti"
+      "email": "Virheellinen sähköposti",
+      "category": "Virhe tapahtui materiaalikategorioiden noutamisessa",
+      "image": "Kuvien haussa tapahtui virhe",
+      "submit": "Ilmoituksen lähettämisessä tapahtui virhe"
+    },
+    "listingScreenLogin": {
+      "loginFailed": "Väärä käyttäjätunnus tai salasana",
+      "serverError": "Valitun sivun kanssa on yhteysongelmia. Yritä myöhemmin uudelleen."
+    },
+    "userGroups": {
+      "list": "Virhe listattaessa käyttäjän ryhmiä"
     }
   },
 
@@ -157,6 +174,7 @@
     "filter": "Suodata",
     "dataGridColumns": {
       "status": "Tila",
+      "creator":"Tekijä",
       "buildingId": "Rakennustunnus",
       "classificationCode": "Rakennusluokka",
       "ownerName": "Omistaja",
@@ -168,6 +186,9 @@
       "title": "Poista kartoitus",
       "text": "Haluatko varmasti poistaa valitut kartoitukset?",
       "deletingOthers": "Varoitus! Olet poistamassa toisen käyttäjän luomaa kartoitusta. Haluatko varmasti jatkaa?"
+    },
+    "groupSelectDialog": {
+      "title": "Valitse ryhmä"
     }
   },
 
@@ -537,6 +558,7 @@
     "materialInfoHelperText": "Lisätietoa materiaalista",
     "materialAmount": "Määrä",
     "materialAmountInfoHelperText": "Lisätietoa määrästä",
+    "unit": "Yksikkö",
     "propertyName": "Purkukohteen nimi",
     "address": "Osoite",
     "postalCode": "Postinumero",
@@ -545,6 +567,16 @@
     "email": "Sähköpostiosoite",
     "send": "lähetä",
     "ownUse": "Omaan käyttöön",
-    "deleteOwnUse": "poista oma käyttö"
+    "deleteOwnUse": "poista oma käyttö",
+    "categorySelect": "Valitse vastaava kategoria",
+    "submit": "Ilmoituksen lähettäminen onnistui",
+    "submitConfirm": "Oletko varma, että haluat lähettää ilmoituksen?",
+    "submitLinkText": "Klikkaa linkkiä nähdäksesi ilmoituksen palvelussa: "
+  },
+  "listingScreenLogin": {
+    "helperText": "Valitse sivu, minne haluat luoda ilmoituksen",
+    "title": "Sinun tulee kirjautua sisään sivustolle, jolle olet luomassa ilmoitusta",
+    "registerText": "Eikö sinulla ole tiliä valitulla sivulla?",
+    "registerLink": "Luo tili sivulle"
   }
 }

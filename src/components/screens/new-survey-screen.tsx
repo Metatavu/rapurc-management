@@ -21,7 +21,7 @@ const NewSurveyScreen: React.FC = () => {
   const keycloak = useAppSelector(selectKeycloak);
   const errorContext = React.useContext(ErrorContext);
   const [ loading, setLoading ] = React.useState(false);
-
+  
   /**
    * Check if viewport is mobile size
    */
@@ -77,12 +77,14 @@ const NewSurveyScreen: React.FC = () => {
 
   /**
    * Create survey manually
+   * 
+   * TODO: Implement logic for selecting group
    */
   const createSurveyManually = async () => {
     setLoading(true);
 
     try {
-      const { id } = await dispatch(createSurvey()).unwrap();
+      const { id } = await dispatch(createSurvey({ groupId: "" })).unwrap();
       await createOwnerInformation(id);
       await createBuilding(id);
       navigate(`/surveys/${id}/owner`);
@@ -90,7 +92,7 @@ const NewSurveyScreen: React.FC = () => {
       errorContext.setError(strings.errorHandling.surveys.create, error);
     }
   };
-
+  
   /**
    * Render list filter
    */
@@ -143,7 +145,7 @@ const NewSurveyScreen: React.FC = () => {
           <CreateManuallyButton
             size={ isMobile ? "medium" : "small" }
             variant="outlined"
-            onClick={ () => createSurveyManually() }
+            onClick={ createSurveyManually }
           >
             { strings.newSurveyScreen.createManually }
           </CreateManuallyButton>

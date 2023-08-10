@@ -32,6 +32,7 @@ export interface SurveyWithInfo {
   streetAddress?: string;
   city?: string;
   creatorId?: string;
+  creatorDisplayName?: string;
 }
 
 /**

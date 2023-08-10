@@ -22,7 +22,10 @@ export interface Localized extends LocalizedStringsMethods {
     confirm: string;
     cancel: string;
     delete: string;
+    login: string;
     logout: string;
+    username: string,
+    password: string,
     open: string;
     close: string;
     save: string;
@@ -72,6 +75,7 @@ export interface Localized extends LocalizedStringsMethods {
       create: string;
       update: string;
       delete: string;
+      sendEmail: string;
     };
     reusables: {
       list: string;
@@ -150,15 +154,28 @@ export interface Localized extends LocalizedStringsMethods {
       update: string;
     };
     listingScreen: {
+      listingTitle: string;
       materialInfo: string;
       materialAmount: string;
       materialAmountInfo: string;
+      priceAmount: string;
+      unit: string;
       propertyName: string;
       address: string;
       postalcode: string;
       name: string;
       phone: string;
       email: string;
+      category: string;
+      image: string;
+      submit: string;
+    };
+    listingScreenLogin: {
+      loginFailed: string;
+      serverError: string;
+    };
+    userGroups: {
+      list: string;
     };
   };
 
@@ -185,6 +202,7 @@ export interface Localized extends LocalizedStringsMethods {
     filter: string;
     dataGridColumns: {
       status: string;
+      creator: string;
       buildingId: string;
       classificationCode: string;
       ownerName: string;
@@ -196,6 +214,9 @@ export interface Localized extends LocalizedStringsMethods {
       title: string;
       text: string;
       deletingOthers: string;
+    };
+    groupSelectDialog: {
+      title: string;
     };
   };
 
@@ -585,6 +606,7 @@ export interface Localized extends LocalizedStringsMethods {
     materialInfoHelperText: string;
     materialAmount: string;
     materialAmountInfoHelperText: string;
+    unit: string;
     propertyName: string;
     address: string;
     postalCode: string;
@@ -594,7 +616,17 @@ export interface Localized extends LocalizedStringsMethods {
     send: string;
     ownUse: string;
     deleteOwnUse: string;
+    categorySelect: string;
+    submit: string;
+    submitConfirm: string;
+    submitLinkText: string;
   };
+  listingScreenLogin: {
+    helperText: string;
+    title: string;
+    registerText: string;
+    registerLink: string;
+  }
 }
 
 /**

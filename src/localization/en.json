@@ -8,7 +8,10 @@
     "confirm": "Confirm",
     "cancel": "Cancel",
     "delete": "Delete",
+    "login": "Login",
     "logout": "Log out",
+    "username": "Username",
+    "password": "Password",
     "open": "Open",
     "close": "Close",
     "save": "Save",
@@ -48,7 +51,8 @@
       "list": "Error while listing owners",
       "create": "Error while creating owner information",
       "update": "Error while updating owner information",
-      "delete": "Error while deleting owner information"
+      "delete": "Error while deleting owner information",
+      "sendEmail": "Error while sending email"
     },
     "reusables": {
       "list": "Error while listing reusable building parts",
@@ -127,15 +131,28 @@
       "update": "Error while updating attachment"
     },
     "listingScreen": {
+      "listingTitle": "Material title is required",
       "materialInfo": "Material information is required",
       "materialAmount": "Material amount must be a number",
       "materialAmountInfo": "Material amount info is required",
+      "priceAmount": "Price is required",
+      "unit": "Unit type is required",
       "propertyName": "Property name is required",
       "address": "Address is required",
       "postalcode": "Postal code is required",
       "name": "Name is required",
       "phone": "Phone number must be a number",
-      "email": "Invalid email"
+      "email": "Invalid email",
+      "category": "Error occurred while fetching categories",
+      "image": "Error occurred while fetching images",
+      "submit": "Error occured while submitting the listing"
+    },
+    "listingScreenLogin": {
+      "loginFailed": "Invalid username or password",
+      "serverError": "There is a connection problem with the selected site. Please try again later."
+    },
+    "userGroups": {
+      "list": "Error listing users groups"
     }
   },
 
@@ -156,6 +173,7 @@
     "filter": "Filter",
     "dataGridColumns": {
       "status": "Status",
+      "creator": "Creator",
       "buildingId": "Building ID",
       "classificationCode": "Classification code",
       "ownerName": "Owner name",
@@ -168,6 +186,9 @@
       "title": "Delete survey(s)",
       "text": "Are you sure you want to delete these surveys?",
       "deletingOthers": "You are about to delete another users survey. Do you want to proceed?"
+    },
+    "groupSelectDialog": {
+      "title": "Select group"
     }
   },
 
@@ -538,6 +559,7 @@
     "materialInfoHelperText": "Additional information",
     "materialAmount": "Material amount",
     "materialAmountInfoHelperText": "More information on material amount",
+    "unit": "Unit",
     "propertyName": "Property name",
     "address": "Address",
     "postalCode": "Postal code",
@@ -546,6 +568,16 @@
     "email": "Email",
     "send": "send",
     "ownUse": "For own use",
-    "deleteOwnUse": "Delete own use"
+    "deleteOwnUse": "Delete own use",
+    "categorySelect": "Select a category for the material",
+    "submit": "Listing sent succesfully",
+    "submitConfirm": "Are you sure you want to submit the listing?",
+    "submitLinkText": "Click here to view the listing on "
+  },
+  "listingScreenLogin": {
+    "helperText": "Select the site where you want to post the listing",
+    "title": "You will need to login to the site where you are submitting the listing",
+    "registerText": "Not registered on the chosen site?",
+    "registerLink": "Click here to register for"
   }
 }
