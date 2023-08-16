@@ -32,9 +32,9 @@ const GroupDialogScreen: FC = () => {
   const [ groupNameError, setGroupNameError ] = useState(false);
 
   /**
-   * Gets all groups and groups user is group admin of
+   * Get list of all available groups
+   * Get list of groups that user has member or admin role
    *
-   * @returns list of groups and groups user is admin of
    */
   const loadGroups = async () => {
     if (!keycloak?.token || !keycloak?.tokenParsed) {
@@ -53,14 +53,16 @@ const GroupDialogScreen: FC = () => {
       }));
       setJoinGroupCheckedItems(initialCheckedItems);
 
-      const foundGroups = await Api.getUserGroupsApi(keycloak.token).listUserGroups({});
+      const foundGroupsAsMember = await Api.getUserGroupsApi(keycloak.token).listUserGroups({ member: true });
+      const foundGroupsAsAdmin = await Api.getUserGroupsApi(keycloak.token).listUserGroups({ admin: true });
+      const foundGroups = foundGroupsAsMember.concat(foundGroupsAsAdmin);
+
       setUsersGroups(foundGroups);
       dispatch(setUserGroups(foundGroups));
       dispatch(setSelectedGroup(foundGroups[0]));
     } catch (error) {
       errorContext.setError(strings.errorHandling.groupDialogsScreen.listGroups);
     }
-    setLoading(false);
   };
 
   /**
