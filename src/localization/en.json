@@ -152,13 +152,16 @@
     "groupDialogsScreen": {
       "listGroups": "Error while fetching groups",
       "createGroup": "Error while creating group",
-      "createGroupRequest": "Error while creating group join request"
+      "createGroupRequest": "Error while creating group join request",
+      "acceptGroupInvite": "Error while accepting group invite",
+      "denyGroupInvite": "Error while denying group invite"
     },
     "groupManagementScreen": {
       "listMembers": "Error while listing group members",
       "inviteMember": "Error while sending member invite",
       "pendingRequests": "Error while listing pending requests",
-      "pendingInvites": "Error while listing pending invites"
+      "pendingInvites": "Error while listing pending invites",
+      "deletePendingRequest": "Error while deleting pending request"
     },
     "userGroups": {
       "list": "Error listing users groups"
@@ -615,6 +618,27 @@
       "title": "Join the group",
       "requestSent": "Request sent",
       "content": "Join request sent to group {0}. You will receive a notification in your email when the request has been approved. \n After approval, you can view your organization's maps and create new ones."
+    },
+    "acceptedInviteDialog": {
+      "title": "Invitation accepted!",
+      "continue": "Continue",
+      "content": "You have joined group {0}. You can now view your organization's surveys and create new ones."
+    },
+    "pendingInviteDialog": {
+      "title": "Welcome to purkukartoitus.fi service!",
+      "content": "In order to use the service you need to belong in your organization's group. Then you can view group members surveys and create new surveys. \n You have been invited to group {0} by user {1}. Do you want to join group?",
+      "denyInvitation": "Deny invitation",
+      "acceptInvitation": "Join group"
+    },
+    "denyInviteConfirmDialog": {
+      "title": "Deny invitation?",
+      "content": "Are you sure you want to deny invitation?",
+      "denyInvitation": "Deny invitation"
+    },
+    "invitationDeniedDialog": {
+      "title": "Invitation denied.",
+      "content": "You have denied invitation to group {0}",
+      "close": "Close"
     }
   },
   "groupManagementScreen": {
@@ -633,7 +657,9 @@
       "control": "Control"
     },
     "pendingInvitesScreen": {
-      "resend": "Resend invitation"
+      "resend": "Resend invitation",
+      "cancel": "Cancel invitation"
+
     },
     "pendingRequestsScreen": {
       "reject": "Reject",

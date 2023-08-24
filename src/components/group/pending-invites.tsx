@@ -16,6 +16,7 @@ import Api from "api";
  */
 interface Props {
   pendingInvites: GroupJoinInvite[];
+  deletePendingInvite: (inviteId: string) => Promise<void>;
 }
 
 /**
@@ -23,7 +24,7 @@ interface Props {
  *
  * @param props component properties
  */
-const PendingInvites: FC<Props> = ({ pendingInvites }) => {
+const PendingInvites: FC<Props> = ({ pendingInvites, deletePendingInvite }) => {
   const keycloak = useAppSelector(selectKeycloak);
   const language = useAppSelector(selectLanguage);
   const errorContext = useContext(ErrorContext);
@@ -65,6 +66,22 @@ const PendingInvites: FC<Props> = ({ pendingInvites }) => {
             sx={{ color: "#009E9E" }}
           >
             { strings.groupManagementScreen.pendingInvitesScreen.resend }
+          </Button>
+        </Box>
+      )
+    },
+    {
+      field: "control",
+      headerName: "",
+      width: 150,
+      renderCell: ({ row }) => (
+        <Box>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={ () => deletePendingInvite(row.id)}
+          >
+            { strings.groupManagementScreen.pendingInvitesScreen.cancel }
           </Button>
         </Box>
       )

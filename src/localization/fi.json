@@ -153,13 +153,16 @@
     "groupDialogsScreen": {
       "listGroups": "Virhe haettaessa ryhmiä",
       "createGroup": "Virhe luotaessa ryhmää",
-      "createGroupRequest": "Virhe luotaessa ryhmään liittymispyyntöä"
+      "createGroupRequest": "Virhe luotaessa ryhmään liittymispyyntöä",
+      "acceptGroupInvite": "Virhe hyväksyttäessä ryhmäkutsua",
+      "denyGroupInvite": "Virhe hylätessä ryhmäkutsua"
     },
     "groupManagementScreen": {
       "listMembers": "Virhe listattaessa ryhmän jäseniä",
       "inviteMember": "Virhe lähetettäessä jäsenkutsua",
       "pendingRequests": "Virhe listattaessa odottavia pyyntöjä",
-      "pendingInvites": "Virhe listattaessa odottavia kutsuja"
+      "pendingInvites": "Virhe listattaessa odottavia kutsuja",
+      "deletePendingRequest": "Virhe poistettaessa odottavaa pyyntöä"
     },
     "userGroups": {
       "list": "Virhe listattaessa käyttäjän ryhmiä"
@@ -614,6 +617,27 @@
       "title": "Liity ryhmään",
       "requestSent": "Pyyntö lähetetty",
       "content": "Liittymispyyntö lähetetty ryhmään {0}. Saat ilmoituksen sähköpostiisi, kun pyyntö on hyväksytty. \n Hyväksynnän jälkeen pääset tarkastelemaan organisaatiosi kartoituksia ja luomaan uusia."
+    },
+    "acceptedInviteDialog": {
+      "title": "Kutsu hyväksytty!",
+      "continue": "Jatka",
+      "content": "Olet liittynyt ryhmään {0}. Voit nyt siirtyä tarkastelemaan ja luomaan purkukartoituksia."
+    },
+    "pendingInviteDialog": {
+      "title": "Tervetuloa purkukartoitus.fi palveluun!",
+      "content": "Käyttääksesi palvelua on sinun kuuluttava organisaatiosi ryhmään. Ryhmässä näet organisaatiosi jäsenten luomat kartoitukset ja voit luoda sinne uusia kartoítuksia. \n Sinut on kutsuttu ryhmään {0} käyttäjän {1} toimesta. Haluatko liittyä ryhmään?",
+      "denyInvitation": "Hylkää kutsu",
+      "acceptInvitation": "Liity ryhmään"
+    },
+    "denyInviteConfirmDialog": {
+      "title": "Hylkää kutsu",
+      "content": "Oletko varma, että haluat hylätä kutsun?",
+      "denyInvitation": "Hylkää kutsu"
+    },
+    "invitationDeniedDialog": {
+      "title": "Kutsu hylätty.",
+      "content": "Olet hylännyt kutsun liittyä ryhmään {0}",
+      "close": "Sulje"
     }
   },
   "groupManagementScreen": {
@@ -632,7 +656,8 @@
       "control": "Hallitse"
     },
     "pendingInvitesScreen": {
-      "resend": "Lähetä kutsu uudelleen"
+      "resend": "Lähetä kutsu uudelleen",
+      "cancel": "Peru kutsu"
     },
     "pendingRequestsScreen": {
       "reject": "Hylkää",

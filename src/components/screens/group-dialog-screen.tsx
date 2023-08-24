@@ -6,7 +6,7 @@ import { selectKeycloak } from "features/auth-slice";
 import strings from "localization/strings";
 import React, { ChangeEvent, FC, useContext, useEffect, useState } from "react";
 import Api from "api";
-import { UserGroup } from "generated/client";
+import { GroupJoinInvite, JoinRequestStatus, UserGroup } from "generated/client";
 import { CheckboxData, GroupDialogStatus } from "types";
 import { ErrorContext } from "components/error-handler/error-handler";
 import { useNavigate } from "react-router-dom";
@@ -28,6 +28,7 @@ const GroupDialogScreen: FC = () => {
   const [ joinGroupCheckedItems, setJoinGroupCheckedItems ] = useState<CheckboxData[]>([]);
   const [ joinedGroup, setJoinedGroup ] = useState("");
   const [ groupNameError, setGroupNameError ] = useState(false);
+  const [ pendingInvites, setPendingInvites ] = useState<GroupJoinInvite[]>([]);
 
   /**
    * Get list of all available groups
@@ -41,11 +42,13 @@ const GroupDialogScreen: FC = () => {
 
     setLoading(true);
     try {
-      const foundAllGroups = await Api.getUserGroupsApi(keycloak.token).listUserGroups({});
+      setAllGroups(await Api.getUserGroupsApi(keycloak.token).listUserGroups({}));
 
-      setAllGroups(foundAllGroups);
-      setFilteredGroups(foundAllGroups);
-      const initialCheckedItems = foundAllGroups.map(group => ({
+      const foundGroupInvites = await Api.getGroupJoinInvitesApi(keycloak.token).listUserGroupJoinInvites();
+      setPendingInvites(foundGroupInvites.filter(invite => invite.status === JoinRequestStatus.Pending));
+
+      setFilteredGroups(allGroups);
+      const initialCheckedItems = allGroups.map(group => ({
         name: group.name,
         checked: false
       }));
@@ -59,6 +62,7 @@ const GroupDialogScreen: FC = () => {
     } catch (error) {
       errorContext.setError(strings.errorHandling.groupDialogsScreen.listGroups);
     }
+    setLoading(false);
   };
 
   /**
@@ -72,7 +76,9 @@ const GroupDialogScreen: FC = () => {
    * Set dialog status or navigate to surveys
    */
   const updateDialogStatus = () => {
-    if (!usersGroups.length) {
+    if (pendingInvites.length) {
+      setDialogStatus(GroupDialogStatus.PENDING_INVITE);
+    } else if (!usersGroups.length) {
       setDialogStatus(GroupDialogStatus.WELCOME);
     } else {
       navigate("/surveys");
@@ -206,6 +212,78 @@ const GroupDialogScreen: FC = () => {
       errorContext.setError(strings.errorHandling.groupDialogsScreen.createGroupRequest);
     }
     setLoading(false);
+  };
+
+  /**
+   * Accepts a group join invite
+   */
+  const acceptGroupInvite = async () => {
+    if (!keycloak?.token || !keycloak?.tokenParsed) return;
+
+    const { id, groupId } = pendingInvites[0];
+    
+    if (!id || !groupId) return;
+    
+    setLoading(true);
+    try {
+      await Api.getGroupJoinInvitesApi(keycloak.token).updateGroupJoinInvite({
+        inviteId: id,
+        groupId: groupId,
+        groupJoinInvite: {
+          status: JoinRequestStatus.Accepted,
+          email: keycloak.tokenParsed.email,
+          groupId: groupId
+        }
+      });
+      setDialogStatus(GroupDialogStatus.INVITATION_ACCEPTED);
+    } catch (error) {
+      errorContext.setError(strings.errorHandling.groupDialogsScreen.acceptGroupInvite);
+    }
+    setLoading(false);
+  };
+
+  /**
+   * Denies a group join invite
+   */
+  const denyGroupInvite = async () => {
+    if (!keycloak?.token || !keycloak?.tokenParsed) return;
+
+    const { id, groupId } = pendingInvites[0];
+
+    if (!id || !groupId) return;
+
+    setLoading(true);
+    try {
+      await Api.getGroupJoinInvitesApi(keycloak.token).updateGroupJoinInvite({
+        inviteId: id,
+        groupId: groupId,
+        groupJoinInvite: {
+          status: JoinRequestStatus.Rejected,
+          email: keycloak.tokenParsed.email,
+          groupId: groupId
+        }
+      });
+      setDialogStatus(GroupDialogStatus.INVITATION_DENIED);
+    } catch (error) {
+      errorContext.setError(strings.errorHandling.groupDialogsScreen.denyGroupInvite);
+    }
+    setLoading(false);
+  };
+
+  /**
+   * Get group name based on group id
+   */
+  const getGroupName = () => {
+    const foundGroupName = allGroups.find(foundGroup => foundGroup.id === pendingInvites[0].groupId)?.name ?? "";
+    return foundGroupName;
+  };
+
+  /**
+   * Get group admin name based on group id
+   */
+  const getGroupAdminName = () => {
+    const foundGroupAdminName = pendingInvites[0].metadata?.creatorId ?? "";
+    return foundGroupAdminName;
   };
 
   /**
@@ -346,6 +424,83 @@ const GroupDialogScreen: FC = () => {
   );
 
   /**
+   * Render join request sent dialog
+   */
+  const renderPendingInviteDialog = () => (
+    <GenericDialog
+      open
+      onClose={ () => {} }
+      onCancel={ () => setDialogStatus(GroupDialogStatus.DENY_INVITATION_CONFIRM) }
+      onConfirm={ () => acceptGroupInvite() }
+      title={ strings.groupDialogsScreen.requestSentDialog.title }
+      positiveButtonText={ strings.groupDialogsScreen.pendingInviteDialog.acceptInvitation }
+      cancelButtonText={ strings.groupDialogsScreen.pendingInviteDialog.denyInvitation }
+      hideClose
+    >
+      <Typography>
+        { strings.formatString(strings.groupDialogsScreen.pendingInviteDialog.content, getGroupName(), getGroupAdminName()) }
+      </Typography>
+    </GenericDialog>
+  );
+
+  /**
+   * Renders the invitation accepted dialog
+   */
+  const renderInvitationAcceptedDialog = () => (
+    <GenericDialog
+      open
+      onClose={ () => {} }
+      // eslint-disable-next-line no-restricted-globals
+      onConfirm={ () => location.reload() }
+      title={ strings.groupDialogsScreen.acceptedInviteDialog.title }
+      positiveButtonText={ strings.groupDialogsScreen.acceptedInviteDialog.continue }
+      hideClose
+    >
+      <Typography>
+        { strings.formatString(strings.groupDialogsScreen.acceptedInviteDialog.content, getGroupName()) }
+      </Typography>
+    </GenericDialog>
+  );
+
+  /**
+   * Render join request sent dialog
+   */
+  const renderDenyInvitationConfirmDialog = () => (
+    <GenericDialog
+      open
+      onClose={ () => {} }
+      onCancel={ () => setDialogStatus(GroupDialogStatus.PENDING_INVITE) }
+      onConfirm={ () => denyGroupInvite() }
+      title={ strings.groupDialogsScreen.denyInviteConfirmDialog.title }
+      positiveButtonText={ strings.groupDialogsScreen.denyInviteConfirmDialog.denyInvitation }
+      cancelButtonText={ strings.generic.cancel }
+      hideClose
+    >
+      <Typography>
+        { strings.groupDialogsScreen.denyInviteConfirmDialog.content }
+      </Typography>
+    </GenericDialog>
+  );
+
+  /**
+   * Renders the invitation denied dialog
+   */
+  const renderInvitationDeniedDialog = () => (
+    <GenericDialog
+      open
+      onClose={ () => {} }
+      onConfirm={ () => { usersGroups.length ? navigate("/surveys") : setDialogStatus(GroupDialogStatus.WELCOME); }}
+      title={ strings.groupDialogsScreen.invitationDeniedDialog.title }
+      positiveButtonText={ String(strings.formatString(strings.groupDialogsScreen.invitationDeniedDialog.close, getGroupName())) }
+      hideClose
+    >
+      <Typography>
+        { strings.formatString(strings.groupDialogsScreen.invitationDeniedDialog.content, getGroupName()) }
+      </Typography>
+    </GenericDialog>
+  );
+
+  /**
    * Renders dialog based on dialog status
    */
   const renderGroupDialogContent = () => {
@@ -360,6 +515,14 @@ const GroupDialogScreen: FC = () => {
         return renderJoinDialog();
       case GroupDialogStatus.REQUEST_SENT:
         return renderRequestSentDialog();
+      case GroupDialogStatus.PENDING_INVITE:
+        return renderPendingInviteDialog();
+      case GroupDialogStatus.DENY_INVITATION_CONFIRM:
+        return renderDenyInvitationConfirmDialog();
+      case GroupDialogStatus.INVITATION_ACCEPTED:
+        return renderInvitationAcceptedDialog();
+      case GroupDialogStatus.INVITATION_DENIED:
+        return renderInvitationDeniedDialog();
       default:
         return null;
     }

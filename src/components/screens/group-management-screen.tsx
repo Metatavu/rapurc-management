@@ -124,6 +124,30 @@ const GroupManagementScreen: FC = () => {
   };
 
   /**
+   * Delete pending 
+   * 
+   * @param inviteId invite id
+   */
+  const deletePendingInvite = async (inviteId: string) => {
+    if (!keycloak?.token || !groupId) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await Api.getGroupJoinInvitesApi(keycloak.token).deleteGroupJoinInvite({
+        groupId: groupId,
+        inviteId: inviteId
+      });
+
+      setPendingInvites(pendingInvites.filter(invite => invite.id !== inviteId));
+    } catch (error) {
+      errorContext.setError(strings.errorHandling.groupManagementScreen.deletePendingRequest);
+    }
+    setLoading(false);
+  };
+
+  /**
    * Load all data required for screen
    */
   const loadData = async () => {
@@ -286,6 +310,7 @@ const GroupManagementScreen: FC = () => {
               groupMembers={ groupMembers }
               pendingRequests={ pendingRequests }
               pendingInvites={ pendingInvites }
+              deletePendingInvite={ deletePendingInvite }
               setPendingRequests={ setPendingRequests }
               setGroupMembers={ setGroupMembers }
             />

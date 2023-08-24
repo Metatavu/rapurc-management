@@ -131,5 +131,9 @@ export enum GroupDialogStatus {
   INVITE = "invite",
   CREATE_DONE = "create done",
   JOIN = "join",
-  REQUEST_SENT = "request sent"
+  REQUEST_SENT = "request sent",
+  PENDING_INVITE = "pending invite",
+  DENY_INVITATION_CONFIRM = "deny invitation confirm",
+  INVITATION_DENIED = "invitation denied",
+  INVITATION_ACCEPTED = "invitation accepted"
 }

@@ -13,6 +13,7 @@ interface Props {
   groupMembers: User[];
   pendingRequests: GroupJoinRequest[];
   pendingInvites: GroupJoinInvite[];
+  deletePendingInvite: (inviteId: string) => Promise<void>;
   setPendingRequests: Dispatch<SetStateAction<GroupJoinRequest[]>>;
   setGroupMembers: Dispatch<SetStateAction<User[]>>;
 }
@@ -28,7 +29,8 @@ const GroupRoutes: FC<Props> = ({
   pendingRequests,
   pendingInvites,
   setPendingRequests,
-  setGroupMembers
+  setGroupMembers,
+  deletePendingInvite
 }) => {
   if (!groupId) {
     return null;
@@ -42,7 +44,7 @@ const GroupRoutes: FC<Props> = ({
       />
       <Route
         path="pendingInvites"
-        element={ <PendingInvites pendingInvites={ pendingInvites }/> }
+        element={ <PendingInvites pendingInvites={ pendingInvites } deletePendingInvite={ deletePendingInvite }/> }
       />
       <Route
         path="pendingRequests"

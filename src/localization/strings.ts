@@ -176,12 +176,15 @@ export interface Localized extends LocalizedStringsMethods {
       listGroups: string;
       createGroup: string;
       createGroupRequest: string;
+      acceptGroupInvite: string;
+      denyGroupInvite: string;
     },
     groupManagementScreen: {
       listMembers: string;
       inviteMember: string;
       pendingRequests: string;
       pendingInvites: string;
+      deletePendingRequest: string;
     },
     userGroups: {
       list: string;
@@ -667,6 +670,27 @@ export interface Localized extends LocalizedStringsMethods {
       requestSent: string;
       content: string;
     }
+    acceptedInviteDialog: {
+      title: string;
+      continue: string
+      content: string;
+    };
+    pendingInviteDialog: {
+      title: string;
+      content: string;
+      denyInvitation: string;
+      acceptInvitation: string;
+    };
+    denyInviteConfirmDialog: {
+      title: string;
+      content: string;
+      denyInvitation: string;
+    };
+    invitationDeniedDialog: {
+      title: string;
+      content: string;
+      close: string;
+    };
   }
 
   /**
@@ -689,6 +713,7 @@ export interface Localized extends LocalizedStringsMethods {
     },
     pendingInvitesScreen: {
       resend: string;
+      cancel: string;
     },
     pendingRequestsScreen: {
       reject: string;
