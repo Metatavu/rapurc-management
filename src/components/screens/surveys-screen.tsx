@@ -38,7 +38,9 @@ const SurveysScreen: React.FC = () => {
   const [ deletingSurvey, setDeletingSurvey ] = React.useState(false);
   const [ selectedSurveyIds, setSelectedSurveyIds ] = React.useState<string[]>([]);
   const [ groupSelectDialogOpen, setGroupSelectDialog ] = React.useState(false);
-  const [ usersGroups, setUsersGroups ] = React.useState<UserGroup[]>([]);
+  const [ usersGroupsAsAdmin, setUsersGroupsAsAdmin ] = React.useState<UserGroup[]>([]);
+  const [ , setUsersGroupsAsMember ] = React.useState<UserGroup[]>([]);
+  const [ allUsersGroups, setAllUsersGroups ] = React.useState<UserGroup[]>([]);
   
   /**
    * Toggles group select dialog
@@ -171,8 +173,20 @@ const SurveysScreen: React.FC = () => {
     try {
       if (!keycloak?.token) return;
       
-      const groups = await Api.getUserGroupsApi(keycloak.token).listUserGroups({ member: true });
-      setUsersGroups(groups);
+      const foundGroupsAsMember = await Api.getUserGroupsApi(keycloak.token).listUserGroups({ member: true });
+      const foundGroupsAsAdmin = await Api.getUserGroupsApi(keycloak.token).listUserGroups({ admin: true });
+
+      setUsersGroupsAsMember(foundGroupsAsMember);
+      setUsersGroupsAsAdmin(foundGroupsAsAdmin);
+
+      const uniqueGroups = [ ...foundGroupsAsMember, ...foundGroupsAsAdmin ].reduce((acc: UserGroup[], group) => {
+        if (!acc.some(accGroup => accGroup.id === group.id)) {
+          acc.push(group);
+        }
+        return acc;
+      }, []);
+      
+      setAllUsersGroups(uniqueGroups);
     } catch (error) {
       errorContext.setError(strings.errorHandling.userGroups.list, error);
     }
@@ -288,14 +302,14 @@ const SurveysScreen: React.FC = () => {
    * Handles create survey manually button click
    */
   const handleCreateSurveyManuallyClick = () => {
-    if (!usersGroups.length) return;
+    if (!allUsersGroups.length) return;
     
-    if (usersGroups.length === 1) {
-      const selectedGroup = usersGroups[0];
+    if (allUsersGroups.length === 1) {
+      const selectedGroup = allUsersGroups[0];
       
       if (!selectedGroup.id) return;
       
-      createSurveyManually(usersGroups[0].id!);
+      createSurveyManually(allUsersGroups[0].id!);
     } else {
       toggleGroupSelectDialog();
     }
@@ -405,7 +419,7 @@ const SurveysScreen: React.FC = () => {
                 variant="contained"
                 color="secondary"
                 startIcon={ <Add/> }
-                disabled={ !usersGroups.length }
+                disabled={ !allUsersGroups.length }
                 onClick={ handleCreateSurveyManuallyClick }
               >
                 { strings.surveysScreen.newSurvey }
@@ -571,7 +585,7 @@ const SurveysScreen: React.FC = () => {
         open={ groupSelectDialogOpen }
         onClose={ toggleGroupSelectDialog }
         onGroupSelect={ createSurveyManually }
-        groups={ usersGroups }
+        groups={ usersGroupsAsAdmin }
       />
     </>
   );

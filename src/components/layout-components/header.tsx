@@ -6,7 +6,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { AppTitle, Root } from "styled/layout-components/header";
 import ProfileMenu from "./profile-menu";
-import Navigation from "./top-navigation";
+import TopNavigation from "./top-navigation";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 
 /**
@@ -61,7 +61,7 @@ const Header: React.FC<Props> = ({
         <Stack direction="row" spacing={ 2 }>
           { renderLanguageSelection() }
           <Hidden smDown>
-            <Navigation/>
+            <TopNavigation/>
           </Hidden>
           <ProfileMenu/>
         </Stack>

@@ -1,31 +1,55 @@
 import { AdminPanelSettings } from "@mui/icons-material";
 import { Button, MenuItem, Stack, TextField } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "app/hooks";
+import Api from "api";
+import { useAppSelector } from "app/hooks";
 import VisibleWithRole from "components/containers/visible-with-role";
-import { selectGroups, selectSelectedGroup, setSelectedGroup } from "features/group-slice";
+import { ErrorContext } from "components/error-handler/error-handler";
+import { selectKeycloak } from "features/auth-slice";
+import { UserGroup } from "generated/client";
 import strings from "localization/strings";
-import React, { ChangeEventHandler } from "react";
+import React, { ChangeEventHandler, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 /**
  * Navigation component
  */
 const TopNavigation: React.FC = () => {
-  const dispatch = useAppDispatch();
+  const keycloak = useAppSelector(selectKeycloak);
+  const errorContext = React.useContext(ErrorContext);
+
   const navigate = useNavigate();
-  const userGroups = useAppSelector(selectGroups);
-  const selectedUserGroup = useAppSelector(selectSelectedGroup);
+  const [ usersGroupsAsAdmin, setUsersGroupsAsAdmin ] = React.useState<UserGroup[]>([]);
+
+  /**
+   * Loads users groups from API
+   */
+  const loadUsersGroups = async () => {
+    try {
+      if (!keycloak?.token) return;
+      const foundGroupsAsAdmin = await Api.getUserGroupsApi(keycloak.token).listUserGroups({ admin: true });
+      setUsersGroupsAsAdmin(foundGroupsAsAdmin);
+    } catch (error) {
+      errorContext.setError(strings.errorHandling.userGroups.list, error);
+    }
+  };
+
+  /**
+   * Effect that loads component data
+   */
+  useEffect(() => {
+    loadUsersGroups();
+  }, []);
 
   /**
    * Navigate to group management screen with selected group if available
    */
-  const navigateToGroupManagement = () => {
-    if (selectedUserGroup) {
-      navigate(`/groups/${selectedUserGroup.id}`);
+  /*   const navigateToGroupManagement = (groupId: string) => {
+    if (groupId) {
+      navigate(`/groups/${groupId}`);
     } else {
       navigate("/groups");
     }
-  };
+  }; */
 
   /**
    * Handle user group change
@@ -33,19 +57,21 @@ const TopNavigation: React.FC = () => {
    * @param event event
    */
   const onUserGroupChange: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
-    const userGroup = userGroups.find(group => group.name === target.value)!;
-    dispatch(setSelectedGroup(userGroup));
+    const userGroup = usersGroupsAsAdmin.find(group => group.name === target.value)!;
+    if (!userGroup.id) {
+      return;
+    }
     navigate(`/groups/${userGroup.id}`);
   };
 
   /**
-   * Render the usder group select
+   * Render the user group select
    */
   const renderUserGroupsSelect = () => {
-    if (!userGroups || !selectedUserGroup) return null;
+    if (!usersGroupsAsAdmin.length) return null;
 
-    if (userGroups.length > 1) {
-      const options = userGroups.map(group =>
+    if (usersGroupsAsAdmin.length > 1) {
+      const options = usersGroupsAsAdmin.map(group =>
         <MenuItem key={ group.id } value={ group.name }>
           { group.name }
         </MenuItem>
@@ -56,7 +82,7 @@ const TopNavigation: React.FC = () => {
           color="secondary"
           variant="standard"
           select
-          value={ selectedUserGroup.name }
+          value={ usersGroupsAsAdmin[0].name }
           label="Groups"
           onChange={ onUserGroupChange }
         >
@@ -64,6 +90,14 @@ const TopNavigation: React.FC = () => {
         </TextField>
       );
     }
+    return (
+      <Button
+        variant="text"
+        onClick={ () => navigate(`/groups/${usersGroupsAsAdmin[0].id}`) }
+      >
+        { strings.navigation.groups }
+      </Button>
+    );
   };
 
   /**
@@ -77,14 +111,6 @@ const TopNavigation: React.FC = () => {
       >
         { strings.navigation.surveys }
       </Button>
-      <VisibleWithRole userRole="admin">
-        <Button
-          variant="text"
-          onClick={ () => navigateToGroupManagement() }
-        >
-          { strings.navigation.groups }
-        </Button>
-      </VisibleWithRole>
       <VisibleWithRole userRole="admin">
         <Button
           variant="text"

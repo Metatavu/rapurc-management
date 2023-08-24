@@ -1,5 +1,5 @@
 import { Box, Checkbox, CircularProgress, FormControlLabel, List, ListItem, TextField, Typography } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "app/hooks";
+import { useAppSelector } from "app/hooks";
 import GenericDialog from "components/generic/generic-dialog";
 import StackLayout from "components/layouts/stack-layout";
 import { selectKeycloak } from "features/auth-slice";
@@ -10,13 +10,11 @@ import { UserGroup } from "generated/client";
 import { CheckboxData, GroupDialogStatus } from "types";
 import { ErrorContext } from "components/error-handler/error-handler";
 import { useNavigate } from "react-router-dom";
-import { setSelectedGroup, setUserGroups } from "features/group-slice";
 
 /**
  * Group dialog screen component
  */
 const GroupDialogScreen: FC = () => {
-  const dispatch = useAppDispatch();
   const keycloak = useAppSelector(selectKeycloak);
   const navigate = useNavigate();
   const errorContext = useContext(ErrorContext);
@@ -58,8 +56,6 @@ const GroupDialogScreen: FC = () => {
       const foundGroups = foundGroupsAsMember.concat(foundGroupsAsAdmin);
 
       setUsersGroups(foundGroups);
-      dispatch(setUserGroups(foundGroups));
-      dispatch(setSelectedGroup(foundGroups[0]));
     } catch (error) {
       errorContext.setError(strings.errorHandling.groupDialogsScreen.listGroups);
     }
@@ -158,13 +154,11 @@ const GroupDialogScreen: FC = () => {
 
     setLoading(true);
     try {
-      const createdGroup = await Api.getUserGroupsApi(keycloak.token).createUserGroup({
+      await Api.getUserGroupsApi(keycloak.token).createUserGroup({
         userGroup: {
           name: newGroupName
         }
       });
-      dispatch(setUserGroups([...usersGroups, createdGroup]));
-      dispatch(setSelectedGroup(createdGroup));
       setDialogStatus(GroupDialogStatus.CREATE_DONE);
     } catch (error) {
       errorContext.setError(strings.errorHandling.groupDialogsScreen.createGroup);
