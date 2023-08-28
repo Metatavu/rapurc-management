@@ -31,6 +31,10 @@ const App: React.FC = () => {
         <Router>
           <Routes>
             <Route
+              path="/"
+              element={ <GroupDialogScreen/> }
+            />
+            <Route
               path="/surveys"
               element={ <SurveysScreen/> }
             />
@@ -65,10 +69,6 @@ const App: React.FC = () => {
                   <ListingScreen/>
                 </VisibleWithRole>
               }
-            />
-            <Route
-              path="/"
-              element={ <GroupDialogScreen/> }
             />
           </Routes>
         </Router>
