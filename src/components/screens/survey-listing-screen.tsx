@@ -1,5 +1,5 @@
-import { Button, Paper, Stack, TextField, Typography, Container } from "@mui/material";
-import { Reusable, Usability, Survey, ReusableMaterial, Building } from "generated/client";
+import { Button, Paper, Stack, TextField, Typography, Container, MenuItem } from "@mui/material";
+import { Reusable, Usability, Survey, ReusableMaterial, Building, Unit } from "generated/client";
 import { useParams, useNavigate } from "react-router-dom";
 import { ErrorContext } from "components/error-handler/error-handler";
 import { useAppDispatch, useAppSelector } from "app/hooks";
@@ -12,6 +12,8 @@ import LocalizationUtils from "utils/localization-utils";
 import { selectLanguage } from "features/locale-slice";
 import LoginDialog from "components/listing-components/login-dialog";
 import CategorySelect from "components/listing-components/categories";
+import createItem from "components/listing-components/listing-screen-post";
+import GenericDialog from "components/generic/generic-dialog";
 
 /**
  * Form errors interface
@@ -23,12 +25,24 @@ interface FormErrors {
   materialAmount?: string;
   materialAmountInfo?: string;
   priceAmount?: string;
+  unit?: string;
   propertyName?: string;
   address?: string;
   postalcode?: string;
   name?: string;
   phone?: string;
   email?: string;
+}
+
+/**
+ * Selected site data
+ */
+interface SiteData {
+  id: string;
+  name: string;
+  url: string;
+  item: string;
+  token: string;
 }
 
 /**
@@ -65,8 +79,20 @@ const SurveyListingScreen: React.FC = () => {
     componentName: "",
     usability: Usability.NotValidated,
     reusableMaterialId: "",
-    metadata: {}
+    metadata: {},
+    unit: undefined
   });
+
+  /**
+   * Render material unit select
+   */
+  const renderUnitOptions = Object.values(Unit)
+    .sort((a, b) => LocalizationUtils.getLocalizedUnits(a).localeCompare(LocalizationUtils.getLocalizedUnits(b)))
+    .map(unit =>
+      <MenuItem key={ unit } value={ unit }>
+        { LocalizationUtils.getLocalizedUnits(unit) }
+      </MenuItem>
+    );
 
   /**
    * Event handler for new material string change
@@ -76,7 +102,10 @@ const SurveyListingScreen: React.FC = () => {
   const onNewMaterialChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
   
-    setNewMaterial({ ...newMaterial, [name]: value });
+    setNewMaterial(prevMaterial => ({
+      ...prevMaterial,
+      [name]: value
+    }));
   };
 
   /**
@@ -97,13 +126,50 @@ const SurveyListingScreen: React.FC = () => {
   const [ email, setEmail ] = React.useState("");
   const [ formErrors, setFormErrors ] = React.useState<FormErrors>({});
   const [ accessToken, setAccessToken ] = React.useState("");
-  const [ site, setSite ] = React.useState("");
+  const [ site, setSite ] = React.useState<SiteData | null>(null);
   const [ category, setCategory] = React.useState("");
   const [ images, setImages ] = React.useState<string[]>([]);
-  //  const [blobs, setBlobs] = React.useState<(Blob | null)[]>([]);
 
   /**
-   * checking if the form displays fetched information or edited information
+   * Succesful POST dialog / text
+   */
+  const [ showSuccessDialog, setShowSuccessDialog ] = React.useState(false);
+  const [ itemId, setItemId ] = React.useState<string | null>(null);
+  const link = itemId && site ? `${site.item}/${itemId}` : null;
+  const linkText = site ? `${site.name}` : null;
+  
+  /**
+   * Confirmation dialog 
+   */
+  const [ confirmationDialogOpen, setConfirmationDialogOpen ] = React.useState(false);
+  
+  /**
+   * Handle confirmation dialog open
+   */
+  const handleOpenConfirmationDialog = () => {
+    setConfirmationDialogOpen(true);
+  };
+
+  /**
+   * Callback function to handle successful item creation and show the success dialog
+   * 
+   * @param itemIdResponse 
+   */
+  const handleItemCreationSuccess = (itemIdResponse: string) => {
+    setItemId(itemIdResponse);
+    setShowSuccessDialog(true);
+  };
+    
+  /**
+   * Event handler for closing the success dialog
+   */
+  const handleCloseSuccessDialog = () => {
+    setItemId(null);
+    setShowSuccessDialog(false);
+  };
+
+  /**
+   * Checking if the form displays fetched information or edited information
    */
   const updateStateValues = () => {
     if (material) {
@@ -114,6 +180,7 @@ const SurveyListingScreen: React.FC = () => {
     if (building && building.address) {
       setAddress(`${building?.address?.streetAddress ?? ""} ${building?.address?.city || ""}`);
       setPostalcode(building.address.postCode?.toString() ?? "");
+      setpropertyName(building?.propertyName ?? "");
     }
   };
 
@@ -156,7 +223,7 @@ const SurveyListingScreen: React.FC = () => {
   };
 
   /**
-   * Event handler for property name change
+   * Event handler for adress name change
    *
    * @param event React change event
    */
@@ -176,7 +243,7 @@ const SurveyListingScreen: React.FC = () => {
   };
 
   /**
-   * form validation
+   * Form validation
    */
   const validateForm = () => {
     const errors: FormErrors = {};
@@ -205,6 +272,10 @@ const SurveyListingScreen: React.FC = () => {
     } else if (Number.isNaN(Number(priceAmount))) {
       errors.priceAmount = strings.errorHandling.listingScreen.priceAmount;
     }
+    
+    if (!newMaterial.unit || newMaterial.unit.trim() === "") {
+      errors.unit = strings.errorHandling.listingScreen.unit;
+    }
 
     if (address.trim() === "") {
       errors.address = strings.errorHandling.listingScreen.address;
@@ -225,13 +296,12 @@ const SurveyListingScreen: React.FC = () => {
     }
 
     if (email.trim() === "") {
-      errors.email = "Email is required";
+      errors.email = strings.errorHandling.listingScreen.email;
     } else if (!/\S+@\S+\.\S+/.test(email)) {
       errors.email = strings.errorHandling.listingScreen.email;
     }
 
     setFormErrors(errors);
-
     return Object.keys(errors).length === 0;
   };
 
@@ -297,8 +367,8 @@ const SurveyListingScreen: React.FC = () => {
   };
 
   /**
-  * Fetch Building property name
-  */
+   * Fetch Building property name
+   */
   const fetchBuilding = async () => {
     if (!keycloak?.token || !surveyId) {
       return;
@@ -333,39 +403,33 @@ const SurveyListingScreen: React.FC = () => {
       });
       const data = fetchImages.flatMap(item => item.images || []);
       setImages(data);
-      // Convert each image URL to a Blob
-      /*
-      const fetchedBlobs = await Promise.all(data.map(async imageUrl => {
-        try {
-          const response = await fetch(imageUrl);
-          return await response.blob();
-        } catch (error) {
-          errorContext.setError(strings.errorHandling.listingScreen.image, error);
-          return null;
-        }
-      }));
-      setBlobs(fetchedBlobs);;
-      */
     } catch (error) {
       errorContext.setError(strings.errorHandling.title, error);
     }
   };
+  
   /**
    * Number of images
    */
   const numberOfImages = images.length;
 
   /**
-   * Effect for fetching survey / materials of selected row
+   * Effect for fetching survey
    */
   React.useEffect(() => {
     fetchSurvey();
   }, [ surveyId ]);
   
+  /**
+   * Effect for fetching material of selected row
+   */
   React.useEffect(() => {
     fetchReusableMaterial();
   }, [ materialId ]);
-  
+
+  /**
+   * Effect for fetching materials and buidings of selected row / images 
+   */
   React.useEffect(() => {
     fetchReusableMaterials();
     fetchBuilding();
@@ -391,7 +455,7 @@ const SurveyListingScreen: React.FC = () => {
   /**
    * Handle access token state update
    * 
-   * @param newAccessToken for fetching categories
+   * @param newAccessToken
    */
   const handleAccessTokenUpdate = (newAccessToken: string) => {
     setAccessToken(newAccessToken);
@@ -402,33 +466,48 @@ const SurveyListingScreen: React.FC = () => {
    *
    * @param selectedSite 
    */
-  const handleSelectedSite = (selectedSite: string) => {
+  const handleSelectedSite = (selectedSite: SiteData) => {
     setSite(selectedSite);
   };
 
   /**
-   * Submit handle. Sending data added later
+   * Handle submitting data
    */
-  const handleSubmit = (e:any) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    /* const data = {
+    
+    if (validateForm()) {
+      handleOpenConfirmationDialog();
+    }
+  };
+
+  /**
+   * handle calling confirm dialog
+   */
+  const handleConfirmSubmit = () => {
+    setConfirmationDialogOpen(false);
+    const data = {
       title: listingTitle || "",
+      category: category,
       description: materialInfo || "",
-      amount: materialAmount || "",
-      price: priceAmount,
-      unit: material?.unit || "",
+      amount: Number(materialAmount) || 0,
+      price: Number(priceAmount) || 0,
+      unit: (newMaterial.unit as "KG" | "TN" | "M2" | "M3" | "PCS") || "",
       propertyName: building?.propertyName || "",
       address: address || "",
       postalcode: postalcode || "",
       name: name || "",
       phone: phone || "",
-      email: email || "",
-      image: blobs || ""
+      email: email || ""
     };
-    */
-    if (validateForm()) {
-      // If validation true --> send info
-    }
+    createItem(data, accessToken, handleItemCreationSuccess, errorContext.setError);
+  };
+
+  /**
+   * Handle confirmation dialog close
+   */
+  const handleCancelConfirmationDialog = () => {
+    setConfirmationDialogOpen(false);
   };
 
   /**
@@ -566,7 +645,7 @@ const SurveyListingScreen: React.FC = () => {
                   name=""
                   label="Kokonaishinta (alv.24%):"
                   value=""
-                  type="number"
+                  type="text"
                   sx={{ label: { color: "black" }, input: { color: "black" } }}
                   InputLabelProps={{
                     shrink: false
@@ -599,7 +678,7 @@ const SurveyListingScreen: React.FC = () => {
                   name=""
                   label={`${strings.listingScreen.unit}:`}
                   value=""
-                  type="number"
+                  type="text"
                   sx={{ label: { color: "black" }, input: { color: "black" } }}
                   InputLabelProps={{
                     shrink: false
@@ -607,37 +686,54 @@ const SurveyListingScreen: React.FC = () => {
                   inputProps={{ readOnly: true, disableunderline: true.toString() }}
                 />
                 <TextField
-                  variant="outlined"
                   fullWidth
-                  select={ false }
-                  color="primary"
+                  select
                   name="unit"
-                  label=""
-                  value={ material.unit }
+                  color="primary"
+                  value={ newMaterial.unit || "" }
                   onChange={ onNewMaterialChange }
-                  sx={{ input: { color: "black" }, label: { color: "black" } }}
-                  InputLabelProps={{
-                    shrink: true
-                  }}
-                  inputProps={{ readOnly: true, disableunderline: true.toString() }}
-                />
+                  error={!!formErrors.unit}
+                >
+                  { renderUnitOptions }
+                </TextField>
               </Stack>
               { /* Location of the material */ }
-              <Stack spacing={ 2 } marginTop={ 5 }>
+              <Stack
+                direction="row"
+                spacing={ 2 }
+                marginTop={ 2 }
+              >
                 <TextField
                   variant="outlined"
                   fullWidth
                   color="primary"
-                  name="propertyName"
-                  label={ building?.propertyName }
+                  name=""
+                  label={ `${strings.listingScreen.propertyName}:` }
                   value=""
-                  helperText={ strings.listingScreen.propertyName }
-                  onChange={ e => setpropertyName(e.target.value) }
                   sx={{ label: { color: "black" } }}
                   InputLabelProps={{
                     shrink: false
                   }}
                   inputProps={{ readOnly: true, disableunderline: true.toString() }}
+                />
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  color="primary"
+                  name="propertyName"
+                  label=""
+                  type="text"
+                  value={ propertyName }
+                  onChange={ e => setpropertyName(e.target.value) }
+                  error={!!formErrors.propertyName}
+                  sx={{
+                    input: { color: "black" },
+                    "& .MuiOutlinedInput-input": { color: "black" },
+                    "& .MuiInputLabel-root": { color: "black" }
+                  }}
+                  InputLabelProps={{
+                    shrink: false
+                  }}
                 />
               </Stack>
               <Stack
@@ -796,10 +892,37 @@ const SurveyListingScreen: React.FC = () => {
               </Stack>
             </form>
           </Paper>
+          <GenericDialog
+            open={ confirmationDialogOpen }
+            title={ strings.listingScreen.title }
+            positiveButtonText={ strings.listingScreen.send }
+            cancelButtonText={ strings.generic.cancel }
+            onClose={ handleCancelConfirmationDialog }
+            onCancel={ handleCancelConfirmationDialog }
+            onConfirm={ handleConfirmSubmit }
+          >
+            {strings.listingScreen.submitConfirm}
+          </GenericDialog>
         </Stack>
       ) : (
         <></>
       )}
+      <GenericDialog
+        open={ showSuccessDialog }
+        title={ strings.listingScreen.submit }
+        onClose={ handleCloseSuccessDialog }
+        positiveButtonText="OK"
+        onConfirm={ handleCloseSuccessDialog }
+      >
+        {linkText && link && (
+          <Typography>
+            { strings.listingScreen.submitLinkText }
+            <a href={ link } target="_blank" rel="noopener noreferrer">
+              { linkText }
+            </a>
+          </Typography>
+        )}
+      </GenericDialog>
       <LoginDialog
         open={ open }
         onClose={ handleCloseDialog }

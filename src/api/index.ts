@@ -1,4 +1,4 @@
-import { Configuration, SurveysApi, BuildingsApi, OwnersApi, ReusableMaterialApi, SurveyReusablesApi, BuildingTypesApi, SurveyorsApi, SurveyWastesApi, UsagesApi, WasteMaterialApi, WasteCategoryApi, WasteSpecifiersApi, HazardousMaterialApi, SurveyHazardousWastesApi, SurveyAttachmentsApi, UserGroupsApi, GroupJoinInvitesApi, GroupJoinRequestsApi } from "../generated/client";
+import { Configuration, SurveysApi, BuildingsApi, OwnersApi, ReusableMaterialApi, SurveyReusablesApi, BuildingTypesApi, SurveyorsApi, SurveyWastesApi, UsagesApi, WasteMaterialApi, WasteCategoryApi, WasteSpecifiersApi, HazardousMaterialApi, SurveyHazardousWastesApi, SurveyAttachmentsApi, UserGroupsApi, EmailsApi, GroupJoinInvitesApi, GroupJoinRequestsApi } from "../generated/client";
 
 /**
  * Utility class for loading api with predefined configuration
@@ -193,6 +193,16 @@ export default class Api {
    */
   public static getGroupJoinRequestsApi = (accessToken: string) => {
     return new GroupJoinRequestsApi(Api.getConfiguration(accessToken));
+  };
+  
+  /**
+   * Gets initialized emails API
+   *
+   * @param accessToken access token
+   * @returns initialized emails API
+   */
+  public static getEmailsApi = (accessToken: string) => {
+    return new EmailsApi(Api.getConfiguration(accessToken));
   };
 
   /**

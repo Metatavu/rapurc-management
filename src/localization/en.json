@@ -51,7 +51,8 @@
       "list": "Error while listing owners",
       "create": "Error while creating owner information",
       "update": "Error while updating owner information",
-      "delete": "Error while deleting owner information"
+      "delete": "Error while deleting owner information",
+      "sendEmail": "Error while sending email"
     },
     "reusables": {
       "list": "Error while listing reusable building parts",
@@ -143,7 +144,8 @@
       "phone": "Phone number must be a number",
       "email": "Invalid email",
       "category": "Error occurred while fetching categories",
-      "image": "Error occurred while fetching images"
+      "image": "Error occurred while fetching images",
+      "submit": "Error occured while submitting the listing"
     },
     "listingScreenLogin": {
       "loginFailed": "Invalid username or password",
@@ -582,7 +584,10 @@
     "send": "send",
     "ownUse": "For own use",
     "deleteOwnUse": "Delete own use",
-    "categorySelect": "Select a category for the material"
+    "categorySelect": "Select a category for the material",
+    "submit": "Listing sent succesfully",
+    "submitConfirm": "Are you sure you want to submit the listing?",
+    "submitLinkText": "Click here to view the listing on "
   },
   "listingScreenLogin": {
     "helperText": "Select the site where you want to post the listing",

@@ -51,7 +51,8 @@
       "list": "Virhe listattaessa omistajia",
       "create": "Virhe luotaessa omistajatietoja",
       "update": "Virhe päivitettäessä omistajan tietoja",
-      "delete": "Virhe poistettaessa omistajan tietoja"
+      "delete": "Virhe poistettaessa omistajan tietoja",
+      "sendEmail": "Virhe sähköpostin lähetyksessä"
     },
     "reusables": {
       "list": "Virhe listattaessa uudelleenkäytettäviä rakennusosia",
@@ -144,7 +145,8 @@
       "phone": "Puhelinnumero täytyy olla numero",
       "email": "Virheellinen sähköposti",
       "category": "Virhe tapahtui materiaalikategorioiden noutamisessa",
-      "image": "Virhe hakiessa kuvia"
+      "image": "Kuvien haussa tapahtui virhe",
+      "submit": "Ilmoituksen lähettämisessä tapahtui virhe"
     },
     "listingScreenLogin": {
       "loginFailed": "Väärä käyttäjätunnus tai salasana",
@@ -581,7 +583,10 @@
     "send": "lähetä",
     "ownUse": "Omaan käyttöön",
     "deleteOwnUse": "poista oma käyttö",
-    "categorySelect": "Valitse vastaava kategoria"
+    "categorySelect": "Valitse vastaava kategoria",
+    "submit": "Ilmoituksen lähettäminen onnistui",
+    "submitConfirm": "Oletko varma, että haluat lähettää ilmoituksen?",
+    "submitLinkText": "Klikkaa linkkiä nähdäksesi ilmoituksen palvelussa: "
   },
   "listingScreenLogin": {
     "helperText": "Valitse sivu, minne haluat luoda ilmoituksen",
