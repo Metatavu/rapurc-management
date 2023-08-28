@@ -46,7 +46,6 @@ const GroupDialogScreen: FC = () => {
 
       const foundGroupInvites = await Api.getGroupJoinInvitesApi(keycloak.token).listUserGroupJoinInvites();
       setPendingInvites(foundGroupInvites.filter(invite => invite.status === JoinRequestStatus.Pending));
-
       setFilteredGroups(allGroups);
       const initialCheckedItems = allGroups.map(group => ({
         name: group.name,
@@ -451,7 +450,7 @@ const GroupDialogScreen: FC = () => {
       open
       onClose={ () => {} }
       // eslint-disable-next-line no-restricted-globals
-      onConfirm={ () => location.reload() }
+      onConfirm={ () => loadGroups()}
       title={ strings.groupDialogsScreen.acceptedInviteDialog.title }
       positiveButtonText={ strings.groupDialogsScreen.acceptedInviteDialog.continue }
       hideClose
@@ -489,7 +488,7 @@ const GroupDialogScreen: FC = () => {
     <GenericDialog
       open
       onClose={ () => {} }
-      onConfirm={ () => { usersGroups.length ? navigate("/surveys") : setDialogStatus(GroupDialogStatus.WELCOME); }}
+      onConfirm={ () => loadGroups()}
       title={ strings.groupDialogsScreen.invitationDeniedDialog.title }
       positiveButtonText={ String(strings.formatString(strings.groupDialogsScreen.invitationDeniedDialog.close, getGroupName())) }
       hideClose

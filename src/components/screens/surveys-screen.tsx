@@ -38,8 +38,6 @@ const SurveysScreen: React.FC = () => {
   const [ deletingSurvey, setDeletingSurvey ] = React.useState(false);
   const [ selectedSurveyIds, setSelectedSurveyIds ] = React.useState<string[]>([]);
   const [ groupSelectDialogOpen, setGroupSelectDialog ] = React.useState(false);
-  const [ usersGroupsAsAdmin, setUsersGroupsAsAdmin ] = React.useState<UserGroup[]>([]);
-  const [ , setUsersGroupsAsMember ] = React.useState<UserGroup[]>([]);
   const [ allUsersGroups, setAllUsersGroups ] = React.useState<UserGroup[]>([]);
   
   /**
@@ -175,9 +173,6 @@ const SurveysScreen: React.FC = () => {
       
       const foundGroupsAsMember = await Api.getUserGroupsApi(keycloak.token).listUserGroups({ member: true });
       const foundGroupsAsAdmin = await Api.getUserGroupsApi(keycloak.token).listUserGroups({ admin: true });
-
-      setUsersGroupsAsMember(foundGroupsAsMember);
-      setUsersGroupsAsAdmin(foundGroupsAsAdmin);
 
       const uniqueGroups = [ ...foundGroupsAsMember, ...foundGroupsAsAdmin ].reduce((acc: UserGroup[], group) => {
         if (!acc.some(accGroup => accGroup.id === group.id)) {
@@ -585,7 +580,7 @@ const SurveysScreen: React.FC = () => {
         open={ groupSelectDialogOpen }
         onClose={ toggleGroupSelectDialog }
         onGroupSelect={ createSurveyManually }
-        groups={ usersGroupsAsAdmin }
+        groups={ allUsersGroups }
       />
     </>
   );

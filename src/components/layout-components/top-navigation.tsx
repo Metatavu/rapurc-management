@@ -21,13 +21,18 @@ const TopNavigation: React.FC = () => {
   const [ usersGroupsAsAdmin, setUsersGroupsAsAdmin ] = React.useState<UserGroup[]>([]);
 
   /**
-   * Loads users groups from API
+   * Loads admin users groups from API
+   * If user is group admin but not keycloak admin, users groups are returned, otherwise returns all groups
    */
   const loadUsersGroups = async () => {
     try {
       if (!keycloak?.token) return;
-      const foundGroupsAsAdmin = await Api.getUserGroupsApi(keycloak.token).listUserGroups({ admin: true });
-      setUsersGroupsAsAdmin(foundGroupsAsAdmin);
+      const isAdmin = keycloak.hasRealmRole("admin");
+      setUsersGroupsAsAdmin(
+        isAdmin ?
+          await Api.getUserGroupsApi(keycloak.token).listUserGroups({}) :
+          await Api.getUserGroupsApi(keycloak.token).listUserGroups({ admin: true })
+      );
     } catch (error) {
       errorContext.setError(strings.errorHandling.userGroups.list, error);
     }
@@ -39,17 +44,6 @@ const TopNavigation: React.FC = () => {
   useEffect(() => {
     loadUsersGroups();
   }, []);
-
-  /**
-   * Navigate to group management screen with selected group if available
-   */
-  /*   const navigateToGroupManagement = (groupId: string) => {
-    if (groupId) {
-      navigate(`/groups/${groupId}`);
-    } else {
-      navigate("/groups");
-    }
-  }; */
 
   /**
    * Handle user group change
