@@ -8,7 +8,7 @@ import { selectKeycloak } from "features/auth-slice";
 import { UserGroup } from "generated/client";
 import strings from "localization/strings";
 import React, { ChangeEventHandler, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 /**
  * Navigation component
@@ -19,7 +19,7 @@ const TopNavigation: React.FC = () => {
 
   const navigate = useNavigate();
   const [ usersGroupsAsAdmin, setUsersGroupsAsAdmin ] = React.useState<UserGroup[]>([]);
-
+  const { groupId } = useParams();
   /**
    * Loads admin users groups from API
    * If user is group admin but not keycloak admin, users groups are returned, otherwise returns all groups
@@ -59,9 +59,10 @@ const TopNavigation: React.FC = () => {
   };
 
   /**
-   * Render the user group select
+   * Render the user group select navigation if user is admin of multiple groups.
+   * Otherwise render single button to navigate group management.
    */
-  const renderUserGroupsSelect = () => {
+  const renderUserGroupSelect = () => {
     if (!usersGroupsAsAdmin.length) return null;
 
     if (usersGroupsAsAdmin.length > 1) {
@@ -71,13 +72,18 @@ const TopNavigation: React.FC = () => {
         </MenuItem>
       );
 
+      const selectedGroup = usersGroupsAsAdmin.find(group => group.id === groupId);
+
       return (
         <TextField
+          sx={{
+            width: 100, marginLeft: 5, marginRight: 5
+          }}
           color="secondary"
           variant="standard"
           select
-          value={ usersGroupsAsAdmin[0].name }
-          label="Groups"
+          value={ selectedGroup?.name ?? "" }
+          label={ strings.navigation.groups }
           onChange={ onUserGroupChange }
         >
           { options }
@@ -114,7 +120,7 @@ const TopNavigation: React.FC = () => {
           { strings.navigation.admin }
         </Button>
       </VisibleWithRole>
-      { renderUserGroupsSelect() }
+      { renderUserGroupSelect() }
     </Stack>
   );
 };

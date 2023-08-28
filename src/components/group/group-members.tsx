@@ -53,7 +53,7 @@ const GroupMembers: FC<Props> = ({ groupMembers, setGroupMembers }) => {
       const updatedMembers = groupMembers.filter(m => m.id !== member.id);
       setGroupMembers(updatedMembers);
     } catch (error) {
-      errorContext.setError(strings.errorHandling.groupManagementScreen.pendingRequests);
+      errorContext.setError(strings.errorHandling.groupManagementScreen.deleteGroupMember);
     }
     setLoading(false);
   };

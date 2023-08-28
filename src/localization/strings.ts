@@ -187,6 +187,7 @@ export interface Localized extends LocalizedStringsMethods {
       pendingRequests: string;
       pendingInvites: string;
       deletePendingRequest: string;
+      deleteGroupMember: string;
     },
     userGroups: {
       list: string;

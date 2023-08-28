@@ -281,7 +281,7 @@ const GroupDialogScreen: FC = () => {
    * Get group admin name based on group id
    */
   const getGroupAdminName = () => {
-    const foundGroupAdminName = pendingInvites[0].metadata?.creatorId ?? "";
+    const foundGroupAdminName = pendingInvites[0].invitingUserName ?? "";
     return foundGroupAdminName;
   };
 
@@ -449,7 +449,6 @@ const GroupDialogScreen: FC = () => {
     <GenericDialog
       open
       onClose={ () => {} }
-      // eslint-disable-next-line no-restricted-globals
       onConfirm={ () => loadGroups()}
       title={ strings.groupDialogsScreen.acceptedInviteDialog.title }
       positiveButtonText={ strings.groupDialogsScreen.acceptedInviteDialog.continue }

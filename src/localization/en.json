@@ -163,7 +163,8 @@
       "inviteMember": "Error while sending member invite",
       "pendingRequests": "Error while listing pending requests",
       "pendingInvites": "Error while listing pending invites",
-      "deletePendingRequest": "Error while deleting pending request"
+      "deletePendingRequest": "Error while deleting pending request",
+      "deleteGroupMember": "Error while deleting group member"
     },
     "userGroups": {
       "list": "Error listing users groups"

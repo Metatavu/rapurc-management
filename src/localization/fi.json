@@ -164,7 +164,8 @@
       "inviteMember": "Virhe lähetettäessä jäsenkutsua",
       "pendingRequests": "Virhe listattaessa odottavia pyyntöjä",
       "pendingInvites": "Virhe listattaessa odottavia kutsuja",
-      "deletePendingRequest": "Virhe poistettaessa odottavaa pyyntöä"
+      "deletePendingRequest": "Virhe poistettaessa odottavaa pyyntöä",
+      "deleteGroupMember": "Virhe poistettaessa ryhmän jäsentä"
     },
     "userGroups": {
       "list": "Virhe listattaessa käyttäjän ryhmiä"
@@ -621,7 +622,7 @@
     "requestSentDialog": {
       "title": "Liity ryhmään",
       "requestSent": "Pyyntö lähetetty",
-      "content": "Liittymispyyntö lähetetty ryhmään {0}. Saat ilmoituksen sähköpostiisi, kun pyyntö on hyväksytty. \n Hyväksynnän jälkeen pääset tarkastelemaan organisaatiosi kartoituksia ja luomaan uusia."
+      "content": "Liittymispyyntö lähetetty ryhmään {0}. Saat ilmoituksen sähköpostiisi, kun pyyntö on hyväksytty.\n Hyväksynnän jälkeen pääset tarkastelemaan organisaatiosi kartoituksia ja luomaan uusia."
     },
     "acceptedInviteDialog": {
       "title": "Kutsu hyväksytty!",
@@ -630,7 +631,7 @@
     },
     "pendingInviteDialog": {
       "title": "Tervetuloa purkukartoitus.fi palveluun!",
-      "content": "Käyttääksesi palvelua on sinun kuuluttava organisaatiosi ryhmään. Ryhmässä näet organisaatiosi jäsenten luomat kartoitukset ja voit luoda sinne uusia kartoítuksia. \n Sinut on kutsuttu ryhmään {0} käyttäjän {1} toimesta. Haluatko liittyä ryhmään?",
+      "content": "Käyttääksesi palvelua on sinun kuuluttava organisaatiosi ryhmään. Ryhmässä näet organisaatiosi jäsenten luomat kartoitukset ja voit luoda sinne uusia kartoítuksia.\n Sinut on kutsuttu ryhmään {0} käyttäjän {1} toimesta. Haluatko liittyä ryhmään?",
       "denyInvitation": "Hylkää kutsu",
       "acceptInvitation": "Liity ryhmään"
     },
