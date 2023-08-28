@@ -610,7 +610,7 @@
     },
     "createDoneDialog": {
       "title": "Ryhmän luonti onnistui!",
-      "goToGroupManagement": "Siirry kartoituksiin",
+      "goToSurveys": "Siirry kartoituksiin",
       "content": "Voit nyt tehdä uusia kartoituksia ja kutsua jäseniä ryhmääsi. Ryhmän hallinta löytyy ylänavigaatiosta 'Hallinta'."
     },
     "joinDialog": {

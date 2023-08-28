@@ -611,7 +611,7 @@
     },
     "createDoneDialog": {
       "title": "The group was created successfully!",
-      "goToGroupManagement": "Go to group management",
+      "goToSurveys": "Go to surveys",
       "content": "You can now make new mappings and invite members to your group. Group management can be found in the top navigation 'Management'."
     },
     "joinDialog": {

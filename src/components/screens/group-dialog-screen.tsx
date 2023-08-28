@@ -343,7 +343,7 @@ const GroupDialogScreen: FC = () => {
       onClose={ () => {} }
       onConfirm={ () => navigate("/surveys")}
       title={ strings.groupDialogsScreen.createDoneDialog.title }
-      positiveButtonText={ strings.groupDialogsScreen.createDoneDialog.goToGroupManagement }
+      positiveButtonText={ strings.groupDialogsScreen.createDoneDialog.goToSurveys }
       hideClose
     >
       <Typography>

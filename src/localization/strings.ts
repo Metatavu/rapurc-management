@@ -662,7 +662,7 @@ export interface Localized extends LocalizedStringsMethods {
     };
     createDoneDialog: {
       title: string;
-      goToGroupManagement: string;
+      goToSurveys: string;
       content: string;
     };
     joinDialog: {
