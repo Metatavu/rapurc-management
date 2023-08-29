@@ -156,7 +156,8 @@
       "createGroup": "Error while creating group",
       "createGroupRequest": "Error while creating group join request",
       "acceptGroupInvite": "Error while accepting group invite",
-      "denyGroupInvite": "Error while denying group invite"
+      "denyGroupInvite": "Error while denying group invite",
+      "joinMultipleGroups": "Joining multiple groups not yet supported"
     },
     "groupManagementScreen": {
       "listMembers": "Error while listing group members",

@@ -157,7 +157,8 @@
       "createGroup": "Virhe luotaessa ryhmää",
       "createGroupRequest": "Virhe luotaessa liittymispyyntöä ryhmään",
       "acceptGroupInvite": "Virhe hyväksyttäessä ryhmäkutsua",
-      "denyGroupInvite": "Virhe hylätessä ryhmäkutsua"
+      "denyGroupInvite": "Virhe hylätessä ryhmäkutsua",
+      "joinMultipleGroups": "Pyynnön lähettäminen useaan ryhmään ei vielä ole tuettu"
     },
     "groupManagementScreen": {
       "listMembers": "Virhe listattaessa ryhmän jäseniä",

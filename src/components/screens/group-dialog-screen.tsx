@@ -188,7 +188,7 @@ const GroupDialogScreen: FC = () => {
 
     // TODO: currently set up to only join one group at a time
     if (groupsToJoin.length !== 1) {
-      errorContext.setError("Joining multiple groups not yet supported");
+      errorContext.setError(strings.errorHandling.groupDialogsScreen.joinMultipleGroups);
       return;
     }
 

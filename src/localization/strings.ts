@@ -180,6 +180,7 @@ export interface Localized extends LocalizedStringsMethods {
       createGroupRequest: string;
       acceptGroupInvite: string;
       denyGroupInvite: string;
+      joinMultipleGroups: string;
     },
     groupManagementScreen: {
       listMembers: string;
