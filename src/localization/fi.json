@@ -155,7 +155,7 @@
     "groupDialogsScreen": {
       "listGroups": "Virhe haettaessa ryhmiä",
       "createGroup": "Virhe luotaessa ryhmää",
-      "createGroupRequest": "Virhe luotaessa ryhmään liittymispyyntöä",
+      "createGroupRequest": "Virhe luotaessa liittymispyyntöä ryhmään",
       "acceptGroupInvite": "Virhe hyväksyttäessä ryhmäkutsua",
       "denyGroupInvite": "Virhe hylätessä ryhmäkutsua"
     },
