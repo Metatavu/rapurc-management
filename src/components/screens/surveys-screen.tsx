@@ -175,7 +175,7 @@ const SurveysScreen: React.FC = () => {
       const foundGroupsAsAdmin = await Api.getUserGroupsApi(keycloak.token).listUserGroups({ admin: true });
 
       const uniqueGroups = [ ...foundGroupsAsMember, ...foundGroupsAsAdmin ].reduce((acc: UserGroup[], group) => {
-        if (!acc.some(accGroup => accGroup.id === group.id)) {
+        if (acc.every(accGroup => accGroup.id !== group.id)) {
           acc.push(group);
         }
         return acc;
