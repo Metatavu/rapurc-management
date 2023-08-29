@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "../features/auth-slice";
 import surveysReducer from "../features/surveys-slice";
 import localeReducer from "../features/locale-slice";
+import groupReducer from "../features/group-slice";
 
 /**
  * Initialized Redux store
@@ -10,7 +11,8 @@ export const store = configureStore({
   reducer: {
     auth: authReducer,
     surveys: surveysReducer,
-    locale: localeReducer
+    locale: localeReducer,
+    groups: groupReducer
   },
   middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false })
 });

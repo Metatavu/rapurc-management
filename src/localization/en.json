@@ -151,6 +151,22 @@
       "loginFailed": "Invalid username or password",
       "serverError": "There is a connection problem with the selected site. Please try again later."
     },
+    "groupDialogsScreen": {
+      "listGroups": "Error while fetching groups",
+      "createGroup": "Error while creating group",
+      "createGroupRequest": "Error while creating group join request",
+      "acceptGroupInvite": "Error while accepting group invite",
+      "denyGroupInvite": "Error while denying group invite",
+      "joinMultipleGroups": "Joining multiple groups not yet supported"
+    },
+    "groupManagementScreen": {
+      "listMembers": "Error while listing group members",
+      "inviteMember": "Error while sending member invite",
+      "pendingRequests": "Error while listing pending requests",
+      "pendingInvites": "Error while listing pending invites",
+      "deletePendingRequest": "Error while deleting pending request",
+      "deleteGroupMember": "Error while deleting group member"
+    },
     "userGroups": {
       "list": "Error listing users groups"
     }
@@ -158,6 +174,7 @@
 
   "navigation": {
     "surveys": "Surveys",
+    "groups": "Group management",
     "newSurvey": "New survey",
     "admin": "Admin"
   },
@@ -202,7 +219,7 @@
     "createManually": "Create manually",
     "createSurvey": "Create survey"
   },
-  
+
   "surveyScreen": {
     "title": "Survey",
     "status": "Status",
@@ -219,7 +236,7 @@
       "summary": "Summary"
     }
   },
-  
+
   "adminScreen": {
     "title": "Administration",
     "description": "Control the contents of survey options.",
@@ -579,5 +596,81 @@
     "title": "You will need to login to the site where you are submitting the listing",
     "registerText": "Not registered on the chosen site?",
     "registerLink": "Click here to register for"
+  },
+  "groupDialogsScreen": {
+    "createNewGroup": "Create a new group" ,
+    "cancel": "Cancel",
+    "welcomeDialog": {
+      "title": "Welcome to the purkukartoitus.fi service!",
+      "joinGroup": "Join group" ,
+      "content": "To use the service, you must belong to a group in your organization. In the group, you can see the mappings created by the members of your organization and you can create new mappings there. If your organization does not yet have a group, you can create a new one. If your organization already has a group in the system, you can join it by requesting membership. If you want to join an existing group, choose 'Join a group' or if you want to create a completely new group, choose 'Create a new group'."
+    },
+    "createDialog": {
+      "title": "Create a new group",
+      "placeholder": "Enter a group name",
+      "helperText": "The group already exists"
+    },
+    "createDoneDialog": {
+      "title": "The group was created successfully!",
+      "goToSurveys": "Go to surveys",
+      "content": "You can now make new mappings and invite members to your group. Group management can be found in the top navigation 'Management'."
+    },
+    "joinDialog": {
+      "title": "Join the group",
+      "sendRequest": "Send a request to join",
+      "content": "To be able to make surveys, you must belong to a group. Search for your organization's group from the list below. If your organization does not have a group, you can create a new group by selecting 'Create a new group'.",
+      "placeholder": "Search for a group"
+    },
+    "requestSentDialog": {
+      "title": "Join the group",
+      "requestSent": "Request sent",
+      "content": "Join request sent to group {0}. You will receive a notification in your email when the request has been approved. \n After approval, you can view your organization's maps and create new ones."
+    },
+    "acceptedInviteDialog": {
+      "title": "Invitation accepted!",
+      "continue": "Continue",
+      "content": "You have joined group {0}. You can now view your organization's surveys and create new ones."
+    },
+    "pendingInviteDialog": {
+      "title": "Welcome to purkukartoitus.fi service!",
+      "content": "In order to use the service you need to belong in your organization's group. Then you can view group members surveys and create new surveys. \n You have been invited to group {0} by user {1}. Do you want to join group?",
+      "denyInvitation": "Deny invitation",
+      "acceptInvitation": "Join group"
+    },
+    "denyInviteConfirmDialog": {
+      "title": "Deny invitation?",
+      "content": "Are you sure you want to deny invitation?",
+      "denyInvitation": "Deny invitation"
+    },
+    "invitationDeniedDialog": {
+      "title": "Invitation denied.",
+      "content": "You have denied invitation to group {0}",
+      "close": "Close"
+    }
+  },
+  "groupManagementScreen": {
+    "groupMembers": "Group members",
+    "pendingInvites": "Pending invites ({0})",
+    "pendingRequests": "Pending requests ({0})",
+    "inviteUser": "Invite user",
+    "sendInvite": "Send Invite",
+    "invitePlaceholder": "Enter an email address",
+    "inviteMember": "Invite member",
+    "groupManagement": "Group management {0}",
+    "groupMembersScreen": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "control": "Control"
+    },
+    "pendingInvitesScreen": {
+      "resend": "Resend invitation",
+      "cancel": "Cancel invitation"
+
+    },
+    "pendingRequestsScreen": {
+      "reject": "Reject",
+      "accept": "Accept"
+    }
   }
 }

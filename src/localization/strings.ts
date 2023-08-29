@@ -174,6 +174,22 @@ export interface Localized extends LocalizedStringsMethods {
       loginFailed: string;
       serverError: string;
     };
+    groupDialogsScreen: {
+      listGroups: string;
+      createGroup: string;
+      createGroupRequest: string;
+      acceptGroupInvite: string;
+      denyGroupInvite: string;
+      joinMultipleGroups: string;
+    },
+    groupManagementScreen: {
+      listMembers: string;
+      inviteMember: string;
+      pendingRequests: string;
+      pendingInvites: string;
+      deletePendingRequest: string;
+      deleteGroupMember: string;
+    },
     userGroups: {
       list: string;
     };
@@ -184,6 +200,7 @@ export interface Localized extends LocalizedStringsMethods {
    */
   navigation: {
     surveys: string;
+    groups: string;
     newSurvey: string;
     admin: string;
   };
@@ -626,6 +643,89 @@ export interface Localized extends LocalizedStringsMethods {
     title: string;
     registerText: string;
     registerLink: string;
+  }
+
+  /**
+   * Translatations related to group dialogs
+   */
+  groupDialogsScreen: {
+    createNewGroup: string;
+    cancel: string;
+    welcomeDialog: {
+      title: string;
+      joinGroup: string
+      content: string;
+    };
+    createDialog: {
+      title: string;
+      placeholder: string;
+      helperText: string;
+    };
+    createDoneDialog: {
+      title: string;
+      goToSurveys: string;
+      content: string;
+    };
+    joinDialog: {
+      title: string;
+      sendRequest: string;
+      content: string;
+      placeholder: string;
+    };
+    requestSentDialog: {
+      title: string;
+      requestSent: string;
+      content: string;
+    }
+    acceptedInviteDialog: {
+      title: string;
+      continue: string
+      content: string;
+    };
+    pendingInviteDialog: {
+      title: string;
+      content: string;
+      denyInvitation: string;
+      acceptInvitation: string;
+    };
+    denyInviteConfirmDialog: {
+      title: string;
+      content: string;
+      denyInvitation: string;
+    };
+    invitationDeniedDialog: {
+      title: string;
+      content: string;
+      close: string;
+    };
+  }
+
+  /**
+   * Translations related to group management
+   */
+  groupManagementScreen: {
+    groupMembers: string;
+    pendingInvites: string;
+    pendingRequests: string;
+    inviteUser: string;
+    sendInvite: string;
+    invitePlaceholder: string;
+    inviteMember: string;
+    groupManagement: string;
+    groupMembersScreen: {
+      name: string;
+      email: string;
+      role: string;
+      control: string;
+    },
+    pendingInvitesScreen: {
+      resend: string;
+      cancel: string;
+    },
+    pendingRequestsScreen: {
+      reject: string;
+      accept: string;
+    }
   }
 }
 
