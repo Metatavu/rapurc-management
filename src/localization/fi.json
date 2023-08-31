@@ -602,7 +602,8 @@
     "welcomeDialog": {
       "title": "Tervetuloa purkukartoitus.fi palveluun!",
       "joinGroup": "Liity Ryhmään" ,
-      "content": "Käyttääksesi palvelua on sinun kuuluttava organisaatiosi ryhmään. Ryhmässä näet organisaatiosi jäsenten luomat kartoitukset ja voit luoda sinne uusia kartoítuksia. Jos organisaatiollasi ei ole vielä ryhmää, voit luoda uuden. Jos organisaatiollasi on jo ryhmä järjestelmässä, voit liittyä siihen pyytämällä jäsenyyttä.\n Jos haluat liittyä olemassaolevaan ryhmään, valite 'Liity ryhmään' tai jos haluat luoda kokonaan uuden ryhmän, valitse 'Luo uusi ryhmä'."
+      "content1": "Käyttääksesi palvelua on sinun kuuluttava organisaatiosi ryhmään. Ryhmässä näet organisaatiosi jäsenten luomat kartoitukset ja voit luoda sinne uusia kartoítuksia. Jos organisaatiollasi ei ole vielä ryhmää, voit luoda uuden. Jos organisaatiollasi on jo ryhmä järjestelmässä, voit liittyä siihen pyytämällä jäsenyyttä.",
+      "content2": "Jos haluat liittyä olemassaolevaan ryhmään, valite 'Liity ryhmään' tai jos haluat luoda kokonaan uuden ryhmän, valitse 'Luo uusi ryhmä'."
     },
     "createDialog": {
       "title": "Luo uusi ryhmä",
@@ -623,16 +624,18 @@
     "requestSentDialog": {
       "title": "Liity ryhmään",
       "requestSent": "Pyyntö lähetetty",
-      "content": "Liittymispyyntö lähetetty ryhmään {0}. Saat ilmoituksen sähköpostiisi, kun pyyntö on hyväksytty.\n Hyväksynnän jälkeen pääset tarkastelemaan organisaatiosi kartoituksia ja luomaan uusia."
+      "content1": "Liittymispyyntö lähetetty ryhmään \"{0}\". Saat ilmoituksen sähköpostiisi, kun pyyntö on hyväksytty.",
+      "content2": "Hyväksynnän jälkeen pääset tarkastelemaan organisaatiosi kartoituksia ja luomaan uusia."
     },
     "acceptedInviteDialog": {
       "title": "Kutsu hyväksytty!",
       "continue": "Jatka",
-      "content": "Olet liittynyt ryhmään {0}. Voit nyt siirtyä tarkastelemaan ja luomaan purkukartoituksia."
+      "content": "Olet liittynyt ryhmään \"{0}\". Voit nyt siirtyä tarkastelemaan ja luomaan purkukartoituksia."
     },
     "pendingInviteDialog": {
       "title": "Tervetuloa purkukartoitus.fi palveluun!",
-      "content": "Käyttääksesi palvelua on sinun kuuluttava organisaatiosi ryhmään. Ryhmässä näet organisaatiosi jäsenten luomat kartoitukset ja voit luoda sinne uusia kartoítuksia.\n Sinut on kutsuttu ryhmään {0} käyttäjän {1} toimesta. Haluatko liittyä ryhmään?",
+      "content1": "Käyttääksesi palvelua on sinun kuuluttava organisaatiosi ryhmään. Ryhmässä näet organisaatiosi jäsenten luomat kartoitukset ja voit luoda sinne uusia kartoítuksia.",
+      "content2": "Sinut on kutsuttu ryhmään \"{0}\" käyttäjän \"{1}\" toimesta. Haluatko liittyä ryhmään?",
       "denyInvitation": "Hylkää kutsu",
       "acceptInvitation": "Liity ryhmään"
     },

@@ -22,6 +22,7 @@ interface Props {
   ignoreOutsideClicks?: boolean;
   hasIcon?: boolean;
   hideClose?: boolean;
+  variant?: "text" | "outlined" | "contained";
 }
 
 /**
@@ -45,6 +46,7 @@ const GenericDialog: React.FC<Props> = ({
   ignoreOutsideClicks,
   hasIcon,
   hideClose,
+  variant,
   children
 }) => {
   /**
@@ -105,7 +107,8 @@ const GenericDialog: React.FC<Props> = ({
             disabled={ error || disabled }
             onClick={ onConfirm }
             color="primary"
-            autoFocus
+            autoFocus={ !variant }
+            variant={ variant }
             endIcon={ hasIcon && <DoneIcon/> }
           >
             { positiveButtonText }
