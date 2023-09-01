@@ -653,8 +653,9 @@ export interface Localized extends LocalizedStringsMethods {
     cancel: string;
     welcomeDialog: {
       title: string;
-      joinGroup: string
-      content: string;
+      joinGroup: string;
+      content1: string;
+      content2: string;
     };
     createDialog: {
       title: string;
@@ -675,7 +676,8 @@ export interface Localized extends LocalizedStringsMethods {
     requestSentDialog: {
       title: string;
       requestSent: string;
-      content: string;
+      content1: string;
+      content2: string;
     }
     acceptedInviteDialog: {
       title: string;
@@ -684,7 +686,8 @@ export interface Localized extends LocalizedStringsMethods {
     };
     pendingInviteDialog: {
       title: string;
-      content: string;
+      content1: string;
+      content2: string;
       denyInvitation: string;
       acceptInvitation: string;
     };

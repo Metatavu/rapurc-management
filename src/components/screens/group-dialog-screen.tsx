@@ -42,12 +42,13 @@ const GroupDialogScreen: FC = () => {
 
     setLoading(true);
     try {
-      setAllGroups(await Api.getUserGroupsApi(keycloak.token).listUserGroups({}));
+      const allFoundGroups = await Api.getUserGroupsApi(keycloak.token).listUserGroups({});
+      setAllGroups(allFoundGroups);
 
       const foundGroupInvites = await Api.getGroupJoinInvitesApi(keycloak.token).listUserGroupJoinInvites();
       setPendingInvites(foundGroupInvites.filter(invite => invite.status === JoinRequestStatus.Pending));
-      setFilteredGroups(allGroups);
-      const initialCheckedItems = allGroups.map(group => ({
+      setFilteredGroups(allFoundGroups);
+      const initialCheckedItems = allFoundGroups.map(group => ({
         name: group.name,
         checked: false
       }));
@@ -299,9 +300,13 @@ const GroupDialogScreen: FC = () => {
       positiveButtonText={ strings.groupDialogsScreen.createNewGroup }
       cancelButtonText={ strings.groupDialogsScreen.welcomeDialog.joinGroup }
       hideClose
+      variant="text"
     >
       <Typography>
-        { strings.groupDialogsScreen.welcomeDialog.content }
+        { strings.groupDialogsScreen.welcomeDialog.content1 }
+      </Typography>
+      <Typography marginTop={ 3 }>
+        { strings.groupDialogsScreen.welcomeDialog.content2 }
       </Typography>
     </GenericDialog>
   );
@@ -321,6 +326,7 @@ const GroupDialogScreen: FC = () => {
       cancelButtonText={ strings.groupDialogsScreen.cancel }
       disabled={ !newGroupName }
       hideClose
+      variant="text"
     >
       <TextField
         fullWidth
@@ -345,6 +351,7 @@ const GroupDialogScreen: FC = () => {
       title={ strings.groupDialogsScreen.createDoneDialog.title }
       positiveButtonText={ strings.groupDialogsScreen.createDoneDialog.goToSurveys }
       hideClose
+      variant="text"
     >
       <Typography>
         { strings.groupDialogsScreen.createDoneDialog.content }
@@ -370,6 +377,7 @@ const GroupDialogScreen: FC = () => {
         cancelButtonText={ strings.groupDialogsScreen.createNewGroup }
         disabled={ !isChecked }
         hideClose
+        variant="text"
       >
         <Typography>
           { strings.groupDialogsScreen.joinDialog.content }
@@ -417,7 +425,10 @@ const GroupDialogScreen: FC = () => {
       hideClose
     >
       <Typography>
-        { strings.formatString(strings.groupDialogsScreen.requestSentDialog.content, joinedGroup) }
+        { strings.formatString(strings.groupDialogsScreen.requestSentDialog.content1, joinedGroup) }
+      </Typography>
+      <Typography marginTop={ 3 }>
+        { strings.groupDialogsScreen.requestSentDialog.content2 }
       </Typography>
     </GenericDialog>
   );
@@ -435,9 +446,13 @@ const GroupDialogScreen: FC = () => {
       positiveButtonText={ strings.groupDialogsScreen.pendingInviteDialog.acceptInvitation }
       cancelButtonText={ strings.groupDialogsScreen.pendingInviteDialog.denyInvitation }
       hideClose
+      variant="text"
     >
       <Typography>
-        { strings.formatString(strings.groupDialogsScreen.pendingInviteDialog.content, getGroupName(), getGroupAdminName()) }
+        { strings.groupDialogsScreen.pendingInviteDialog.content1 }
+      </Typography>
+      <Typography marginTop={ 3 }>
+        { strings.formatString(strings.groupDialogsScreen.pendingInviteDialog.content2, getGroupName(), getGroupAdminName()) }
       </Typography>
     </GenericDialog>
   );
@@ -453,6 +468,7 @@ const GroupDialogScreen: FC = () => {
       title={ strings.groupDialogsScreen.acceptedInviteDialog.title }
       positiveButtonText={ strings.groupDialogsScreen.acceptedInviteDialog.continue }
       hideClose
+      variant="text"
     >
       <Typography>
         { strings.formatString(strings.groupDialogsScreen.acceptedInviteDialog.content, getGroupName()) }
@@ -473,6 +489,7 @@ const GroupDialogScreen: FC = () => {
       positiveButtonText={ strings.groupDialogsScreen.denyInviteConfirmDialog.denyInvitation }
       cancelButtonText={ strings.generic.cancel }
       hideClose
+      variant="text"
     >
       <Typography>
         { strings.groupDialogsScreen.denyInviteConfirmDialog.content }
@@ -491,6 +508,7 @@ const GroupDialogScreen: FC = () => {
       title={ strings.groupDialogsScreen.invitationDeniedDialog.title }
       positiveButtonText={ String(strings.formatString(strings.groupDialogsScreen.invitationDeniedDialog.close, getGroupName())) }
       hideClose
+      variant="text"
     >
       <Typography>
         { strings.formatString(strings.groupDialogsScreen.invitationDeniedDialog.content, getGroupName()) }
