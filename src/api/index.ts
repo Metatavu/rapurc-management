@@ -1,4 +1,4 @@
-import { Configuration, SurveysApi, BuildingsApi, OwnersApi, ReusableMaterialApi, SurveyReusablesApi, BuildingTypesApi, SurveyorsApi, SurveyWastesApi, UsagesApi, WasteMaterialApi, WasteCategoryApi, WasteSpecifiersApi, HazardousMaterialApi, SurveyHazardousWastesApi, SurveyAttachmentsApi, UserGroupsApi, EmailsApi } from "../generated/client";
+import { Configuration, SurveysApi, BuildingsApi, OwnersApi, ReusableMaterialApi, SurveyReusablesApi, BuildingTypesApi, SurveyorsApi, SurveyWastesApi, UsagesApi, WasteMaterialApi, WasteCategoryApi, WasteSpecifiersApi, HazardousMaterialApi, SurveyHazardousWastesApi, SurveyAttachmentsApi, UserGroupsApi, EmailsApi, GroupJoinInvitesApi, GroupJoinRequestsApi } from "../generated/client";
 
 /**
  * Utility class for loading api with predefined configuration
@@ -34,7 +34,7 @@ export default class Api {
   public static getUsagesApi = (accessToken: string) => {
     return new UsagesApi(Api.getConfiguration(accessToken));
   };
-  
+
   /**
    * Gets initialized building types API
    *
@@ -165,10 +165,36 @@ export default class Api {
     return new SurveyAttachmentsApi(Api.getConfiguration(accessToken));
   };
 
+  /**
+   * Gets initialized user groups API
+   *
+   * @param accessToken access token
+   * @returns initialized user groups API
+   */
   public static getUserGroupsApi = (accessToken: string) => {
     return new UserGroupsApi(Api.getConfiguration(accessToken));
   };
 
+  /**
+   * Gets initialized group join invites API
+   *
+   * @param accessToken access token
+   * @returns initialized group join invites API
+   */
+  public static getGroupJoinInvitesApi = (accessToken: string) => {
+    return new GroupJoinInvitesApi(Api.getConfiguration(accessToken));
+  };
+
+  /**
+   * Gets initialized group join requests API
+   *
+   * @param accessToken access token
+   * @returns initialized group join requests API
+   */
+  public static getGroupJoinRequestsApi = (accessToken: string) => {
+    return new GroupJoinRequestsApi(Api.getConfiguration(accessToken));
+  };
+  
   /**
    * Gets initialized emails API
    *

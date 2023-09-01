@@ -138,7 +138,7 @@
       "materialAmountInfo": "Materiaalimäärän tieto vaaditaan", 
       "priceAmount": "Hinta vaaditaan",
       "unit": "Materiaaliyksikkö vaaditaan",
-      "propertyName": "Kiinteistön nimi vaaditaan", 
+      "propertyName": "Kiinteistön nimi vaaditaan",
       "address": "Osoite vaaditaan",
       "postalcode": "Postinumero vaaditaan",
       "name": "Nimi vaaditaan",
@@ -152,6 +152,22 @@
       "loginFailed": "Väärä käyttäjätunnus tai salasana",
       "serverError": "Valitun sivun kanssa on yhteysongelmia. Yritä myöhemmin uudelleen."
     },
+    "groupDialogsScreen": {
+      "listGroups": "Virhe haettaessa ryhmiä",
+      "createGroup": "Virhe luotaessa ryhmää",
+      "createGroupRequest": "Virhe luotaessa liittymispyyntöä ryhmään",
+      "acceptGroupInvite": "Virhe hyväksyttäessä ryhmäkutsua",
+      "denyGroupInvite": "Virhe hylätessä ryhmäkutsua",
+      "joinMultipleGroups": "Pyynnön lähettäminen useaan ryhmään ei vielä ole tuettu"
+    },
+    "groupManagementScreen": {
+      "listMembers": "Virhe listattaessa ryhmän jäseniä",
+      "inviteMember": "Virhe lähetettäessä jäsenkutsua",
+      "pendingRequests": "Virhe listattaessa odottavia pyyntöjä",
+      "pendingInvites": "Virhe listattaessa odottavia kutsuja",
+      "deletePendingRequest": "Virhe poistettaessa odottavaa pyyntöä",
+      "deleteGroupMember": "Virhe poistettaessa ryhmän jäsentä"
+    },
     "userGroups": {
       "list": "Virhe listattaessa käyttäjän ryhmiä"
     }
@@ -159,6 +175,7 @@
 
   "navigation": {
     "surveys": "Kartoitukset",
+    "groups": "Ryhmänhallinta",
     "newSurvey": "Uusi kartoitus",
     "admin": "Ylläpito"
   },
@@ -202,7 +219,7 @@
     "createManually": "Luo manuaalisesti",
     "createSurvey": "Luo kartoitus"
   },
-  
+
   "surveyScreen": {
     "title": "Kartoitus",
     "status": "Tila",
@@ -219,7 +236,7 @@
       "summary": "Yhteenveto"
     }
   },
-  
+
   "adminScreen": {
     "title": "Ylläpito",
     "description": "Hallitse alasvetovalikoiden sisältöjä.",
@@ -578,5 +595,83 @@
     "title": "Sinun tulee kirjautua sisään sivustolle, jolle olet luomassa ilmoitusta",
     "registerText": "Eikö sinulla ole tiliä valitulla sivulla?",
     "registerLink": "Luo tili sivulle"
+  },
+  "groupDialogsScreen": {
+    "createNewGroup": "Luo uusi ryhmä" ,
+    "cancel": "Peruuta",
+    "welcomeDialog": {
+      "title": "Tervetuloa purkukartoitus.fi palveluun!",
+      "joinGroup": "Liity Ryhmään" ,
+      "content1": "Käyttääksesi palvelua on sinun kuuluttava organisaatiosi ryhmään. Ryhmässä näet organisaatiosi jäsenten luomat kartoitukset ja voit luoda sinne uusia kartoítuksia. Jos organisaatiollasi ei ole vielä ryhmää, voit luoda uuden. Jos organisaatiollasi on jo ryhmä järjestelmässä, voit liittyä siihen pyytämällä jäsenyyttä.",
+      "content2": "Jos haluat liittyä olemassaolevaan ryhmään, valite 'Liity ryhmään' tai jos haluat luoda kokonaan uuden ryhmän, valitse 'Luo uusi ryhmä'."
+    },
+    "createDialog": {
+      "title": "Luo uusi ryhmä",
+      "placeholder": "Anna ryhmän nimi",
+      "helperText": "Ryhmä on jo olemassa"
+    },
+    "createDoneDialog": {
+      "title": "Ryhmän luonti onnistui!",
+      "goToSurveys": "Siirry kartoituksiin",
+      "content": "Voit nyt tehdä uusia kartoituksia ja kutsua jäseniä ryhmääsi. Ryhmän hallinta löytyy ylänavigaatiosta 'Hallinta'."
+    },
+    "joinDialog": {
+      "title": "Liity ryhmään",
+      "sendRequest": "Lähetä liittymispyyntö",
+      "content": "Pystyäksesi tekemään kartoituksia on sinun kuuluttava johonkin ryhmään. Hae organisaatiosi ryhmää alla olevasta listasta. Jos organisaatiollasi ei ole ryhmää, voit luoda uuden ryhmän valitsemalla 'Luo uusi ryhmä'.",
+      "placeholder": "Hae ryhmää"
+    },
+    "requestSentDialog": {
+      "title": "Liity ryhmään",
+      "requestSent": "Pyyntö lähetetty",
+      "content1": "Liittymispyyntö lähetetty ryhmään \"{0}\". Saat ilmoituksen sähköpostiisi, kun pyyntö on hyväksytty.",
+      "content2": "Hyväksynnän jälkeen pääset tarkastelemaan organisaatiosi kartoituksia ja luomaan uusia."
+    },
+    "acceptedInviteDialog": {
+      "title": "Kutsu hyväksytty!",
+      "continue": "Jatka",
+      "content": "Olet liittynyt ryhmään \"{0}\". Voit nyt siirtyä tarkastelemaan ja luomaan purkukartoituksia."
+    },
+    "pendingInviteDialog": {
+      "title": "Tervetuloa purkukartoitus.fi palveluun!",
+      "content1": "Käyttääksesi palvelua on sinun kuuluttava organisaatiosi ryhmään. Ryhmässä näet organisaatiosi jäsenten luomat kartoitukset ja voit luoda sinne uusia kartoítuksia.",
+      "content2": "Sinut on kutsuttu ryhmään \"{0}\" käyttäjän \"{1}\" toimesta. Haluatko liittyä ryhmään?",
+      "denyInvitation": "Hylkää kutsu",
+      "acceptInvitation": "Liity ryhmään"
+    },
+    "denyInviteConfirmDialog": {
+      "title": "Hylkää kutsu",
+      "content": "Oletko varma, että haluat hylätä kutsun?",
+      "denyInvitation": "Hylkää kutsu"
+    },
+    "invitationDeniedDialog": {
+      "title": "Kutsu hylätty.",
+      "content": "Olet hylännyt kutsun liittyä ryhmään {0}",
+      "close": "Sulje"
+    }
+  },
+  "groupManagementScreen": {
+    "groupMembers": "Ryhmän jäsenet",
+    "pendingInvites": "Lähetetyt kutsut ({0})",
+    "pendingRequests": "Jäsenpyynnöt ({0})",
+    "inviteUser": "Kutsu käyttäjä",
+    "sendInvite": "Lähetä kutsu",
+    "invitePlaceholder": "Anna sähköpostiosoite",
+    "inviteMember": "Kutsu jäseniä",
+    "groupManagement": "Ryhmän hallinta {0}",
+    "groupMembersScreen": {
+      "name": "Nimi",
+      "email": "Sähköposti",
+      "role": "Rooli",
+      "control": "Hallitse"
+    },
+    "pendingInvitesScreen": {
+      "resend": "Lähetä kutsu uudelleen",
+      "cancel": "Peru kutsu"
+    },
+    "pendingRequestsScreen": {
+      "reject": "Hylkää",
+      "accept": "Hyväksy"
+    }
   }
 }

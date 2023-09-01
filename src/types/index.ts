@@ -87,7 +87,7 @@ export interface UploadFile {
 }
 
 /**
- * Interface for survey summary 
+ * Interface for survey summary
  */
 export interface SurveySummary {
   building?: Building;
@@ -107,9 +107,33 @@ export interface SurveySummary {
 }
 
 /**
- * Interface for survey summary 
+ * Checkbox state data
+ */
+export interface CheckboxData {
+  name: string;
+  checked: boolean;
+}
+
+/**
+ * Interface for survey summary
  */
 export enum SurveyShow {
   ShowAll = "showAll",
   ShowMine = "showMine"
+}
+
+/**
+ * Enum for group dialog status
+ */
+export enum GroupDialogStatus {
+  WELCOME = "welcome",
+  CREATE = "create",
+  INVITE = "invite",
+  CREATE_DONE = "create done",
+  JOIN = "join",
+  REQUEST_SENT = "request sent",
+  PENDING_INVITE = "pending invite",
+  DENY_INVITATION_CONFIRM = "deny invitation confirm",
+  INVITATION_DENIED = "invitation denied",
+  INVITATION_ACCEPTED = "invitation accepted"
 }

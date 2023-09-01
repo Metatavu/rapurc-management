@@ -1,4 +1,5 @@
 import CloseIcon from "@mui/icons-material/Close";
+import DoneIcon from "@mui/icons-material/Done";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import * as React from "react";
 
@@ -19,6 +20,9 @@ interface Props {
   disableEnforceFocus?: boolean;
   disabled?: boolean;
   ignoreOutsideClicks?: boolean;
+  hasIcon?: boolean;
+  hideClose?: boolean;
+  variant?: "text" | "outlined" | "contained";
 }
 
 /**
@@ -40,6 +44,9 @@ const GenericDialog: React.FC<Props> = ({
   disableEnforceFocus,
   disabled,
   ignoreOutsideClicks,
+  hasIcon,
+  hideClose,
+  variant,
   children
 }) => {
   /**
@@ -67,19 +74,20 @@ const GenericDialog: React.FC<Props> = ({
     >
       <DialogTitle>
         { title }
-        <IconButton
-          aria-label="close"
-          size="small"
-          sx={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-            color: theme => theme.palette.grey[500]
-          }}
-          onClick={ onCancel }
-        >
-          <CloseIcon/>
-        </IconButton>
+        { !hideClose &&
+          <IconButton
+            aria-label="close"
+            size="small"
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: theme => theme.palette.grey[500]
+            }}
+            onClick={ onCancel }
+          >
+            <CloseIcon/>
+          </IconButton>}
       </DialogTitle>
       <DialogContent>
         { children }
@@ -99,7 +107,9 @@ const GenericDialog: React.FC<Props> = ({
             disabled={ error || disabled }
             onClick={ onConfirm }
             color="primary"
-            autoFocus
+            autoFocus={ !variant }
+            variant={ variant }
+            endIcon={ hasIcon && <DoneIcon/> }
           >
             { positiveButtonText }
           </Button>
