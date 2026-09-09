@@ -21,7 +21,6 @@ import WhiteOutlinedInput from "../../styled/generic/inputs";
 import { Building, OwnerInformation, SurveyStatus, UserGroup } from "generated/client";
 import GroupSelectDialog from "components/dialogs/group-select-dialog";
 import AnnouncementBanner from "components/layout-components/announcement-banner";
-import isLocalUiMode from "app/local-dev";
 
 /**
  * Surveys screen component
@@ -196,16 +195,6 @@ const SurveysScreen: React.FC = () => {
   const loadData = async () => {
     setLoading(true);
     const surveys = await listSurveys();
-
-    if (isLocalUiMode) {
-      const localSurveyWithInfoArray: SurveyWithInfo[] = surveys.map(survey =>
-        SurveyUtils.parseToSurveyWithInfo(survey)
-      );
-
-      setSurveysWithInfo(localSurveyWithInfoArray);
-      setLoading(false);
-      return;
-    }
 
     const buildingTypes = await listBuildingTypes();
     await loadUsersGroups();
