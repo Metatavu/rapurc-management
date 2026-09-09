@@ -17,6 +17,7 @@ interface Props {
   back?: boolean;
   customControls?: JSX.Element;
   renderLastModifiedDate?: JSX.Element;
+  beforeTitleContent?: JSX.Element;
 }
 
 /**
@@ -29,7 +30,8 @@ const Header: React.FC<Props> = ({
   children,
   back,
   customControls,
-  renderLastModifiedDate
+  renderLastModifiedDate,
+  beforeTitleContent
 }) => {
   const navigate = useNavigate();
   const language = useAppSelector(selectLanguage);
@@ -66,6 +68,7 @@ const Header: React.FC<Props> = ({
           <ProfileMenu/>
         </Stack>
       </Toolbar>
+      { beforeTitleContent }
       <Toolbar>
         <Stack
           width="100%"
