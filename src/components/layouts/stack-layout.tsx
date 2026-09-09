@@ -8,6 +8,7 @@ import { Content, Root } from "styled/layouts/stack-layout";
 interface Props {
   title: string;
   headerContent?: JSX.Element;
+  preHeaderContent?: JSX.Element;
   back?: boolean;
 }
 
@@ -19,12 +20,13 @@ interface Props {
 const StackLayout: React.FC<Props> = ({
   title,
   headerContent,
+  preHeaderContent,
   back,
   children
 }) => {
   return (
     <Root>
-      <Header back={ back } title={ title }>
+      <Header back={ back } title={ title } beforeTitleContent={ preHeaderContent }>
         { headerContent }
       </Header>
       <Content>

@@ -18,9 +18,10 @@ import { SurveyShow, SurveyWithInfo } from "types";
 import LocalizationUtils from "utils/localization-utils";
 import SurveyUtils from "utils/survey";
 import WhiteOutlinedInput from "../../styled/generic/inputs";
-import { SurveyStatus } from "../../generated/client/models/SurveyStatus";
-import { Building, OwnerInformation, UserGroup } from "generated/client";
+import { Building, OwnerInformation, SurveyStatus, UserGroup } from "generated/client";
 import GroupSelectDialog from "components/dialogs/group-select-dialog";
+import AnnouncementBanner from "components/layout-components/announcement-banner";
+import isLocalUiMode from "app/local-dev";
 
 /**
  * Surveys screen component
@@ -195,6 +196,17 @@ const SurveysScreen: React.FC = () => {
   const loadData = async () => {
     setLoading(true);
     const surveys = await listSurveys();
+
+    if (isLocalUiMode) {
+      const localSurveyWithInfoArray: SurveyWithInfo[] = surveys.map(survey =>
+        SurveyUtils.parseToSurveyWithInfo(survey)
+      );
+
+      setSurveysWithInfo(localSurveyWithInfoArray);
+      setLoading(false);
+      return;
+    }
+
     const buildingTypes = await listBuildingTypes();
     await loadUsersGroups();
 
@@ -567,6 +579,7 @@ const SurveysScreen: React.FC = () => {
       <StackLayout
         title={ strings.surveysScreen.title }
         headerContent={ renderSurveyListFilter() }
+        preHeaderContent={ <AnnouncementBanner/> }
       >
         <Hidden lgUp>
           { renderSurveyList() }
